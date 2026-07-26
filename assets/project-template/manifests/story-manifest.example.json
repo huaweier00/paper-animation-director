@@ -1,0 +1,134 @@
+{
+  "project": "sample-paper-story",
+  "story": "A small bird finds a seed before a storm and learns to ask for help.",
+  "message": "Preparation and cooperation turn a small effort into safety.",
+  "aspect": "16:9",
+  "fps": 30,
+  "target_duration": 12,
+  "language": "zh",
+  "subtitle_mode": "zh-en",
+  "audio_mode": "dialogue-only",
+  "watermark": {
+    "enabled": false,
+    "text": ""
+  },
+  "voice": {
+    "provider": "manual",
+    "reference_id": "",
+    "speed_policy": "natural-1x",
+    "generate_by_scene": true
+  },
+  "characters": [
+    {
+      "id": "bird",
+      "description": "A small ochre paper-cut bird with a round body and indigo wing tips.",
+      "costume": "",
+      "identity_reference": "assets/references/bird.png",
+      "required_poses": [
+        "neutral",
+        "hop-left",
+        "hop-right",
+        "carry-seed",
+        "ask-for-help",
+        "final"
+      ]
+    },
+    {
+      "id": "helper-bird",
+      "description": "A slightly larger jade-green paper-cut bird with a long tail and warm cream chest.",
+      "costume": "",
+      "identity_reference": "assets/references/helper-bird.png",
+      "required_poses": [
+        "neutral",
+        "fly-in",
+        "grip-leaf",
+        "carry-leaf",
+        "place-leaf",
+        "final"
+      ]
+    }
+  ],
+  "scenes": [
+    {
+      "id": "scene-01-find-seed",
+      "title": "发现种子",
+      "title_en": "The Seed",
+      "narrative_goal": "The bird notices a seed while storm clouds approach.",
+      "narration": "暴雨来临前，小鸟在路边发现了一颗种子。",
+      "duration": 6,
+      "duration_policy": "voice-plus-action",
+      "layers": [
+        "background",
+        "far-atmosphere",
+        "midground",
+        "actors",
+        "props-and-effects",
+        "foreground-occlusion",
+        "paper-texture"
+      ],
+      "events": [
+        {
+          "cause": "Dark clouds and wind approach.",
+          "action": "The bird notices and lifts the seed.",
+          "propagation": "The seed changes owner from ground to bird.",
+          "result": "The bird starts looking for shelter.",
+          "proof": "The seed visibly leaves the ground and is held by the bird while clouds gather.",
+          "start": 0.8,
+          "end": 4.8,
+          "proof_time": 4.2
+        }
+      ],
+      "activity_windows": [
+        { "start": 0, "end": 5.5, "type": "character-and-prop-action" },
+        { "start": 5.5, "end": 6, "type": "transition" }
+      ]
+    },
+    {
+      "id": "scene-02-shelter",
+      "title": "一起筑巢",
+      "title_en": "Shelter",
+      "narrative_goal": "Two birds cooperate to cover the seed before rain.",
+      "narration": "它叫来伙伴，一起把种子藏进温暖的巢里。",
+      "duration": 6,
+      "duration_policy": "voice-plus-action",
+      "ensemble_actions": [
+        {
+          "id": "shared-leaf",
+          "participants": ["bird", "helper-bird"],
+          "ensemble_required": true,
+          "proof": "Both birds visibly grip the same leaf while placing it over the nest."
+        }
+      ],
+      "layers": [
+        "background",
+        "far-atmosphere",
+        "midground",
+        "actors",
+        "props-and-effects",
+        "foreground-occlusion",
+        "paper-texture"
+      ],
+      "events": [
+        {
+          "cause": "Rain begins.",
+          "action": "Two birds carry one leaf together.",
+          "propagation": "The leaf crosses the frame and lowers over the nest.",
+          "result": "The seed remains dry inside the nest.",
+          "proof": "Both birds contact the same leaf and the final leaf visibly covers the nest.",
+          "start": 0.4,
+          "end": 5.2,
+          "proof_time": 4.8
+        }
+      ],
+      "activity_windows": [
+        { "start": 0, "end": 5.4, "type": "ensemble-action" },
+        { "start": 5.4, "end": 6, "type": "final-hold" }
+      ]
+    }
+  ],
+  "delivery": {
+    "master": true,
+    "social_1080p": true,
+    "social_vmaf_floor": 95
+  }
+}

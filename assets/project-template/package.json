@@ -1,0 +1,11 @@
+{
+  "name": "__PROJECT_ID__",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "HYPERFRAMES_NO_UPDATE_CHECK=1 npx --yes hyperframes@0.7.68 preview",
+    "check": "HYPERFRAMES_NO_UPDATE_CHECK=1 npx --yes hyperframes@0.7.68 check --strict",
+    "render": "HYPERFRAMES_NO_UPDATE_CHECK=1 npx --yes hyperframes@0.7.68 render",
+    "publish": "HYPERFRAMES_NO_UPDATE_CHECK=1 npx --yes hyperframes@0.7.68 publish"
+  }
+}

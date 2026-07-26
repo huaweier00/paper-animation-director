@@ -1,0 +1,32 @@
+<template>
+  <style>
+    #__SCENE_ID__ { position: relative; width: __WIDTH__px; height: __HEIGHT__px; overflow: hidden; font-family: "Noto Sans JP", sans-serif; color: #34281e; }
+    #__SCENE_ID__-fill { position: absolute; inset: 0; background: linear-gradient(145deg, #ede2c7, #d8c49b 68%, #b79d73); }
+    #__SCENE_ID__-depth-a { position: absolute; inset: 8% 5% 15%; border-radius: 48% 52% 10% 10%; opacity: .34; background: radial-gradient(ellipse at 50% 100%, rgba(64,88,69,.34), transparent 67%); transform-origin: 50% 70%; }
+    #__SCENE_ID__-depth-b { position: absolute; left: 7%; right: 7%; top: 12%; bottom: 18%; opacity: .5; border: 2px dashed rgba(77,57,37,.24); }
+    #__SCENE_ID__-card { position: absolute; left: 9%; top: 15%; width: 66%; padding: 28px 34px 32px; background: rgba(247,238,214,.86); border: 1px solid rgba(70,51,35,.3); box-shadow: 10px 12px 0 rgba(139,62,48,.22); transform-origin: 0 50%; }
+    #__SCENE_ID__-eyebrow { font-size: 20px; letter-spacing: .18em; color: #8b3e34; text-transform: uppercase; }
+    #__SCENE_ID__-title { margin-top: 12px; font-size: 54px; font-weight: 720; line-height: 1.08; }
+    #__SCENE_ID__-goal { margin-top: 18px; max-width: 84%; font-size: 27px; line-height: 1.45; }
+    #__SCENE_ID__-event { position: absolute; right: 8%; bottom: 26%; width: 46%; padding: 22px 26px; color: #f7edda; background: rgba(50,37,28,.86); font-size: 23px; line-height: 1.4; }
+  </style>
+  <div id="__SCENE_ID__" data-hf-id="hf-__SCENE_ID__-root" data-composition-id="__SCENE_ID__" data-start="0" data-duration="__DURATION__" data-width="__WIDTH__" data-height="__HEIGHT__">
+    <div id="__SCENE_ID__-fill" data-hf-id="hf-__SCENE_ID__-fill"></div>
+    <div id="__SCENE_ID__-depth-a" data-hf-id="hf-__SCENE_ID__-depth-a" data-layout-ignore></div>
+    <div id="__SCENE_ID__-depth-b" data-hf-id="hf-__SCENE_ID__-depth-b" data-layout-ignore></div>
+    <div id="__SCENE_ID__-card" data-hf-id="hf-__SCENE_ID__-card">
+      <div id="__SCENE_ID__-eyebrow" data-hf-id="hf-__SCENE_ID__-eyebrow">Development placeholder</div>
+      <div id="__SCENE_ID__-title" data-hf-id="hf-__SCENE_ID__-title">__SCENE_TITLE__</div>
+      <div id="__SCENE_ID__-goal" data-hf-id="hf-__SCENE_ID__-goal">__SCENE_GOAL__</div>
+    </div>
+    <div id="__SCENE_ID__-event" data-hf-id="hf-__SCENE_ID__-event">__EVENT_TEXT__</div>
+  </div>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#__SCENE_ID__-card", { opacity: 0, x: -40, y: 12 }, { opacity: 1, x: 0, y: 0, duration: .45, ease: "power3.out" }, .08);
+    tl.fromTo("#__SCENE_ID__-event", { opacity: 0, x: 34 }, { opacity: 1, x: 0, duration: .4, ease: "power3.out" }, __EVENT_AT__);
+    tl.to("#__SCENE_ID__-depth-a", { scale: 1.04, x: 16, duration: __DURATION__, ease: "sine.inOut" }, 0);
+    window.__timelines["__SCENE_ID__"] = tl;
+  </script>
+</template>

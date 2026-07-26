@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="260" viewBox="0 0 1200 260" role="img" aria-labelledby="title desc">
+  <title id="title">Paper animation director workflow</title>
+  <desc id="desc">Story and evidence flow through spatial planning, complete assets, benchmark animation, voice timing, proof review, and delivery.</desc>
+  <defs>
+    <linearGradient id="paper" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#f7f0de"/>
+      <stop offset="1" stop-color="#e8d7b6"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#4a3023" flood-opacity=".2"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#96633e"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="260" fill="#f4ead6"/>
+  <path d="M0 215 C190 190 330 232 520 211 S900 230 1200 202" fill="none" stroke="#d0ad7b" stroke-width="2" opacity=".6"/>
+  <g font-family="-apple-system,BlinkMacSystemFont,'Noto Sans SC','Microsoft YaHei',sans-serif" text-anchor="middle" filter="url(#shadow)">
+    <g transform="translate(32 72)"><rect width="145" height="92" rx="12" fill="url(#paper)" stroke="#8b5d3b" stroke-width="2"/><text x="72.5" y="36" font-size="17" fill="#4c3024">剧本与史料</text><text x="72.5" y="62" font-size="12" fill="#765441">先问“为什么”</text></g>
+    <g transform="translate(207 72)"><rect width="145" height="92" rx="12" fill="url(#paper)" stroke="#8b5d3b" stroke-width="2"/><text x="72.5" y="36" font-size="17" fill="#4c3024">空间平面</text><text x="72.5" y="62" font-size="12" fill="#765441">再问“在哪里”</text></g>
+    <g transform="translate(382 72)"><rect width="145" height="92" rx="12" fill="url(#paper)" stroke="#8b5d3b" stroke-width="2"/><text x="72.5" y="36" font-size="17" fill="#4c3024">完整资产</text><text x="72.5" y="62" font-size="12" fill="#765441">不乱拆零件</text></g>
+    <g transform="translate(557 72)"><rect width="145" height="92" rx="12" fill="url(#paper)" stroke="#8b5d3b" stroke-width="2"/><text x="72.5" y="36" font-size="17" fill="#4c3024">动作基准</text><text x="72.5" y="62" font-size="12" fill="#765441">先证明再扩展</text></g>
+    <g transform="translate(732 72)"><rect width="145" height="92" rx="12" fill="url(#paper)" stroke="#8b5d3b" stroke-width="2"/><text x="72.5" y="36" font-size="17" fill="#4c3024">声音字幕</text><text x="72.5" y="62" font-size="12" fill="#765441">归属与节拍</text></g>
+    <g transform="translate(907 72)"><rect width="145" height="92" rx="12" fill="url(#paper)" stroke="#8b5d3b" stroke-width="2"/><text x="72.5" y="36" font-size="17" fill="#4c3024">三次审片</text><text x="72.5" y="62" font-size="12" fill="#765441">静音 / 只听 / 合看</text></g>
+  </g>
+  <g stroke="#96633e" stroke-width="3" marker-end="url(#arrow)">
+    <path d="M179 118 H201"/><path d="M354 118 H376"/><path d="M529 118 H551"/><path d="M704 118 H726"/><path d="M879 118 H901"/>
+  </g>
+  <text x="600" y="224" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="17" fill="#5f3b2b">空间成立 → 资产适配 → 动作可读 → 声音归属 → 渲染交付</text>
+</svg>

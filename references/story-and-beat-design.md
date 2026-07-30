@@ -4,12 +4,15 @@
 
 Resolve or infer the source story, intended lesson, target platform, aspect ratio, target duration, language, subtitle mode, audio mode, and watermark text. Record assumptions in the manifest instead of hiding them in chat history.
 
-Use four approval gates:
+Use five approval gates:
 
 1. story action table;
-2. voice, character bible, and hardest benchmark scene;
-3. complete editable preview;
-4. final render and delivery.
+2. voice and one reference-only frontal identity image per recurring character;
+3. hardest benchmark shot’s semantic contract, spatial contract, and just-in-time asset plan;
+4. complete editable preview;
+5. final render and delivery.
+
+For a social-platform story, also lock the first-three-second promise and the final takeaway before shot production. A strong hook without a completed ending produces attention but not meaning.
 
 ## Scene contract
 
@@ -41,7 +44,31 @@ Omit `propagation` only for genuinely instantaneous events. Write `proof` as som
 
 ## Action table
 
-Before asset production, make a compact table with scene, goal, cause, action, result, proof, actors, props, and whether a connected ensemble asset is required. Reject any scene whose proof depends entirely on narration.
+Before shot production, make a compact table with scene, goal, cause, action, result, proof, actors, props, critical-prop recognizability requirements, support surfaces, command-state changes, and whether a connected ensemble asset is required. Reject any scene whose proof depends entirely on narration.
+
+Treat each manifest `scene` as a production shot unless the project explicitly subdivides it. Approve its event and `spatial_contract` before listing or generating concrete assets. Character identity references are the only visual assets allowed before this shot gate.
+
+## Ending contract
+
+Write the ending before generating the opening. For an educational, historical, or cultural fable, require:
+
+1. **consequence** — show what changed because of the climax;
+2. **source/cultural closure** — return to the artifact, place, tradition, or evidence when promised;
+3. **transferable lesson** — state what a viewer can carry into present life.
+
+Do not end only with provenance, punishment, or a generic “be kind.” Connect individual choice to the larger principle the story has earned. Keep the final statement concise enough to be remembered and give it sufficient visual hold.
+
+An interaction question may follow in title/description/pinned comment, but it cannot replace the film’s own conclusion.
+
+## Social publishing package
+
+After the final render passes, provide:
+
+- several title options that foreground conflict or choice without fabricated sensationalism;
+- a description that names the cultural source accurately, states the interpretive angle, and includes useful topic tags;
+- a pinned comment with one concrete question that invites viewers to explain a choice, memory, or principle.
+
+Avoid reducing cultural material to clickbait, falsely labeling a cultural relic as intangible heritage, or posing a question so vague that it yields only “yes/no” replies.
 
 ## Do not overfit one story
 

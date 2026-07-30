@@ -35,6 +35,10 @@ Every traveling prop needs one owner at a time. Define `source → owner → han
 
 Use foreground masks and contact shadows to place elements in one space. When a prop crosses a rim, hand, body, doorway, or foreground plant, animate the relevant z-order or mask instead of letting the prop float above every layer.
 
-For a light-to-screen-to-observer scene, write the depth order explicitly and keep it stable: lamp → complete shadow object → screen → observer. If the light moves, the shadow scale and edge sharpness must respond in the correct direction. Use the same contact-shadow and floor-line logic for characters crossing the space.
+Treat a character head and face as protected review regions. Never let a scene-host boundary, `overflow: hidden`, alpha crop, mask, matte, foreground edge, transition, caption, or watermark cut through the scalp or identity-critical facial features. A straight edge that removes half the face reads as amputation, not depth.
+
+Allow partial head/face coverage only when the occluding object is visible, belongs at the declared depth, crosses the actor along a physically readable path, and appears in the shot’s intentional-occlusion contract. Preserve an unobstructed identity-proof frame before or after the coverage. Natural profile is allowed when the skull, facial contour, visible features, jaw, and neck remain coherent.
+
+At every pose swap, keep canvas padding, anchor, scale, crop, and mask bounds consistent. Check the frame before the swap, the overlap, and the frame after it; mismatched atlas padding often produces a one-frame sliced scalp or half-face.
 
 For a light-to-screen-to-observer scene, write the depth order explicitly and keep it stable: `lamp → complete shadow object → screen → observer`. If the light moves, the shadow scale and edge sharpness must respond in the correct direction. Use the same contact-shadow and floor-line logic for characters crossing the space.

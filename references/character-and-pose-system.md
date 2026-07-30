@@ -2,28 +2,19 @@
 
 ## Identity bible
 
-Approve one identity reference per recurring character before generating pose volume. Record face shape, age, body proportions, hair, costume silhouette, palette, footwear, signature prop, and forbidden changes.
+Approve exactly one neutral frontal identity reference per recurring character before any shot asset generation. Prefer a full-body frame that clearly records face shape, age, body proportions, hair, costume silhouette, palette, footwear, and signature identity details. Keep the background plain and exclude story action, interaction, expressive posing, and scene-specific props.
 
-Use the approved image as the visual reference for every later atlas. Do not describe identity from memory after the first generation.
+Mark it `purpose: identity-consistency-reference-only` and `animation_use: false`. Use it as visual conditioning for every later shot-specific generation. Never key, animate, place, or deliver the frontal reference as a shot asset. Do not describe identity from memory after approval.
+
+Do not create side views, turnarounds, expression sheets, gait cycles, or a general pose library during identity lock. Global style rules may be fixed early; all concrete character poses are designed only after the active shot’s semantic and spatial contracts are approved.
 
 ## Complete-pose default
 
-Generate complete connected bodies with full scalp, hands, sleeves, legs, and shoes. Keep safety margin around every atlas cell. Avoid anatomy seams even when that reduces local rig freedom.
+Derive the minimum complete connected poses from the active shot only. Generate full scalp, hands, sleeves, legs, and shoes with safety margin around every atlas cell. Avoid anatomy seams even when that reduces local rig freedom. Do not generate a pose merely because it may become useful later.
 
-Minimum recurring-character set:
+When an approved shot visibly requires travel, generate a normalized six-frame gait cycle for its exact camera side and facing direction: `weight-bearing → lift → contact → transition → opposite contact → settle`. Keep every frame on one canvas with the same character center, foot baseline, transparent padding, scale, light, and facing. A parent world-space track may carry the cycle across the approved corridor; translation-only tweens do not count as walking.
 
-- neutral three-quarter stance;
-- left and right walk contacts;
-- one or two passing poses;
-- listen/look reaction;
-- speak/point reaction;
-- surprise, concern, or setback;
-- story-specific action;
-- calm final pose.
-
-Use more poses only when a visible state change needs them.
-
-For travel, use a normalized six-frame gait cycle: `weight-bearing → lift → contact → transition → opposite contact → settle`. Keep every frame on one canvas with the same character center, foot baseline, transparent padding, scale, and facing direction. A parent world-space track may carry the cycle across the floor; translation-only tweens do not count as walking.
+Reject a gait whose travel vector conflicts with head, shoulders, chest, feet, or gaze. Regenerate it instead of rotating, mirroring, or force-fitting it. Permit mirroring only after documenting that costume, hair, held objects, text, handedness, light, contact, and adjacent-shot continuity remain valid.
 
 When the contact problem is harder than the motion problem, step back from a cutout atlas and generate a full-scene multi-frame state instead. Bed + body + bedding + canopy, lamp + flame, and similar causal units should remain together when separating them would make perspective or contact ambiguous.
 
@@ -37,6 +28,6 @@ Require every ensemble cell to contain the exact actor count, one continuous sha
 
 ## Atlas production
 
-Prefer a 2×2 or 3×2 grid on a high-purity chroma background when transparent generation is unreliable. Keep each pose inside one cell; disconnected held items must remain inside that cell.
+Prefer a 2×2 or 3×2 grid on a high-purity chroma background when transparent generation is unreliable. Build it inside the active shot directory and record the shot ID, identity reference, camera side, screen direction, facing, light direction, and required action. Keep each pose inside one cell; disconnected held items must remain inside that cell.
 
 After keying and splitting, audit alpha, edge contact, empty cells, crop safety, and accidental baked effects. Do not patch a missing head with an unrelated generated head unless identity and neck contact can be proven; regenerate the pose first.

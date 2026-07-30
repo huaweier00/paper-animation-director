@@ -22,30 +22,38 @@
     {
       "id": "bird",
       "description": "A small ochre paper-cut bird with a round body and indigo wing tips.",
-      "costume": "",
-      "identity_reference": "assets/references/bird.png",
-      "required_poses": [
-        "neutral",
-        "hop-left",
-        "hop-right",
-        "carry-seed",
-        "ask-for-help",
-        "final"
-      ]
+      "identity_reference": {
+        "path": "assets/references/characters/bird-front.png",
+        "view": "front",
+        "framing": "full-body",
+        "pose": "neutral",
+        "purpose": "identity-consistency-reference-only",
+        "animation_use": false,
+        "approved": true
+      },
+      "stable_traits": {
+        "silhouette": "round ochre body with short beak",
+        "palette": ["ochre", "indigo", "warm cream"],
+        "forbidden_changes": ["no long tail", "no costume", "no facial redesign"]
+      }
     },
     {
       "id": "helper-bird",
       "description": "A slightly larger jade-green paper-cut bird with a long tail and warm cream chest.",
-      "costume": "",
-      "identity_reference": "assets/references/helper-bird.png",
-      "required_poses": [
-        "neutral",
-        "fly-in",
-        "grip-leaf",
-        "carry-leaf",
-        "place-leaf",
-        "final"
-      ]
+      "identity_reference": {
+        "path": "assets/references/characters/helper-bird-front.png",
+        "view": "front",
+        "framing": "full-body",
+        "pose": "neutral",
+        "purpose": "identity-consistency-reference-only",
+        "animation_use": false,
+        "approved": true
+      },
+      "stable_traits": {
+        "silhouette": "slender jade body with long tail",
+        "palette": ["jade", "warm cream", "dark brown"],
+        "forbidden_changes": ["no round tail", "no costume", "no facial redesign"]
+      }
     }
   ],
   "scenes": [
@@ -53,10 +61,97 @@
       "id": "scene-01-find-seed",
       "title": "发现种子",
       "title_en": "The Seed",
-      "narrative_goal": "The bird notices a seed while storm clouds approach.",
+      "narrative_goal": "The bird travels from screen left to screen right, notices a seed, and lifts it.",
       "narration": "暴雨来临前，小鸟在路边发现了一颗种子。",
       "duration": 6,
       "duration_policy": "voice-plus-action",
+      "production_status": "space-approved",
+      "spatial_contract": {
+        "coordinate_system": "normalized-screen",
+        "camera": {
+          "view": "side",
+          "axis": "locked",
+          "floor_line": 0.82,
+          "light_direction": "upper-left-to-lower-right",
+          "entry_side": "left",
+          "exit_side": "right"
+        },
+        "surfaces": [
+          {
+            "id": "ground",
+            "type": "ground",
+            "zone": [0.0, 0.70, 1.0, 1.0],
+            "supports_actions": ["stand-on", "hop-on"]
+          }
+        ],
+        "props": [
+          {
+            "id": "seed",
+            "type": "movable-prop",
+            "zone": [0.68, 0.72, 0.72, 0.78],
+            "supports_actions": ["pick-up"]
+          }
+        ],
+        "obstacles": [],
+        "occluders": [],
+        "reserved_zones": [
+          {
+            "id": "bird-corridor",
+            "zone": [0.08, 0.46, 0.78, 0.88],
+            "purpose": "actor-motion",
+            "must_remain_clear": true
+          }
+        ],
+        "actors": [
+          {
+            "id": "bird",
+            "start_zone": [0.10, 0.54, 0.22, 0.84],
+            "end_zone": [0.58, 0.52, 0.72, 0.84],
+            "travel": {
+              "direction": "left-to-right",
+              "facing": "right",
+              "locomotion": "forward-hop",
+              "path_zone": "bird-corridor",
+              "minimum_clearance_actor_widths": 1.25
+            },
+            "action": {
+              "type": "pick-up",
+              "target": "seed",
+              "contact": "beak-to-seed",
+              "proof": "The seed leaves the ground and remains visibly controlled by the bird."
+            }
+          }
+        ]
+      },
+      "asset_plan": {
+        "generation_policy": "shot-just-in-time",
+        "space_approved": true,
+        "assets": [
+          {
+            "id": "scene-01-background",
+            "kind": "background",
+            "status": "planned"
+          },
+          {
+            "id": "bird-hop-right",
+            "kind": "character-pose-atlas",
+            "status": "planned",
+            "actor_id": "bird",
+            "identity_reference": "bird",
+            "screen_direction": "left-to-right",
+            "facing": "right",
+            "action": "pick-up",
+            "target": "seed"
+          }
+        ]
+      },
+      "review_contract": {
+        "protected_regions": ["head", "face", "hands", "feet", "action-contact"],
+        "edge_clipping": "reject",
+        "unplanned_occlusion": "reject",
+        "review_times": [0.0, 3.0, 4.2, 5.95],
+        "intentional_occlusions": []
+      },
       "layers": [
         "background",
         "far-atmosphere",
@@ -87,10 +182,121 @@
       "id": "scene-02-shelter",
       "title": "一起筑巢",
       "title_en": "Shelter",
-      "narrative_goal": "Two birds cooperate to cover the seed before rain.",
+      "narrative_goal": "Two birds carry one leaf from screen right to screen left and cover the nest.",
       "narration": "它叫来伙伴，一起把种子藏进温暖的巢里。",
       "duration": 6,
       "duration_policy": "voice-plus-action",
+      "production_status": "space-approved",
+      "spatial_contract": {
+        "coordinate_system": "normalized-screen",
+        "camera": {
+          "view": "side",
+          "axis": "locked",
+          "floor_line": 0.82,
+          "light_direction": "upper-left-to-lower-right",
+          "entry_side": "right",
+          "exit_side": "left"
+        },
+        "surfaces": [
+          {
+            "id": "ground",
+            "type": "ground",
+            "zone": [0.0, 0.70, 1.0, 1.0],
+            "supports_actions": ["stand-on", "hop-on"]
+          }
+        ],
+        "props": [
+          {
+            "id": "nest",
+            "type": "container",
+            "zone": [0.16, 0.66, 0.34, 0.82],
+            "supports_actions": ["cover"]
+          },
+          {
+            "id": "shared-leaf",
+            "type": "shared-load",
+            "zone": [0.62, 0.44, 0.84, 0.62],
+            "supports_actions": ["carry", "cover"]
+          }
+        ],
+        "obstacles": [],
+        "occluders": [],
+        "reserved_zones": [
+          {
+            "id": "ensemble-corridor",
+            "zone": [0.12, 0.38, 0.90, 0.90],
+            "purpose": "shared-load-motion",
+            "must_remain_clear": true
+          }
+        ],
+        "actors": [
+          {
+            "id": "bird",
+            "start_zone": [0.72, 0.52, 0.82, 0.80],
+            "end_zone": [0.30, 0.52, 0.40, 0.80],
+            "travel": {
+              "direction": "right-to-left",
+              "facing": "left",
+              "locomotion": "shared-load-hop",
+              "path_zone": "ensemble-corridor",
+              "minimum_clearance_actor_widths": 2.25
+            },
+            "action": {
+              "type": "cover",
+              "target": "nest",
+              "contact": "beak-to-shared-leaf",
+              "proof": "The leaf reaches and visibly covers the nest."
+            }
+          },
+          {
+            "id": "helper-bird",
+            "start_zone": [0.82, 0.48, 0.90, 0.80],
+            "end_zone": [0.40, 0.48, 0.50, 0.80],
+            "travel": {
+              "direction": "right-to-left",
+              "facing": "left",
+              "locomotion": "shared-load-hop",
+              "path_zone": "ensemble-corridor",
+              "minimum_clearance_actor_widths": 2.25
+            },
+            "action": {
+              "type": "cover",
+              "target": "nest",
+              "contact": "beak-to-shared-leaf",
+              "proof": "Both birds stay attached to one leaf until it covers the nest."
+            }
+          }
+        ]
+      },
+      "asset_plan": {
+        "generation_policy": "shot-just-in-time",
+        "space_approved": true,
+        "assets": [
+          {
+            "id": "scene-02-background",
+            "kind": "background",
+            "status": "planned"
+          },
+          {
+            "id": "shared-leaf-ensemble-left",
+            "kind": "connected-ensemble-atlas",
+            "status": "planned",
+            "actor_ids": ["bird", "helper-bird"],
+            "identity_references": ["bird", "helper-bird"],
+            "screen_direction": "right-to-left",
+            "facing": "left",
+            "action": "cover",
+            "target": "nest"
+          }
+        ]
+      },
+      "review_contract": {
+        "protected_regions": ["head", "face", "hands", "feet", "action-contact"],
+        "edge_clipping": "reject",
+        "unplanned_occlusion": "reject",
+        "review_times": [0.0, 3.0, 4.8, 5.95],
+        "intentional_occlusions": []
+      },
       "ensemble_actions": [
         {
           "id": "shared-leaf",

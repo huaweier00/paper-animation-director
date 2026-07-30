@@ -46,13 +46,14 @@ def main() -> None:
     (output / "compositions" / "scene-template.html").unlink(missing_ok=True)
     shutil.copy2(manifest, output / "story-manifest.json")
     for relative in (
-        "assets/references",
+        "assets/references/characters",
         "assets/source-atlases",
         "assets/characters",
         "assets/backgrounds",
         "assets/props",
         "assets/effects",
         "assets/audio",
+        "shots",
         "snapshots",
         "renders",
     ):
@@ -64,7 +65,7 @@ def main() -> None:
         check=True,
     )
     print(f"Initialized {output}")
-    print("Next: add identity references, generate the hardest benchmark scene, then run npm run check.")
+    print("Next: approve frontal reference-only identities, then generate the hardest benchmark shot only after its spatial contract passes.")
 
 
 if __name__ == "__main__":

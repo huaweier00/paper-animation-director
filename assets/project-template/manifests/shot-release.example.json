@@ -1,0 +1,52 @@
+{
+  "shot_id": "scene-01",
+  "decision": "approved",
+  "rendered_mp4": "renders/scene-01-approved.mp4",
+  "contact_required": true,
+  "audio_required": true,
+  "checks": {
+    "muted_semantics": "pass",
+    "required_nouns": "pass",
+    "prop_realism": "pass",
+    "support_grounding": "pass",
+    "identity_continuity": "pass",
+    "voice_only": "pass",
+    "combined_picture_sound_subtitles": "pass",
+    "caption_safety": "pass",
+    "rendered_mp4_frames": "pass",
+    "technical_decode": "pass"
+  },
+  "proof_frames": {
+    "first": "reviews/scene-01-first.png",
+    "midpoint": "reviews/scene-01-midpoint.png",
+    "contact": "reviews/scene-01-contact.png",
+    "proof": "reviews/scene-01-proof.png",
+    "final": "reviews/scene-01-final.png"
+  },
+  "critical_props": [
+    {
+      "id": "example-prop",
+      "class": "real-world object class",
+      "silhouette": "recognizable construction and outline",
+      "scale_reference": "compared with a hand or body",
+      "material_cues": "thickness, edge, texture, highlight",
+      "support_or_attachment": "named hand, ground, wall, root, string, or container",
+      "state_sequence": ["initial", "action", "result"],
+      "proof_time": 4.2,
+      "forbidden_substitutions": ["abstract line", "generic icon", "unexplained mound"],
+      "recognizability_check": "pass"
+    }
+  ],
+  "expected_lines": [
+    {
+      "id": "scene-01-narrator-01",
+      "speaker": "narrator",
+      "text": "已批准的旁白或对白。",
+      "source": "assets/audio/scene-01-narrator-01.wav",
+      "start": 0.4,
+      "measured_duration": 3.8,
+      "audible_check": "pass"
+    }
+  ],
+  "review_notes": "静音、现实物件、地面接触、声音、字幕和技术检查均通过。"
+}

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Extract proof frames from a video and assemble a labeled review contact sheet."""
+"""Extract proof, identity, and occlusion frames into a labeled review contact sheet."""
 
 from __future__ import annotations
 
@@ -20,6 +20,16 @@ def manifest_times(path: Path) -> list[float]:
     scene_start = 0.0
     for scene in data.get("scenes", []):
         duration = float(scene.get("duration", 0))
+        review_contract = scene.get("review_contract", {})
+        for review_time in review_contract.get("review_times", []):
+            if isinstance(review_time, (int, float)):
+                times.append(scene_start + float(review_time))
+        for occlusion in review_contract.get("intentional_occlusions", []):
+            if not isinstance(occlusion, dict):
+                continue
+            for key in ("start", "maximum_time", "end", "identity_proof_time"):
+                if isinstance(occlusion.get(key), (int, float)):
+                    times.append(scene_start + float(occlusion[key]))
         for event in scene.get("events", []):
             if isinstance(event.get("proof_time"), (int, float)):
                 times.append(scene_start + float(event["proof_time"]))
@@ -28,7 +38,7 @@ def manifest_times(path: Path) -> list[float]:
         scene_start += duration
     if scene_start > 0:
         times.extend([0.0, max(0, scene_start - 0.05)])
-    return times
+    return sorted(set(round(max(0, value), 3) for value in times))
 
 
 def parse_times(value: str) -> list[float]:

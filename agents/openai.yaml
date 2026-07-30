@@ -1,4 +1,4 @@
 interface:
   display_name: "纸片动画导演"
-  short_description: "以空间与史料为先，把故事制作成连贯、可审片、可交付的高质量纸片动画"
-  default_prompt: "Use $paper-animation-director to turn my story into a historically grounded, spatially credible, polished multi-layer paper-cut animation."
+  short_description: "逐镜制作柔和工笔纸片动画，校验现实物件、声音和交付"
+  default_prompt: "Use $paper-animation-director to build a soft gongbi paper animation one shot at a time, validating realistic props, grounding, narration, and delivery before release."

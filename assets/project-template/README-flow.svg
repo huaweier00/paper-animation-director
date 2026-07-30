@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="260" viewBox="0 0 1200 260" role="img" aria-labelledby="title desc">
-  <title id="title">Paper animation director workflow</title>
-  <desc id="desc">Story and evidence flow through spatial planning, complete assets, benchmark animation, voice timing, proof review, and delivery.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="340" viewBox="0 0 1200 340" role="img" aria-labelledby="title desc">
+  <title id="title">纸片动画导演逐镜生产流程</title>
+  <desc id="desc">故事与来源、声音与时长、身份参考、镜头空间、最小资产、动画成片、三次审片和逐镜放行构成闭环；全部镜头完成后进入最终交付。</desc>
   <defs>
     <linearGradient id="paper" x1="0" x2="1" y1="0" y2="1">
       <stop offset="0" stop-color="#f7f0de"/>
@@ -13,18 +13,27 @@
       <path d="M0,0 L0,6 L9,3 z" fill="#96633e"/>
     </marker>
   </defs>
-  <rect width="1200" height="260" fill="#f4ead6"/>
-  <path d="M0 215 C190 190 330 232 520 211 S900 230 1200 202" fill="none" stroke="#d0ad7b" stroke-width="2" opacity=".6"/>
+  <rect width="1200" height="340" fill="#f4ead6"/>
+  <path d="M0 300 C190 278 340 322 535 298 S905 318 1200 286" fill="none" stroke="#d0ad7b" stroke-width="2" opacity=".6"/>
   <g font-family="-apple-system,BlinkMacSystemFont,'Noto Sans SC','Microsoft YaHei',sans-serif" text-anchor="middle" filter="url(#shadow)">
-    <g transform="translate(32 72)"><rect width="145" height="92" rx="12" fill="url(#paper)" stroke="#8b5d3b" stroke-width="2"/><text x="72.5" y="36" font-size="17" fill="#4c3024">剧本与史料</text><text x="72.5" y="62" font-size="12" fill="#765441">先问“为什么”</text></g>
-    <g transform="translate(207 72)"><rect width="145" height="92" rx="12" fill="url(#paper)" stroke="#8b5d3b" stroke-width="2"/><text x="72.5" y="36" font-size="17" fill="#4c3024">空间平面</text><text x="72.5" y="62" font-size="12" fill="#765441">再问“在哪里”</text></g>
-    <g transform="translate(382 72)"><rect width="145" height="92" rx="12" fill="url(#paper)" stroke="#8b5d3b" stroke-width="2"/><text x="72.5" y="36" font-size="17" fill="#4c3024">完整资产</text><text x="72.5" y="62" font-size="12" fill="#765441">不乱拆零件</text></g>
-    <g transform="translate(557 72)"><rect width="145" height="92" rx="12" fill="url(#paper)" stroke="#8b5d3b" stroke-width="2"/><text x="72.5" y="36" font-size="17" fill="#4c3024">动作基准</text><text x="72.5" y="62" font-size="12" fill="#765441">先证明再扩展</text></g>
-    <g transform="translate(732 72)"><rect width="145" height="92" rx="12" fill="url(#paper)" stroke="#8b5d3b" stroke-width="2"/><text x="72.5" y="36" font-size="17" fill="#4c3024">声音字幕</text><text x="72.5" y="62" font-size="12" fill="#765441">归属与节拍</text></g>
-    <g transform="translate(907 72)"><rect width="145" height="92" rx="12" fill="url(#paper)" stroke="#8b5d3b" stroke-width="2"/><text x="72.5" y="36" font-size="17" fill="#4c3024">三次审片</text><text x="72.5" y="62" font-size="12" fill="#765441">静音 / 只听 / 合看</text></g>
+    <g transform="translate(20 58)"><rect width="125" height="88" rx="12" fill="url(#paper)" stroke="#8b5d3b" stroke-width="2"/><text x="62.5" y="34" font-size="15" fill="#4c3024">故事与来源</text><text x="62.5" y="59" font-size="11" fill="#765441">结尾也先锁定</text></g>
+    <g transform="translate(165 58)"><rect width="125" height="88" rx="12" fill="url(#paper)" stroke="#8b5d3b" stroke-width="2"/><text x="62.5" y="34" font-size="15" fill="#4c3024">声音与时长</text><text x="62.5" y="59" font-size="11" fill="#765441">台词进入账本</text></g>
+    <g transform="translate(310 58)"><rect width="125" height="88" rx="12" fill="url(#paper)" stroke="#8b5d3b" stroke-width="2"/><text x="62.5" y="34" font-size="15" fill="#4c3024">身份参考</text><text x="62.5" y="59" font-size="11" fill="#765441">只参考不入镜</text></g>
+    <g transform="translate(455 58)"><rect width="125" height="88" rx="12" fill="url(#paper)" stroke="#8b5d3b" stroke-width="2"/><text x="62.5" y="34" font-size="15" fill="#4c3024">镜头空间</text><text x="62.5" y="59" font-size="11" fill="#765441">方向目标可达</text></g>
+    <g transform="translate(600 58)"><rect width="125" height="88" rx="12" fill="url(#paper)" stroke="#8b5d3b" stroke-width="2"/><text x="62.5" y="34" font-size="15" fill="#4c3024">最小资产</text><text x="62.5" y="59" font-size="11" fill="#765441">当前镜头专用</text></g>
+    <g transform="translate(745 58)"><rect width="125" height="88" rx="12" fill="url(#paper)" stroke="#8b5d3b" stroke-width="2"/><text x="62.5" y="34" font-size="15" fill="#4c3024">动画与成片</text><text x="62.5" y="59" font-size="11" fill="#765441">确定性时间轴</text></g>
+    <g transform="translate(890 58)"><rect width="125" height="88" rx="12" fill="url(#paper)" stroke="#8b5d3b" stroke-width="2"/><text x="62.5" y="34" font-size="15" fill="#4c3024">三次审片</text><text x="62.5" y="59" font-size="11" fill="#765441">静音／只听／合看</text></g>
+    <g transform="translate(1035 58)"><rect width="125" height="88" rx="12" fill="url(#paper)" stroke="#8b5d3b" stroke-width="2"/><text x="62.5" y="34" font-size="15" fill="#4c3024">逐镜放行</text><text x="62.5" y="59" font-size="11" fill="#765441">失败就锁下一镜</text></g>
+    <g transform="translate(965 242)"><rect width="215" height="66" rx="14" fill="#ead6ad" stroke="#8b5d3b" stroke-width="2"/><text x="107.5" y="27" font-size="15" fill="#4c3024">全片交付</text><text x="107.5" y="49" font-size="11" fill="#765441">母版／水印版／社交平台版</text></g>
   </g>
-  <g stroke="#96633e" stroke-width="3" marker-end="url(#arrow)">
-    <path d="M179 118 H201"/><path d="M354 118 H376"/><path d="M529 118 H551"/><path d="M704 118 H726"/><path d="M879 118 H901"/>
+  <g fill="none" stroke="#96633e" stroke-width="3" marker-end="url(#arrow)">
+    <path d="M147 102 H159"/><path d="M292 102 H304"/><path d="M437 102 H449"/><path d="M582 102 H594"/><path d="M727 102 H739"/><path d="M872 102 H884"/><path d="M1017 102 H1029"/>
+    <path d="M1058 148 V196 H518 V152"/>
+    <path d="M1098 148 V236"/>
   </g>
-  <text x="600" y="224" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="17" fill="#5f3b2b">空间成立 → 资产适配 → 动作可读 → 声音归属 → 渲染交付</text>
+  <g font-family="-apple-system,BlinkMacSystemFont,'Noto Sans SC','Microsoft YaHei',sans-serif" fill="#5f3b2b">
+    <text x="786" y="188" text-anchor="middle" font-size="14">通过且还有下一镜</text>
+    <text x="1082" y="220" text-anchor="end" font-size="13">全部镜头通过</text>
+    <text x="32" y="286" font-size="16">当前镜头未放行，不开始下一镜。</text>
+  </g>
 </svg>

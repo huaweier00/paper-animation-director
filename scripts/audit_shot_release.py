@@ -16,6 +16,7 @@ REQUIRED_CHECKS = (
     "prop_realism",
     "support_grounding",
     "identity_continuity",
+    "animation_responsibility",
     "voice_only",
     "combined_picture_sound_subtitles",
     "caption_safety",
@@ -86,6 +87,16 @@ def validate(
         errors.append("rendered_mp4: provide the rendered review MP4")
     elif check_paths and not rendered.is_file():
         errors.append(f"rendered_mp4: file does not exist: {rendered}")
+
+    animation_decision = resolve_path(base, data.get("animation_decision"))
+    if animation_decision is None:
+        errors.append(
+            "animation_decision: point to the reviewed animation-decision.json"
+        )
+    elif check_paths and not animation_decision.is_file():
+        errors.append(
+            f"animation_decision: file does not exist: {animation_decision}"
+        )
 
     checks = data.get("checks")
     if not isinstance(checks, dict):

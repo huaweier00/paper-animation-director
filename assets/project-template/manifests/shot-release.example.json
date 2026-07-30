@@ -2,6 +2,7 @@
   "shot_id": "scene-01",
   "decision": "approved",
   "rendered_mp4": "renders/scene-01-approved.mp4",
+  "animation_decision": "animation-decision.json",
   "contact_required": true,
   "audio_required": true,
   "checks": {
@@ -10,6 +11,7 @@
     "prop_realism": "pass",
     "support_grounding": "pass",
     "identity_continuity": "pass",
+    "animation_responsibility": "pass",
     "voice_only": "pass",
     "combined_picture_sound_subtitles": "pass",
     "caption_safety": "pass",
@@ -48,5 +50,5 @@
       "audible_check": "pass"
     }
   ],
-  "review_notes": "静音、现实物件、地面接触、声音、字幕和技术检查均通过。"
+  "review_notes": "镜头完成了 animation-decision.json 中声明的叙事职责；静音、现实物件、地面接触、声音、字幕和技术检查均通过。"
 }

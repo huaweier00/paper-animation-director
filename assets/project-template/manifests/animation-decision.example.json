@@ -1,0 +1,40 @@
+{
+  "shot_id": "scene-01",
+  "shot_function": "state the specific dramatic or informational function of this shot",
+  "narrative_responsibility": "describe what the audience must perceive by the end of the shot",
+  "responsibility_requires_visible_action": true,
+  "required_visible_changes": [
+    "name the visible story-state change needed for this particular shot"
+  ],
+  "evidence_is_presentation_only": false,
+  "intentional_ellipsis_or_offscreen_action": false,
+  "ellipsis_rationale": "",
+  "action_carried_elsewhere": [],
+  "architecture_choice": "describe the chosen combination of integrated scene, paper actors, props, effects, masks, or deliberate stillness",
+  "merged_elements": [
+    "name elements kept together and explain the contact, perspective, identity, light, or stillness reason"
+  ],
+  "independent_elements": [
+    "name only elements whose independent change benefits the shot"
+  ],
+  "camera_and_presentation_role": "explain what camera, text, focus, grain, or graphic motion contributes without mislabeling it as physical action",
+  "why_this_choice": "explain why this architecture best serves the shot's responsibility and style",
+  "alternatives_considered": [
+    "record a simpler or different construction considered and why it was not chosen"
+  ],
+  "risk_flags": [
+    "record shot-specific contact, support, scale, identity, direction, occlusion, or pacing risks"
+  ],
+  "proof_plan": [
+    "describe the rendered evidence that will determine whether the shot worked"
+  ],
+  "rendered_review": {
+    "mp4": "renders/scene-01-review.mp4",
+    "observed_visible_changes": [
+      "record what actually changed, or leave this empty when intentional stillness fulfils the shot"
+    ],
+    "observed_evidence_is_presentation_only": false,
+    "responsibility_fulfilled": true,
+    "review_notes": "Explain why the rendered shot fulfils its declared responsibility."
+  }
+}

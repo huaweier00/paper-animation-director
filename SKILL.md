@@ -25,18 +25,18 @@ For a soft hand-painted, gongbi-style fable, cultural story, or social-platform 
 2. Approve exactly one neutral frontal identity reference for each recurring character. Treat it as generation conditioning only: never key, animate, place, or deliver it as a shot asset.
 3. Generate no background, pose, gait, prop, effect, ensemble, or full-scene plate before the active shot has an approved semantic event and spatial contract. Lock global art direction early; design concrete assets just in time per shot.
 4. Use complete connected character poses by default. Never reconstruct a hero from independently generated head, torso, arms, and legs when seams will be visible.
-5. Generate a connected ensemble pose or state atlas for shared-load actions such as carrying, lifting, embracing, rescuing, or handing off a heavy object.
-6. Separate only elements that need independent motion: foreground, atmosphere, props, rope, water, fire, smoke, shadows, particles, captions, and watermark.
-7. Express every important event as `cause → action → propagation → result`, with a proof frame that remains understandable when audio is muted.
+5. For shared-load or contact-sensitive actions such as carrying, lifting, embracing, rescuing, or handing off a heavy object, use a connected ensemble, integrated full-scene construction, or another approach that preserves believable contact and load. Do not separate participants by default.
+6. Choose separation from the shot’s intended visible changes and physical risks. Keep contact-sensitive subjects integrated when separation would damage anatomy, perspective, light, or performance; separate a foreground, actor, prop, rope, water, fire, smoke, shadow, particle, caption, or watermark when independent control materially benefits the shot.
+7. For each plot-bearing event the shot is responsible for showing, identify the relevant parts of `cause → action → propagation → result` and a muted visual proof. Do not force every contemplative, atmospheric, reaction, or elliptical shot through all four stages.
 8. Lock narration before final timing. Use measured audio duration; do not stretch voice or pad scenes to an arbitrary target.
 9. Do not use whole-frame image-to-video as the default animation engine. Keep story-critical characters, captions, and props on deterministic, seek-safe timelines.
-10. Do not render a full film before the hardest 8–15 second benchmark shot passes continuity, physics, timing, and subtitle review.
+10. Do not render a full film before a representative high-risk benchmark passage—long enough to expose the project’s real continuity, physics, timing, performance, and subtitle risks—passes review.
 11. Draw and approve a top-down plan plus a camera-facing plan before generating any asset for a shot. Mark floor line, axes, actor start/end zones, facing, paths, clearances, obstacles, semantic targets, occlusions, and subtitle-safe zones.
 12. Reject a shot whose action target is semantically wrong or unreachable. A line saying “write on the wall” must identify a writable wall target; a nearby window is not an acceptable substitute.
 13. Treat historical accuracy as an adopt/reject contract: every period claim needs a source or explicit rationale, and every tempting later-period prop, floor, roof, stage, costume, or furniture choice must be rejected or justified.
-14. Prefer a complete full-scene plate when bed, bedding, canopy, character, furniture, or light contact would be fragile as separate layers. Prefer independent complete characters only when they must travel, react, or change pose.
+14. Consider a complete full-scene construction when bed, bedding, canopy, character, furniture, perspective, or light contact would be fragile as separate layers. Consider independent complete characters when travel, reaction, pose, occlusion, or timing needs separate control. Choose between them from the shot responsibility and document the tradeoff; neither is the automatic default.
 15. A lamp and its flame are one causal unit by default. A character is one connected body by default. A shared lift, restraint, carry, handoff, or embrace is one connected ensemble by default.
-16. Never simulate walking with translation-only tweens. Generate a shot-specific normalized complete-body gait cycle with one facing direction, shared canvas, center, and feet baseline; animate the cycle on a world-space parent track.
+16. When the shot is responsible for making physical walking read, do not rely on translation-only tweens. Use a shot- and style-appropriate locomotion solution—such as a normalized complete-body gait cycle, stepped replacement poses, or a deliberately stylized equivalent—with coherent facing, body direction, feet/support behavior, and world-space travel.
 17. Make travel vector, head, shoulders, chest, feet, and gaze agree. Treat a left/right mismatch as a failed asset, not a styling issue. Do not mirror or force-fit it unless a documented symmetry, handedness, text, light, contact, and continuity audit explicitly permits mirroring.
 18. Do not reuse an existing asset merely because it is available. It is only a candidate and must pass the active shot’s space, scale, period, lighting, orientation, target, contact, and action contract; otherwise regenerate it.
 19. Protect the complete head and readable face at all required review times. Reject any unplanned frame edge, `overflow`, crop, mask, matte, foreground, or layer boundary that slices through the scalp, facial contour, eyes, nose, or mouth and creates a half-face or amputated-head effect.
@@ -44,13 +44,20 @@ For a soft hand-painted, gongbi-style fable, cultural story, or social-platform 
 21. Assign every spoken line to a speaker and an audio stem. Audition for accent as well as tone; reject dialect or identity drift, keep narrator and character dialogue from overlapping, and default Chinese captions to bottom-center safe placement.
 22. Every shot must pass three reads: muted visual proof, voice-only speaker/timing proof, and combined picture/sound/subtitle proof. A Studio screenshot is not delivery evidence; review frames from the rendered MP4.
 23. Treat “paper animation” as a layering and motion method, not a mandatory surface material. When the user requests soft gongbi, silk-like painting, or restrained hand-painted color, reject heavy fibers, torn white rims, embossed relief, cardboard thickness, curled edges, and paper-pulp grain.
-24. Give every narrated or story-critical object a recognizability contract: real-world class, silhouette, proportion, material, attachment/support, state changes, and proof time. Reject arrows that become direction lines, grass that floats without roots, gold that reads as an abstract pile, or notices that read as placeholder icons.
+24. Give every narrated or story-critical object a recognizability contract: real-world class, silhouette, proportion, material, attachment/support, applicable state changes, and proof. Reject arrows that become direction lines, grass that floats without roots, gold that reads as an abstract pile, or notices that read as placeholder icons.
 25. Keep every standing actor, animal, wheel, vehicle, and placed prop attached to a declared support surface. Review feet, hooves, wheels, shadows, overlap, and scale at the first, midpoint, proof, and final frames. A guide “in front of the procession” must stand on the road, not above the horse or scenery.
-26. Treat commands as state transitions, not omitted narration. When a ruler orders weapons lowered, preserve `aimed → command/gesture → visibly lowered → safe final state` in picture and sound.
+26. When a shot is responsible for showing the effect of a command, treat it as a state transition rather than omitted narration. For example, an order to lower weapons may use `aimed → command/gesture → visibly lowered → safe final state`, or another staging that makes compliance unmistakable. If the command is intentionally off-screen or elliptical, make its consequence legible elsewhere.
 27. Release exactly one shot at a time. Do not generate, animate, or approve the next shot until the current rendered MP4 passes semantic, realism, spatial, identity, audio, caption, and technical review. A visually attractive draft is not an approval.
 28. Design the ending before production. Require consequence, cultural/source closure when relevant, and a concise transferable lesson. Do not let the film end on an information card that explains provenance but fails to complete the emotional or educational argument.
 29. Preserve a voice ledger and dry voice stems independently of music. Before delivery, prove every expected line exists at its locked time and speaker. If narration is lost from a music-backed render, restore the approved stems onto the unchanged timeline rather than regenerating performances or retiming the film.
 30. Preserve the archival master, watermarked master, and compressed social derivative as separate files. Verify the social file by full decode, technical probing, rendered-frame review, and a VMAF floor normally set to 95; never overwrite the master.
+31. Do not impose universal quotas for shot duration, layer count, pose count, state count, camera movement, or cut frequency. These are directing decisions. Choose them from the shot’s narrative responsibility, physical relationships, rhythm, visual style, and production risk.
+32. Before generating assets, declare what the shot is responsible for making the audience perceive and what visible change, if any, is needed to fulfil that responsibility. A still or nearly still tableau may be exactly right for an establishing view, revelation, dread, reflection, pause, icon-like illustration, or deliberate off-screen/elliptical action.
+33. Do not claim that a plot-bearing visible action has been proved when the rendered evidence is only a whole-frame transform, camera move, text change, or decorative motion. Those devices are valid directing tools; they are insufficient only when the shot itself is responsible for showing an action they do not show.
+34. Choose the animation architecture shot by shot: independently moving paper actors or props, a connected ensemble, a full-scene state change, a single tableau with selective local motion, a deliberate still, or a justified combination. Preserve contact and perspective where separation would damage them; separate elements only where independent change benefits the shot.
+35. Compare later shots with the benchmark by comparable narrative demand, not by raw complexity. A quieter shot may intentionally use fewer layers or less motion. Flag only an unexplained downgrade where a shot with similar action, contact, or continuity demands no longer provides equivalent clarity.
+36. Split or combine shots according to clarity, continuity, rhythm, and staging. Split when one composition cannot carry its responsibilities without flattening the event; keep a longer continuous shot when sustained space, stillness, or performance is the stronger choice.
+37. Record the directing choice in `animation-decision.json` and review the rendered MP4 against that declared choice. The review is a contradiction check, not a formula for art direction.
 
 ## Workflow
 
@@ -62,7 +69,7 @@ Read `references/production-retrospective.md` before designing a new historical,
 
 Read `references/story-and-beat-design.md` and the retrospective’s “visible event” rules. Convert the source into `story-manifest.json`; start from `assets/project-template/manifests/story-manifest.example.json`. Lock the platform, aspect ratio, first-three-second hook, ending argument, and source/copyright boundary before generation.
 
-Require each scene to contain a narrative goal and at least one event with `cause`, `action`, `result`, and `proof`. Add `propagation` whenever the result is not instantaneous. Validate before generating assets:
+Require each scene to contain a narrative goal. For plot-bearing events, record the applicable parts of `cause`, `action`, `propagation`, `result`, and `proof`; a non-applicable or deliberately omitted part needs a directing rationale rather than invented activity. Validate before generating assets:
 
 ```bash
 python3 scripts/validate_story_manifest.py story-manifest.json --strict
@@ -72,7 +79,7 @@ Obtain approval for the story action table before expensive generation.
 
 ### 2. Lock voice, speaker ownership, and timing
 
-Read `references/voice-timing-and-subtitles.md`. Audition at least 3–5 voices per role with one representative paragraph that tests calm narration, emotional dialogue, sentence endings, and accent. When the user requests Fish Audio, search its public model market broadly, retain model IDs and public URLs, shortlist multiple candidates, render same-line tests, and reject celebrity imitation, dialect drift, advertising cadence, and unclear diction. Assign every line to a speaker before mixing, and generate the selected voice by scene at natural speed unless the user requests otherwise. Preserve a voice ledger and original dry stems. Never store credentials in the project or skill.
+Read `references/voice-timing-and-subtitles.md`. Audition multiple voices per role—typically 3–5, or more when the market is inconsistent—with one representative paragraph that tests calm narration, emotional dialogue, sentence endings, and accent. When the user requests Fish Audio, search its public model market broadly, retain model IDs and public URLs, shortlist multiple candidates, render same-line tests, and reject celebrity imitation, dialect drift, advertising cadence, and unclear diction. Assign every line to a speaker before mixing, and generate the selected voice by scene at natural speed unless the user requests otherwise. Preserve a voice ledger and original dry stems. Never store credentials in the project or skill.
 
 Probe delivered audio:
 
@@ -90,7 +97,7 @@ Do not generate side views, gait cycles, expressions, action poses, chroma atlas
 
 ### 4. Plan and generate one shot at a time
 
-Treat each `scene` entry in the manifest as one production shot unless the project explicitly subdivides it. Read `references/shot-spatial-contract.md`, then write and approve the shot’s semantic event, top-down plan, camera-facing plan, and `spatial_contract`.
+Treat each `scene` entry in the manifest as a story unit, not an automatic one-shot instruction. Decide whether it should remain one continuous shot or become several shots from narrative clarity, spatial continuity, performance, and rhythm. Read `references/shot-spatial-contract.md`, then write and approve the chosen shot’s semantic event, top-down plan, camera-facing plan, and `spatial_contract`.
 
 Before generation, prove:
 
@@ -101,7 +108,15 @@ Before generation, prove:
 - the background reserves the path, target, proof frame, head/face-safe region, and subtitle-safe zones;
 - `review_contract` protects head and face and declares every intentional occlusion.
 
-Only after `asset_plan.space_approved: true`, list the minimum assets required by that shot and generate them using the approved frontal identity reference. For every critical prop, write its real-world class, silhouette, scale reference, material cues, support/attachment points, state sequence, and proof frame before generation. Generate coupled actors plus a shared load as one connected ensemble. Generate a full-scene multi-frame state when contact or perspective is fragile. Keep backgrounds free of characters, text, watermarks, and story-critical effects unless the approved full-scene decision requires them.
+Only after `asset_plan.space_approved: true`, list the assets justified by that shot and generate them using the approved frontal identity reference. For every critical prop, write its real-world class, silhouette, scale reference, material cues, support/attachment points, intended change when applicable, and proof frame before generation. Consider a connected ensemble for coupled actors and a shared load. Consider a full-scene state or tableau when contact, perspective, light, or stillness would be damaged by separation. Keep backgrounds free of characters, text, watermarks, and story-critical effects unless the approved shot architecture deliberately keeps them together.
+
+Before any asset prompt, read `references/animation-direction-framework.md`, create the shot’s `animation-decision.json`, and run:
+
+```bash
+python3 scripts/review_animation_decision.py shots/scene-xx/animation-decision.json --phase planning
+```
+
+This review checks whether the proposed visual evidence matches the declared shot responsibility. It must not reject a choice merely because it is still, long, uses a single plate, uses few layers, or differs in complexity from another shot. It must reject a claim that an unfolding action is visible when the plan contains no credible visible change and no deliberate elliptical or off-screen treatment.
 
 Do not ask an image model to improvise important writing, official notices, maps, currency, treasure, weapons, plants, or symbolic connectors. Generate a historically credible blank base when needed, then typeset or composite verified content deterministically. Reject graphic shorthand that cannot be recognized with sound muted.
 
@@ -117,18 +132,20 @@ Reject and regenerate assets that fail identity, orientation, camera, scale, lig
 
 ### 5. Prove the benchmark shot
 
-Choose the scene with the hardest contact, shared load, water, fire, destruction, or handoff. Build only 8–15 seconds first. It must prove:
+Choose a representative high-risk passage with difficult contact, shared load, water, fire, destruction, handoff, subtle acting, or deliberate stillness. Build only enough of it to prove the project’s hardest directing and technical decisions before expanding. It must prove:
 
 - stable character identity and complete heads, hands, and feet;
 - no half-face, sliced scalp, or amputated-head effect at first, midpoint, pose-change, occlusion-boundary, proof, and transition frames;
 - correct hand/shoulder/prop contact;
-- readable cause, action, and result without narration;
-- at least six useful depth/physical layers where the scene benefits from them;
+- the intended action, condition, reaction, reveal, or stillness reads without relying on an explanatory caption;
+- purposeful depth and physical separation where the scene benefits from them, without splitting connected subjects merely to increase layer count;
 - correct container masks, prop ownership, and effect origins;
 - narration, subtitle, and transition timing.
 - muted proof of the event chain and a voice-only check for speaker ownership, accent, and overlap.
+- the visible change—or intentional stillness—declared in `animation-decision.json`;
+- a rendered responsibility review showing that the shot does what it claims to do.
 
-Do not expand to the full film until this benchmark is approved. Afterward, keep the same gate for every shot: contract → minimum assets → animation → rendered MP4 → muted/voice/combined/reality review → release record → next shot.
+Do not expand to the full film until this benchmark is approved. Record its directing logic, asset architecture, physical risks, and proof method as a reference—not a complexity quota. Afterward, keep the same gate for every shot: contract → animation decision → justified assets → animation → rendered MP4 → responsibility review → muted/voice/combined/reality review → release record → next shot. Compare shots with similar narrative and physical demands; permit intentional variation in stillness, density, duration, and technique.
 
 ### 6. Build the deterministic project
 
@@ -144,11 +161,13 @@ Rebuild only the generic scene hosts and timing skeleton when the manifest chang
 python3 scripts/build_hyperframes_timeline.py --manifest story-manifest.json --project ./my-paper-story
 ```
 
-Replace development placeholders with generated assets and seek-safe scene motion. Keep audio as direct children of the top-level composition root. Give each scene a motion sidecar with selectors that prove actual story actions.
+Replace development placeholders with generated assets and seek-safe scene motion. Keep audio as direct children of the top-level composition root. Give each shot an `animation-decision.json`; add motion sidecars and selectors where the chosen architecture uses deterministic local motion.
 
 ### 7. Animate physical relationships and normalized movement
 
-Read `references/semantic-action-checks.md`. For every moving prop, define ownership and lifecycle: `source → owner → handoff → target → exit/rest`. For every standing or walking subject, declare the support surface and review feet/hooves/wheels/contact shadows against it. For every walking character, use a normalized complete-body gait cycle and check feet baseline, support foot, facing, torso direction, and world-space travel. For water, fire, impact, breakage, light, shadow, weapons, plants, documents, treasure, and load, animate visible cause and feedback rather than swapping decorative stickers.
+Read `references/semantic-action-checks.md` and `references/animation-direction-framework.md`. For every moving prop, define ownership and lifecycle as far as the shot needs it: `source → owner → handoff → target → exit/rest`. For every standing or walking subject, declare the support surface and review feet/hooves/wheels/contact shadows against it. When a shot needs walking to read as physical travel, use a complete-body gait or another stylistically coherent locomotion solution and check feet baseline, support, facing, torso direction, and world-space travel. For water, fire, impact, breakage, light, shadow, weapons, plants, documents, treasure, and load, show the cause and feedback needed for the intended read.
+
+Camera moves, whole-frame transforms, background drift, focus changes, grain, captions, and graphic marks may be the right visual language for a shot. Judge them against the declared responsibility. They can carry attention, time, mood, reveal, or transition; do not use them as false evidence that a character, prop, contact, or physical consequence visibly changed.
 
 ### 8. Fit picture to narration
 
@@ -158,7 +177,7 @@ Run the pacing audit after scene timing and activity windows are present:
 python3 scripts/audit_pacing.py story-manifest.json --voice-manifest voice-manifest.json --output PACE-AUDIT.md --strict
 ```
 
-Cut within roughly 0.6–1.2 seconds after semantic completion unless a new action, sound, or transition carries the interval. Do not count paper grain, dust, or slow parallax as story activity.
+Cut after semantic completion when the remaining duration no longer contributes performance, thought, atmosphere, sound, suspense, or transition. Hold longer when duration is the point; cut sooner when the beat has already landed. Do not let paper grain, dust, or slow parallax disguise an unintentionally empty interval.
 
 ### 9. Pass the quality gates
 
@@ -174,10 +193,11 @@ Add a project-specific failure log when a preview exposes a wrong spatial relati
 Create one shot-release record from `assets/project-template/manifests/shot-release.example.json`, then enforce the next-shot lock:
 
 ```bash
+python3 scripts/review_animation_decision.py shots/scene-xx/animation-decision.json --phase release
 python3 scripts/audit_shot_release.py shots/scene-xx/shot-release.json --strict
 ```
 
-The record must point to the rendered MP4, first/midpoint/contact/proof/final frames, critical-prop specifications, expected voice lines, and all review results. Do not start the next shot until this command passes.
+The records must point to the rendered MP4, relevant proof frames, critical-prop specifications, expected voice lines, the directing decision, and a rendered review of whether the declared responsibility was fulfilled. Do not start the next shot until both commands pass.
 
 Inspect head and face regions at enlarged scale in frames extracted from the rendered MP4. Distinguish a natural side/profile view from clipping: profile preserves a coherent skull and facial contour; clipping introduces a frame-, mask-, container-, or foreground-shaped cut. Fix z-order, overflow, mask path, crop, actor position, camera, or source asset before approval.
 
@@ -211,6 +231,8 @@ Report master and social paths, sizes, duration, resolution, frame rate, audio s
 - Voice auditions, measured timing, subtitles, and titles: `references/voice-timing-and-subtitles.md`
 - HyperFrames project and timeline contract: `references/hyperframes-production.md`
 - Semantic proof and action-specific checks: `references/semantic-action-checks.md`
+- Context-sensitive shot architecture, intentional stillness, visual-evidence review, and benchmark comparison: `references/animation-direction-framework.md`
+- Animation decision sidecar example: `assets/project-template/manifests/animation-decision.example.json`
 - P0–P3 acceptance and delivery: `references/quality-gates-and-delivery.md`
 - Per-shot release template: `assets/project-template/manifests/shot-release.example.json`
 

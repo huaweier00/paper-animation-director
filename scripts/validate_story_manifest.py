@@ -677,21 +677,58 @@ def validate_manifest(data: Any, project_dir: Path | None = None) -> list[dict[s
                 )
 
         layers = scene.get("layers")
-        if not isinstance(layers, list) or len(layers) < 4:
-            out.append(finding("warning", f"{base}.layers", "declare useful depth and physical layers; four is the minimum baseline"))
+        if not isinstance(layers, list) or any(
+            not isinstance(layer, str) or not layer.strip() for layer in layers
+        ):
+            out.append(
+                finding(
+                    "error",
+                    f"{base}.layers",
+                    "declare the integrated scene and/or independent layers chosen for this shot; no universal layer count applies",
+                )
+            )
 
         events = scene.get("events")
         if not isinstance(events, list) or not events:
-            out.append(finding("error", f"{base}.events", "add at least one cause/action/result/proof event"))
+            out.append(
+                finding(
+                    "error",
+                    f"{base}.events",
+                    "describe at least one action, reaction, condition, reveal, transition, or intentional pause with a proof",
+                )
+            )
             events = []
         for event_index, event in enumerate(events):
             event_base = f"{base}.events[{event_index}]"
             if not isinstance(event, dict):
                 out.append(finding("error", event_base, "event must be an object"))
                 continue
-            for key in ("cause", "action", "result", "proof"):
-                if not nonempty(event.get(key)):
-                    out.append(finding("error", f"{event_base}.{key}", f"{key} is required"))
+            if not nonempty(event.get("proof")):
+                out.append(
+                    finding(
+                        "error",
+                        f"{event_base}.proof",
+                        "state how the audience will perceive this event or intentional stillness",
+                    )
+                )
+            event_content = (
+                event.get("cause"),
+                event.get("action"),
+                event.get("propagation"),
+                event.get("result"),
+                event.get("condition"),
+                event.get("reaction"),
+                event.get("transition"),
+                event.get("pause"),
+            )
+            if not any(nonempty(value) for value in event_content):
+                out.append(
+                    finding(
+                        "error",
+                        event_base,
+                        "describe the applicable action, reaction, condition, reveal, transition, or pause; do not invent missing causal stages",
+                    )
+                )
             start = event.get("start")
             end = event.get("end")
             proof_time = event.get("proof_time")

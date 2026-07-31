@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "scene_id": "scene-01-depth-stage",
+  "units": "paper-world",
+  "camera": {
+    "kind": "perspective",
+    "fov_degrees": 34,
+    "near": 0.1,
+    "far": 100,
+    "position": [0, 0.25, 10.2],
+    "look_at": [0, -0.15, -0.4]
+  },
+  "lights": [
+    {
+      "id": "ambient",
+      "kind": "ambient",
+      "color": "#ffd8a8",
+      "intensity": 1.35
+    },
+    {
+      "id": "key",
+      "kind": "directional",
+      "color": "#ffb36f",
+      "intensity": 3.3,
+      "position": [-3.5, 5.5, 7]
+    }
+  ],
+  "layers": [
+    {
+      "id": "backdrop",
+      "kind": "plane",
+      "depth": -3.2,
+      "size": [14.8, 8.4],
+      "position": [0, 0],
+      "material": {
+        "color": "#725039",
+        "roughness": 0.93,
+        "opacity": 1
+      },
+      "motion": {
+        "kind": "static"
+      }
+    },
+    {
+      "id": "far-mountain",
+      "kind": "shape",
+      "depth": -2.25,
+      "points": [
+        [-4.5, -2.7],
+        [-1.2, 1.1],
+        [2.2, -2.7]
+      ],
+      "material": {
+        "color": "#9c7958",
+        "roughness": 0.95,
+        "opacity": 1
+      },
+      "motion": {
+        "kind": "parallax",
+        "axis": "x",
+        "amplitude": 0.16,
+        "frequency": 0.52,
+        "phase": 0
+      }
+    },
+    {
+      "id": "hero-model",
+      "kind": "model",
+      "depth": 0.1,
+      "source": "assets/models/hero.glb",
+      "position": [-1.5, -1.05],
+      "scale": [1, 1, 1],
+      "motion": {
+        "kind": "bob",
+        "axis": "y",
+        "amplitude": 0.08,
+        "frequency": 2.25,
+        "phase": 0
+      },
+      "required": false
+    },
+    {
+      "id": "foreground",
+      "kind": "plane",
+      "depth": 1.28,
+      "size": [15.2, 1.4],
+      "position": [0, -3.1],
+      "material": {
+        "color": "#2e211b",
+        "roughness": 1,
+        "opacity": 1
+      },
+      "motion": {
+        "kind": "parallax",
+        "axis": "x",
+        "amplitude": 0.72,
+        "frequency": 0.52,
+        "phase": 0
+      }
+    }
+  ],
+  "occlusion_order": [
+    "backdrop",
+    "far-mountain",
+    "hero-model",
+    "foreground"
+  ],
+  "previous_frame_effects_forbidden": true,
+  "local_assets_only": true
+}

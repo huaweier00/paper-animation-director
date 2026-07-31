@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "library_id": "paper-physics-actions",
+  "engine": "blender",
+  "engine_version": "5.2.0",
+  "plane": "camera-facing-xz",
+  "actions": [
+    {
+      "id": "rigid-drop",
+      "kind": "rigid-body",
+      "required_roles": [
+        "active",
+        "support"
+      ],
+      "bake_required": true,
+      "parameters": {
+        "mass": 0.45,
+        "friction": 0.58,
+        "restitution": 0.18,
+        "linear_damping": 0.12,
+        "angular_damping": 0.18
+      }
+    },
+    {
+      "id": "paper-impact",
+      "kind": "rigid-body-collision",
+      "required_roles": [
+        "active",
+        "impactor",
+        "support"
+      ],
+      "bake_required": true,
+      "parameters": {
+        "substeps_per_frame": 12,
+        "solver_iterations": 20,
+        "planar_constraint": true
+      }
+    },
+    {
+      "id": "hinged-swing",
+      "kind": "hinge",
+      "required_roles": [
+        "active",
+        "anchor"
+      ],
+      "bake_required": true,
+      "parameters": {
+        "axis": "y",
+        "lower_degrees": -35,
+        "upper_degrees": 35,
+        "planar_constraint": true
+      }
+    }
+  ],
+  "release_contract": {
+    "editable_blend_required": true,
+    "baked_cache_required": true,
+    "build_record_required": true,
+    "transparent_master_required": true,
+    "placeholder_media_forbidden": true
+  }
+}

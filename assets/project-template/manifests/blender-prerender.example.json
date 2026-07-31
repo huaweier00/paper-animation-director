@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "engine": "blender",
+  "engine_version": "5.2.0",
+  "delivery": "pre-render-alpha",
+  "clock": "hyperframes-media-seek",
+  "source": {
+    "blend": "scene-01-impact.blend",
+    "builder": "build_blender_paper_impact.py",
+    "build_record": "blender-build.json",
+    "physics_baked": true,
+    "cache_preserved_in_blend": true,
+    "external_cache": false
+  },
+  "render": {
+    "frame_start": 1,
+    "frame_end": 48,
+    "frame_count": 48,
+    "fps": 24,
+    "duration_seconds": 2,
+    "width": 960,
+    "height": 540,
+    "png_color_type": 6
+  },
+  "media": {
+    "path": "scene-01-impact-alpha.webm",
+    "codec": "vp9",
+    "pixel_format_requested": "yuva420p",
+    "alpha_mode": 1,
+    "sha256": "replace-after-render",
+    "bytes": 0
+  },
+  "proof_frames": [
+    {
+      "path": "frames/frame_0001.png",
+      "sha256": "replace-after-render"
+    },
+    {
+      "path": "frames/frame_0020.png",
+      "sha256": "replace-after-render"
+    },
+    {
+      "path": "frames/frame_0033.png",
+      "sha256": "replace-after-render"
+    },
+    {
+      "path": "frames/frame_0048.png",
+      "sha256": "replace-after-render"
+    }
+  ]
+}

@@ -1,4 +1,4 @@
 interface:
-  display_name: "纸片动画导演"
-  short_description: "逐镜制作柔和工笔纸片动画，校验现实物件、声音和交付"
-  default_prompt: "Use $paper-animation-director to build a soft gongbi paper animation one shot at a time, validating realistic props, grounding, narration, and delivery before release."
+  display_name: "纸片动画混合管线导演"
+  short_description: "按镜头能力分流角色、特效、空间与物理动画并统一编排交付"
+  default_prompt: "Use $paper-animation-director to route each paper-animation shot to the least complex capable engine, build its benchmark, and release it through HyperFrames."

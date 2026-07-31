@@ -1,6 +1,6 @@
 ---
 name: paper-animation-director
-description: Turn a story, folktale, fable, script, or narration into a historically and physically credible multi-layer paper animation with reference-only frontal character identities, shot-specific spatial contracts, just-in-time shot assets, complete connected poses, realistic and recognizable props, ground/support continuity, narration-driven timing, per-shot release gates, voice-stem recovery, and master/social delivery. Use when the user asks for 纸片动画, 剪纸动画, 柔和工笔动画, 宣纸水彩故事, paper-theatre animation, an illustrated folktale, a cultural or historical story film, a layered recurring-character story, or a narrative animation whose identity, direction, objects, space, actions, sound, moral ending, and platform delivery must remain consistent and readable.
+description: Turn a story, folktale, fable, script, or narration into a historically and physically credible multi-layer paper animation with per-shot capability routing across HyperFrames/GSAP, Rive or Spine, PixiJS, Three.js WebGPU, and Blender; reference-only frontal character identities; shot-specific spatial contracts; just-in-time engine-shaped assets; realistic props and support; narration-driven timing; release gates; voice-stem recovery; and master/social delivery. Use when the user asks for 纸片动画, 剪纸动画, 柔和工笔动画, 宣纸水彩故事, paper-theatre animation, an illustrated folktale, a cultural or historical story film, a layered recurring-character story, or a narrative animation whose identity, direction, objects, space, actions, sound, moral ending, and platform delivery must remain consistent and readable.
 ---
 
 # Paper Animation Director
@@ -17,6 +17,7 @@ For a soft hand-painted, gongbi-style fable, cultural story, or social-platform 
 - Use `vox-director` instead for editorial collage explainers whose primary unit is a poster-like beat.
 - Use the `imagegen` skill for raster asset generation and editing.
 - Use `hyperframes`, `hyperframes-core`, `hyperframes-animation`, `hyperframes-keyframes`, `hyperframes-creative`, and `hyperframes-cli` as required by the active production stage.
+- Read `references/hybrid-shot-pipeline.md` after approving a shot's animation decision. Use its capability profile and generated engine plan before creating shot assets or authoring a specialized runtime.
 - Use `dynamic-video-watermark` for the final moving ownership mark. Do not duplicate its implementation here.
 
 ## Non-negotiable rules
@@ -58,6 +59,26 @@ For a soft hand-painted, gongbi-style fable, cultural story, or social-platform 
 35. Compare later shots with the benchmark by comparable narrative demand, not by raw complexity. A quieter shot may intentionally use fewer layers or less motion. Flag only an unexplained downgrade where a shot with similar action, contact, or continuity demands no longer provides equivalent clarity.
 36. Split or combine shots according to clarity, continuity, rhythm, and staging. Split when one composition cannot carry its responsibilities without flattening the event; keep a longer continuous shot when sustained space, stillness, or performance is the stronger choice.
 37. Record the directing choice in `animation-decision.json` and review the rendered MP4 against that declared choice. The review is a contradiction check, not a formula for art direction.
+38. Route every production shot through `shot-capabilities.json` and a generated `engine-plan.json` after the directing decision and before asset generation. Record objective capability needs first; do not choose an engine by fashion or convenience.
+39. Keep HyperFrames as the final orchestrator unless the user explicitly changes the delivery framework. Let specialized engines own only their declared character, effects, spatial, or pre-render layer.
+40. Use the least complex engine set that can prove the shot. Keep a credible still, rigid layer, stepped pose, or multiplane shot in GSAP/DOM when it fulfils the responsibility; do not add Rive, PixiJS, Three.js, or Blender as decoration.
+41. Require absolute-time seeking, local assets, fixed dimensions, and seeded randomness for embedded runtimes. Pre-render any state machine, feedback effect, physics, cloth, hair, collision, or simulation whose state depends on earlier frames.
+42. Shape asset generation to the accepted engine plan: rig-ready separated or mesh art for Rive/Spine, deterministic textures and emitter data for PixiJS, depth/model/camera assets for Three.js, and editable sources plus baked caches for Blender.
+43. Prove each specialized engine with one representative benchmark before using it across the film. A benchmark must prove the selected capability and non-sequential seek stability, not merely that a canvas or asset loads.
+44. Route production through `build_routed_shot.py`. Before formal release, audit `engine-inputs.json` against the generated plan, reject every pending engine gate and runtime-network asset, and reject Blender placeholder media even when the composition can display it during development.
+45. Install JavaScript dependencies from the committed `package-lock.json`. Keep exact versions, use the project-local HyperFrames binary, and never let verification silently fall back to an online `npx` fetch.
+46. Treat DOM and GSAP layers as seek-sensitive too. For rasterized text, avoid transform-based entrance motion unless ordered/shuffled capture proves byte stability; prefer an explicit time-zero baseline and opacity-only caption transitions when subpixel transforms retain seek history.
+47. Treat `engine-inputs.json` schema version 2 as a sidecar contract, not only a renderer list. Every specialized route must point to its engine-specific manifest, and every embedded-renderer shot must carry a reviewed `performance-budget.json`.
+48. Inspect every ready Rive `.riv` file with the project-local WASM runtime before release. Match the current asset SHA-256, artboard, and every selected linear animation; never infer those names from a filename or accept a state machine as the absolute-time release path.
+49. Drive Three.js 2.5D shots from a declarative scene manifest with explicit camera, light, layer kind, depth, material, motion, and occlusion order. Keep optional models replaceable without breaking the depth-board scene, and reject previous-frame effects.
+50. Declare PixiJS paper masks by stable id and attach effects to those ids. Use only deterministic live masks; pre-render an inverted, feedback, displacement-history, or otherwise stateful mask that cannot be reconstructed from absolute time.
+51. Probe WebGPU with a real Three.js render on the intended build device. Record the actual backend and adapter limits; allow WebGL2 only when the shot’s `webgpu-capability.json` explicitly declares that fallback.
+52. Build Blender physics shots from reusable action primitives, but preserve shot-specific art direction. A valid library does not replace the editable `.blend`, baked cache, build record, transparent master, or final composite review.
+53. Measure the mounted renderer set at declared proof times under a per-shot performance budget. Block release when a selected embedded renderer is missing, renderer count exceeds the budget, or total/per-engine p95 exceeds its ceiling.
+54. Keep P2 gates inside `build_routed_shot.py`. A separate successful probe, screenshot, or benchmark does not waive a failing controller step; fix the gate and rerun the same phase.
+55. When using Fish Audio S2.1 Pro, derive concise square-bracket performance cues from the line's context and place them where the delivery changes. Do not constrain cues to a fixed vocabulary, treat 《九色鹿》 tag strings as a universal preset, or overload short lines with competing directions.
+56. Treat Fish Audio pauses as expressive and non-deterministic. Prefer an explicit short/normal/long pause cue for performance; never assume repeated pause cues add a predictable duration. Split clauses and insert measured silence in the audio timeline whenever the picture requires an exact pause.
+57. Do not assign one global speech speed to a film, role, or voice. Establish a voice-specific audition baseline, then choose and record segment-level speed from context, information density, physical state, emotional transition, and dramatic function. Use inline cues or separate requests for within-line changes, and fit picture to the selected measured performance.
 
 ## Workflow
 
@@ -79,7 +100,28 @@ Obtain approval for the story action table before expensive generation.
 
 ### 2. Lock voice, speaker ownership, and timing
 
-Read `references/voice-timing-and-subtitles.md`. Audition multiple voices per role—typically 3–5, or more when the market is inconsistent—with one representative paragraph that tests calm narration, emotional dialogue, sentence endings, and accent. When the user requests Fish Audio, search its public model market broadly, retain model IDs and public URLs, shortlist multiple candidates, render same-line tests, and reject celebrity imitation, dialect drift, advertising cadence, and unclear diction. Assign every line to a speaker before mixing, and generate the selected voice by scene at natural speed unless the user requests otherwise. Preserve a voice ledger and original dry stems. Never store credentials in the project or skill.
+Read `references/voice-timing-and-subtitles.md`. When using Fish Audio
+S2.1 Pro, also read `references/fish-audio-s2.1-pro-production.md` and start
+the project's voice-direction ledger from
+`assets/project-template/manifests/voice-direction.example.json`. Audition
+multiple voices per role—typically 3–5, or more when the market is
+inconsistent—with representative material that tests neutral narration,
+contextual emotion, local emphasis, short/long pauses, endings, accent, and
+response to speed changes. Search the Fish Audio public model market broadly,
+retain public model IDs and URLs, and reject celebrity imitation, dialect
+drift, advertising cadence, unclear diction, or a voice that cannot follow
+the story's required directions.
+
+Assign every line to a speaker and analyze its dramatic function before
+synthesis. Generate an untagged baseline, then concise context-derived cue
+variants; begin with one primary direction and add a physical, tonal, pause,
+or emphasis cue only when audition evidence requires it. Establish a
+voice-specific speed baseline during casting, but choose formal
+`prosody.speed` per line or semantic beat rather than copying one value across
+the film. Split requests when the same line requires a material speed or
+emotional transition. Preserve the raw text, annotated text, speed rationale,
+API parameters, selected take, measured duration, voice ledger, and original
+dry stems. Never store credentials in the project or skill.
 
 Probe delivered audio:
 
@@ -118,6 +160,18 @@ python3 scripts/review_animation_decision.py shots/scene-xx/animation-decision.j
 
 This review checks whether the proposed visual evidence matches the declared shot responsibility. It must not reject a choice merely because it is still, long, uses a single plate, uses few layers, or differs in complexity from another shot. It must reject a claim that an unfolding action is visible when the plan contains no credible visible change and no deliberate elliptical or off-screen treatment.
 
+After the animation decision passes, read `references/hybrid-shot-pipeline.md`. Create `shot-capabilities.json` from the bundled example, then generate and review the engine plan:
+
+```bash
+python3 scripts/route_shot_capabilities.py \
+  shots/scene-xx/shot-capabilities.json \
+  --config hybrid-pipeline.json \
+  --output shots/scene-xx/engine-plan.json \
+  --strict
+```
+
+Do not generate assets until the selected engine roles, integration modes, fallbacks, asset requirements, benchmark requirement, and proof requirements agree with the directing and spatial contracts.
+
 Do not ask an image model to improvise important writing, official notices, maps, currency, treasure, weapons, plants, or symbolic connectors. Generate a historically credible blank base when needed, then typeset or composite verified content deterministically. Reject graphic shorthand that cannot be recognized with sound muted.
 
 Prepare shot-specific atlases and keyed assets only after that gate:
@@ -149,7 +203,9 @@ Do not expand to the full film until this benchmark is approved. Record its dire
 
 ### 6. Build the deterministic project
 
-Read `references/layers-physics-and-occlusion.md` and `references/hyperframes-production.md`. Scaffold a generic project:
+Read `references/layers-physics-and-occlusion.md`,
+`references/hyperframes-production.md`, and
+`references/engine-execution-templates.md`. Scaffold a generic project:
 
 ```bash
 python3 scripts/init_paper_project.py --manifest story-manifest.json --output ./my-paper-story
@@ -161,7 +217,39 @@ Rebuild only the generic scene hosts and timing skeleton when the manifest chang
 python3 scripts/build_hyperframes_timeline.py --manifest story-manifest.json --project ./my-paper-story
 ```
 
-Replace development placeholders with generated assets and seek-safe scene motion. Keep audio as direct children of the top-level composition root. Give each shot an `animation-decision.json`; add motion sidecars and selectors where the chosen architecture uses deterministic local motion.
+For an approved routed shot, scaffold the selected engine layers:
+
+```bash
+python3 scripts/scaffold_hybrid_shot.py \
+  --plan shots/scene-xx/engine-plan.json \
+  --project ./my-paper-story
+```
+
+Prefer the guarded one-command controller for production work:
+
+```bash
+python3 scripts/build_routed_shot.py \
+  --project ./my-paper-story \
+  --shot-id scene-xx \
+  --phase prepare
+```
+
+After authoring the real engine assets and composition, run `--phase verify`.
+After the rendered MP4, proof frames, voice checks, and release record are
+complete, run `--phase release`. The controller rechecks plan drift, audits
+engine inputs, runs the offline doctor, runs HyperFrames check, captures
+ordered/shuffled seek evidence, and enforces both release reviewers.
+
+The scaffold is a runnable development composition, not an approved shot. It
+mounts the verified PixiJS and Three.js templates immediately and wires the
+strict Rive adapter behind an explicit `.riv` asset gate; Blender is a seekable
+pre-render layer behind its baked-media gate. Configure the generated
+`engine-inputs.json`, replace template art with the approved engine-shaped
+assets, and clear all required-asset gates before review. Keep audio as direct
+children of the top-level composition root. Give each shot an
+`animation-decision.json`, `shot-capabilities.json`, `engine-plan.json`, and
+`engine-inputs.json`; add motion sidecars and selectors for observable story
+evidence.
 
 ### 7. Animate physical relationships and normalized movement
 
@@ -193,11 +281,16 @@ Add a project-specific failure log when a preview exposes a wrong spatial relati
 Create one shot-release record from `assets/project-template/manifests/shot-release.example.json`, then enforce the next-shot lock:
 
 ```bash
-python3 scripts/review_animation_decision.py shots/scene-xx/animation-decision.json --phase release
-python3 scripts/audit_shot_release.py shots/scene-xx/shot-release.json --strict
+python3 scripts/build_routed_shot.py \
+  --project . \
+  --shot-id scene-xx \
+  --phase release
 ```
 
-The records must point to the rendered MP4, relevant proof frames, critical-prop specifications, expected voice lines, the directing decision, and a rendered review of whether the declared responsibility was fulfilled. Do not start the next shot until both commands pass.
+The release record must point to the rendered MP4, relevant proof frames,
+critical-prop specifications, expected voice lines, directing decision,
+capability profile, generated plan, and audited engine inputs. Do not start the
+next shot until the controller passes.
 
 Inspect head and face regions at enlarged scale in frames extracted from the rendered MP4. Distinguish a natural side/profile view from clipping: profile preserves a coherent skull and facial contour; clipping introduces a frame-, mask-, container-, or foreground-shaped cut. Fix z-order, overflow, mask path, crop, actor position, camera, or source asset before approval.
 
@@ -229,12 +322,27 @@ Report master and social paths, sizes, duration, resolution, frame rate, audio s
 - Image-generation prompt contracts: `references/image-generation-prompts.md`
 - Layering, masks, water, fire, rope, and load: `references/layers-physics-and-occlusion.md`
 - Voice auditions, measured timing, subtitles, and titles: `references/voice-timing-and-subtitles.md`
+- Fish Audio S2.1 Pro natural-language cue semantics, contextual speed direction, pause policy, audition matrix, API baseline, and acceptance gates: `references/fish-audio-s2.1-pro-production.md`
+- Contextual Fish Audio line-direction ledger: `assets/project-template/manifests/voice-direction.example.json`
 - HyperFrames project and timeline contract: `references/hyperframes-production.md`
 - Semantic proof and action-specific checks: `references/semantic-action-checks.md`
 - Context-sensitive shot architecture, intentional stillness, visual-evidence review, and benchmark comparison: `references/animation-direction-framework.md`
+- Capability vocabulary, engine routing, deterministic integration, new-project commands, engine build contracts, benchmarks, and migration: `references/hybrid-shot-pipeline.md`
+- Executable PixiJS, Rive, Blender, and Three.js templates; pinned versions;
+  asset gates; scaffolding outputs; and deterministic verification commands:
+  `references/engine-execution-templates.md`
+- P2 standard Rive rig contract, declarative Three.js depth board, Blender
+  action library, PixiJS masks/effects, WebGPU device probe, and multi-engine
+  performance budget: `references/p2-engine-capabilities.md`
 - Animation decision sidecar example: `assets/project-template/manifests/animation-decision.example.json`
+- Shot capability example: `assets/project-template/manifests/shot-capabilities.example.json`
+- Generated engine-plan example: `assets/project-template/manifests/engine-plan.example.json`
 - P0–P3 acceptance and delivery: `references/quality-gates-and-delivery.md`
 - Per-shot release template: `assets/project-template/manifests/shot-release.example.json`
+- One-command routed shot controller: `scripts/build_routed_shot.py`
+- Engine-input development/release audit: `scripts/audit_engine_inputs.py`
+- Ordered/shuffled seek proof: `scripts/verify_deterministic_seek.py`
+- Offline environment and lock doctor: `scripts/doctor_paper_pipeline.py`
 
 ## Delivery posture
 

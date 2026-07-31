@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "shot_id": "scene-01-find-seed",
+  "responsibility": "Describe what the audience must perceive by the end of this production shot.",
+  "requirements": {
+    "character_motion": "skeletal-2d",
+    "contact": "continuous",
+    "spatial_depth": "multiplane",
+    "camera": "parallax",
+    "particle_load": "light",
+    "simulation": "none",
+    "typography": "supporting",
+    "reuse": "recurring",
+    "environment_fx": [
+      "dust"
+    ]
+  },
+  "constraints": {
+    "must_remain_2d": true,
+    "offline_render_allowed": true,
+    "alpha_required": true,
+    "manual_authoring_allowed": true
+  },
+  "preferences": {
+    "character_engine": "auto",
+    "effects_engine": "auto",
+    "spatial_engine": "auto",
+    "delivery": "auto",
+    "forbid_engines": []
+  },
+  "proof_requirements": [
+    "limbs follow continuous joint paths",
+    "feet or hooves keep readable support contact",
+    "dust originates at the declared impact point"
+  ]
+}

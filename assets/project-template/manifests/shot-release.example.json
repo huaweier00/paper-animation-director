@@ -1,11 +1,17 @@
 {
+  "schema_version": 2,
   "shot_id": "scene-01",
   "decision": "approved",
   "rendered_mp4": "renders/scene-01-approved.mp4",
   "animation_decision": "animation-decision.json",
+  "shot_capabilities": "shot-capabilities.json",
+  "engine_plan": "engine-plan.json",
+  "engine_inputs": "engine-inputs.json",
   "contact_required": true,
   "audio_required": true,
   "checks": {
+    "engine_plan_fulfilled": "pass",
+    "deterministic_seek": "pass",
     "muted_semantics": "pass",
     "required_nouns": "pass",
     "prop_realism": "pass",

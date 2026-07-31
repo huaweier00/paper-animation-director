@@ -1,0 +1,7 @@
+{
+  "name": "three-paper-diorama-benchmark",
+  "entry": "index.html",
+  "width": 960,
+  "height": 540,
+  "fps": 30
+}

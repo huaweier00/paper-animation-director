@@ -1,0 +1,15 @@
+{
+  "duration": 3.2,
+  "assertions": [
+    {
+      "kind": "appearsBy",
+      "selector": "#three-paper-diorama-canvas",
+      "bySec": 0.1
+    },
+    {
+      "kind": "appearsBy",
+      "selector": "#three-paper-diorama-label",
+      "bySec": 0.3
+    }
+  ]
+}

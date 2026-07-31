@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "rig_id": "centaur-linear-benchmark",
+  "profile": "benchmark-linear",
+  "asset": "assets/centaur.riv",
+  "artboard": "Character",
+  "state_machine_forbidden": true,
+  "animations": {
+    "locomotion": {
+      "name": "Walk",
+      "playback": "native",
+      "duration_seconds": null
+    }
+  },
+  "anchors": {},
+  "facing": [
+    "right"
+  ],
+  "inspection_report": "assets/centaur-rig-inspection.json",
+  "proof_times": [
+    0.1,
+    0.7,
+    1.4,
+    2.2
+  ]
+}

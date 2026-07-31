@@ -1,0 +1,15 @@
+{
+  "duration": 2.8,
+  "assertions": [
+    {
+      "kind": "appearsBy",
+      "selector": "#rive-linear-character-canvas",
+      "bySec": 0.1
+    },
+    {
+      "kind": "appearsBy",
+      "selector": "#rive-linear-character-label",
+      "bySec": 0.3
+    }
+  ]
+}

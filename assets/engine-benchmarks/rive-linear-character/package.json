@@ -1,0 +1,12 @@
+{
+  "name": "rive-linear-character-benchmark",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@rive-app/canvas-advanced-single": "2.39.1",
+    "gsap": "3.15.0"
+  },
+  "devDependencies": {
+    "hyperframes": "0.7.83"
+  }
+}

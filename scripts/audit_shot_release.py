@@ -9,8 +9,13 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from audit_engine_inputs import (
+    find_project_root,
+    load_json as load_engine_json,
+    validate_engine_inputs,
+)
 
-REQUIRED_CHECKS = (
+BASE_REQUIRED_CHECKS = (
     "muted_semantics",
     "required_nouns",
     "prop_realism",
@@ -23,6 +28,8 @@ REQUIRED_CHECKS = (
     "rendered_mp4_frames",
     "technical_decode",
 )
+ROUTING_REQUIRED_CHECKS = ("engine_plan_fulfilled", "deterministic_seek")
+REQUIRED_CHECKS = (*BASE_REQUIRED_CHECKS, *ROUTING_REQUIRED_CHECKS)
 
 REQUIRED_FRAMES = ("first", "midpoint", "proof", "final")
 PROP_FIELDS = (
@@ -73,6 +80,16 @@ def validate(
     errors: list[str] = []
     warnings: list[str] = []
 
+    schema_version = data.get("schema_version", 1)
+    if schema_version not in {1, 2}:
+        errors.append("schema_version: expected 1 (legacy) or 2 (hybrid routing)")
+    hybrid_release = schema_version == 2
+    if schema_version == 1:
+        warnings.append(
+            "schema_version: legacy v1 release; use v2 with shot_capabilities and "
+            "engine_plan when this shot is revised"
+        )
+
     if not nonempty(data.get("shot_id")):
         errors.append("shot_id: add a stable shot identifier")
 
@@ -88,21 +105,58 @@ def validate(
     elif check_paths and not rendered.is_file():
         errors.append(f"rendered_mp4: file does not exist: {rendered}")
 
-    animation_decision = resolve_path(base, data.get("animation_decision"))
-    if animation_decision is None:
-        errors.append(
-            "animation_decision: point to the reviewed animation-decision.json"
+    required_records = {
+        "animation_decision": "point to the reviewed animation-decision.json",
+    }
+    if hybrid_release:
+        required_records.update(
+            {
+                "shot_capabilities": "point to the reviewed shot-capabilities.json",
+                "engine_plan": "point to the generated and reviewed engine-plan.json",
+                "engine_inputs": "point to the audited engine-inputs.json",
+            }
         )
-    elif check_paths and not animation_decision.is_file():
-        errors.append(
-            f"animation_decision: file does not exist: {animation_decision}"
-        )
+    resolved_records: dict[str, Path] = {}
+    for field, guidance in required_records.items():
+        record_path = resolve_path(base, data.get(field))
+        if record_path is None:
+            errors.append(f"{field}: {guidance}")
+        elif check_paths and not record_path.is_file():
+            errors.append(f"{field}: file does not exist: {record_path}")
+        else:
+            resolved_records[field] = record_path
+
+    if (
+        hybrid_release
+        and check_paths
+        and "engine_plan" in resolved_records
+        and "engine_inputs" in resolved_records
+        and resolved_records["engine_plan"].is_file()
+        and resolved_records["engine_inputs"].is_file()
+    ):
+        try:
+            engine_plan = load_engine_json(resolved_records["engine_plan"], "engine plan")
+            engine_inputs = load_engine_json(resolved_records["engine_inputs"], "engine inputs")
+            input_errors, input_warnings = validate_engine_inputs(
+                engine_inputs,
+                engine_plan,
+                project_root=find_project_root(base),
+                phase="release",
+                check_paths=True,
+            )
+            errors.extend(f"engine_inputs_audit: {message}" for message in input_errors)
+            warnings.extend(f"engine_inputs_audit: {message}" for message in input_warnings)
+        except ValueError as exc:
+            errors.append(f"engine_inputs_audit: {exc}")
 
     checks = data.get("checks")
     if not isinstance(checks, dict):
         errors.append("checks: expected an object")
         checks = {}
-    for key in REQUIRED_CHECKS:
+    required_checks = (
+        REQUIRED_CHECKS if hybrid_release else BASE_REQUIRED_CHECKS
+    )
+    for key in required_checks:
         status = checks.get(key)
         if status != "pass":
             errors.append(f"checks.{key}: expected pass, got {status!r}")

@@ -1,0 +1,115 @@
+<script src="./assets/runtime/hybrid-bootstrap.js"></script>
+<template>
+  <style>
+    #__SHOT_ID__ {
+      position: relative;
+      width: __WIDTH__px;
+      height: __HEIGHT__px;
+      overflow: hidden;
+      color: #34281e;
+      background: transparent;
+      font-family: Arial, sans-serif;
+    }
+    #__SHOT_ID__-fill {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(145deg, #ede2c7, #d8c49b 68%, #b79d73);
+    }
+    #__SHOT_ID__ .engine-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    #__SHOT_ID__ canvas.engine-layer {
+      display: block;
+    }
+    #__SHOT_ID__ .clip {
+      visibility: hidden;
+    }
+    #__SHOT_ID__-development-card {
+      position: absolute;
+      left: 6%;
+      top: 7%;
+      z-index: 100;
+      max-width: 64%;
+      padding: 22px 28px;
+      border: 1px solid rgba(52, 40, 30, .3);
+      background: rgba(247, 238, 214, .9);
+      box-shadow: 8px 10px 0 rgba(139, 62, 48, .2);
+    }
+    #__SHOT_ID__-development-card strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 25px;
+    }
+    #__SHOT_ID__-development-card span {
+      display: block;
+      font-size: 18px;
+      line-height: 1.45;
+    }
+    #__SHOT_ID__-seek-probe {
+      position: absolute;
+      left: 6%;
+      bottom: 6%;
+      z-index: 100;
+      width: 90px;
+      height: 3px;
+      transform-origin: left center;
+      background: rgba(52, 40, 30, .62);
+    }
+  </style>
+  <div
+    id="__SHOT_ID__"
+    data-hf-id="hf-__SHOT_ID__-root"
+    data-composition-id="__SHOT_ID__"
+    data-start="0"
+    data-duration="__DURATION__"
+    data-width="__WIDTH__"
+    data-height="__HEIGHT__"
+    data-engine-plan="shots/__SHOT_ID__/engine-plan.json"
+    data-engine-inputs="shots/__SHOT_ID__/engine-inputs.json"
+  >
+    <div id="__SHOT_ID__-fill"></div>
+__ENGINE_LAYERS__
+    <div id="__SHOT_ID__-development-card">
+      <strong>Hybrid development scaffold · __SHOT_ID__</strong>
+      <span>Route: __ENGINE_LABELS__</span>
+      <span>Verified adapters are mounted. Replace template art and clear every required-asset gate before shot review.</span>
+    </div>
+    <div id="__SHOT_ID__-seek-probe" aria-hidden="true"></div>
+  </div>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const timeline = gsap.timeline({ paused: true });
+    timeline.fromTo(
+      "#__SHOT_ID__-development-card",
+      { opacity: 0, x: -28, y: 8 },
+      { opacity: 1, x: 0, y: 0, duration: .36, ease: "power3.out" },
+      .08,
+    );
+    timeline.fromTo(
+      "#__SHOT_ID__-seek-probe",
+      { scaleX: .1 },
+      { scaleX: 1, duration: __DURATION__, ease: "none" },
+      0,
+    );
+    window.__timelines["__SHOT_ID__"] = timeline;
+  </script>
+  <script>
+    (async () => {
+      const {
+        registerRenderer,
+      } = await import("./assets/runtime/hybrid-runtime.js");
+__ENGINE_IMPORTS__
+
+__ENGINE_REGISTRATIONS__
+    })().catch((error) => {
+      document.documentElement.dataset.hybridEngineError = error instanceof Error
+        ? error.message
+        : String(error);
+      throw error;
+    });
+  </script>
+</template>

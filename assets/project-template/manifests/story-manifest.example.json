@@ -14,8 +14,11 @@
   },
   "voice": {
     "provider": "manual",
+    "model": "",
     "reference_id": "",
-    "speed_policy": "natural-1x",
+    "speed_policy": "contextual-per-line-or-beat",
+    "expressive_direction_policy": "context-derived-not-fixed-vocabulary",
+    "exact_pause_policy": "measured-silence-in-post",
     "generate_by_scene": true
   },
   "characters": [

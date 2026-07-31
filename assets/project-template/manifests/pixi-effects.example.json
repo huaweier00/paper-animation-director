@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "shot_id": "scene-01-find-seed",
+  "masks": [
+    {
+      "id": "ground-contact-zone",
+      "kind": "band",
+      "origin": [0, 0.62],
+      "size": [1, 0.38],
+      "invert": false
+    }
+  ],
+  "effects": [
+    {
+      "id": "bird-contact-dust",
+      "preset": "hoof-dust",
+      "seed": "scene-01-find-seed:bird-contact-dust",
+      "origin": [0.64, 0.78],
+      "start": 2.1,
+      "duration": 1.4,
+      "count": 34,
+      "opacity": 0.78,
+      "mask": "ground-contact-zone"
+    },
+    {
+      "id": "wind-paper-scraps",
+      "preset": "paper-scraps",
+      "seed": "scene-01-find-seed:wind-paper-scraps",
+      "origin": [0.45, 0.72],
+      "start": 2.5,
+      "duration": 2.1,
+      "count": 38,
+      "opacity": 0.7,
+      "mask": "ground-contact-zone"
+    }
+  ]
+}

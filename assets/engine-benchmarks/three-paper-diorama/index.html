@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Three.js WebGPU 2.5D paper diorama benchmark</title>
+    <script src="./assets/runtime/hybrid-bootstrap.js"></script>
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: #17100c;
+      }
+      #three-paper-diorama {
+        position: relative;
+        width: 960px;
+        height: 540px;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 68% 34%, rgba(213, 136, 64, 0.22), transparent 38%),
+          linear-gradient(150deg, #3a271c, #160f0c 78%);
+        color: #efd8b2;
+        font-family: "EB Garamond", serif;
+      }
+      #three-paper-diorama-canvas {
+        position: absolute;
+        inset: 0;
+        width: 960px;
+        height: 540px;
+      }
+      #three-paper-diorama-vignette {
+        position: absolute;
+        inset: 0;
+        box-shadow:
+          inset 0 0 85px rgba(14, 8, 6, 0.62),
+          inset 0 -30px 60px rgba(14, 8, 6, 0.28);
+      }
+      #three-paper-diorama-label {
+        position: absolute;
+        left: 30px;
+        top: 27px;
+        padding: 11px 15px;
+        border: 1px solid rgba(239, 216, 178, 0.28);
+        background: rgba(22, 15, 12, 0.72);
+        box-shadow: 7px 8px 0 rgba(121, 57, 35, 0.26);
+        font-size: 17px;
+        letter-spacing: 0.08em;
+      }
+      #three-paper-diorama-contract {
+        position: absolute;
+        right: 28px;
+        bottom: 23px;
+        color: rgba(239, 216, 178, 0.74);
+        font: 15px ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+      #three-paper-diorama-seek-probe {
+        position: absolute;
+        left: 30px;
+        bottom: 31px;
+        width: 64px;
+        height: 2px;
+        transform-origin: left center;
+        background: rgba(239, 216, 178, 0.66);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="three-paper-diorama"
+      data-composition-id="three-paper-diorama"
+      data-start="0"
+      data-duration="3.2"
+      data-width="960"
+      data-height="540"
+    >
+      <canvas
+        id="three-paper-diorama-canvas"
+        data-hf-id="three-paper-diorama-canvas"
+        width="960"
+        height="540"
+      ></canvas>
+      <div id="three-paper-diorama-vignette"></div>
+      <div id="three-paper-diorama-label">THREE.JS · WEBGPU→WEBGL2 2.5D DIORAMA</div>
+      <div id="three-paper-diorama-contract">camera · depth · occlusion · absolute time</div>
+      <div id="three-paper-diorama-seek-probe" aria-hidden="true"></div>
+    </div>
+    <script src="./node_modules/gsap/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const timeline = gsap.timeline({ paused: true });
+      timeline.fromTo(
+        "#three-paper-diorama-seek-probe",
+        { scaleX: 0.15 },
+        { scaleX: 1, duration: 3.2, ease: "none" },
+        0,
+      );
+      window.__timelines["three-paper-diorama"] = timeline;
+    </script>
+    <script type="module">
+      import * as THREE from "./node_modules/three/build/three.webgpu.js";
+      import {
+        registerRenderer,
+      } from "./assets/runtime/hybrid-runtime.js";
+      import {
+        mountThreeSeekableScene,
+      } from "./assets/runtime/adapters/three-seekable.js";
+      import {
+        createDeclarativePaperScene,
+      } from "./assets/runtime/scenes/declarative-paper-2_5d.js";
+
+      const sceneManifest = await fetch("./scene-manifest.json").then((response) => {
+        if (!response.ok) throw new Error(`scene-manifest HTTP ${response.status}`);
+        return response.json();
+      });
+      const adapter = await mountThreeSeekableScene({
+        THREE,
+        registerRenderer,
+        id: "three-paper-diorama:scene",
+        root: "#three-paper-diorama",
+        durationSeconds: 3.2,
+        canvas: document.getElementById("three-paper-diorama-canvas"),
+        width: 960,
+        height: 540,
+        pixelRatio: 1,
+        alpha: true,
+        antialias: false,
+        sceneFactory: (options) => createDeclarativePaperScene({
+          ...options,
+          manifest: sceneManifest
+        })
+      });
+      document.documentElement.dataset.engineReady = "three-webgpu";
+      document.documentElement.dataset.threeBackend = adapter.backend;
+    </script>
+  </body>
+</html>

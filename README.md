@@ -249,11 +249,43 @@ your-project/.claude/skills/paper-animation-director/
 | Python 3 | 故事清单、素材、节奏与声音审计脚本 | 必需 |
 | Node.js / npm | HyperFrames 工程与渲染命令 | 使用 HyperFrames 时必需 |
 | FFmpeg / FFprobe | 音视频探测、社交平台版本与成片核验 | 交付时必需 |
+| Blender 5.2 LTS 或兼容版本 | 烘焙刚体、布料、碰撞等历史依赖型镜头并预渲染 | 路由到 Blender 时必需 |
+| 本地锁版运行时 | HyperFrames 0.7.83、GSAP 3.15.0、PixiJS 8.19.0、Rive 2.39.1、Three.js 0.185.1 | 混合引擎项目由 `npm install` 一次安装 |
 | Codex 内置图像生成与编辑 | 正面身份参考、镜头专用背景、完整角色、道具和整场景帧 | 生成新素材时必需 |
 | Fish Audio 或豆包 | 最终旁白和角色对白合成 | 有配音时必需 |
 | Codex 应用内浏览器或本地预览 | 动画预览、截图、交互检查和审片 | 开发阶段推荐 |
 
 外部语音服务的密钥只放在环境变量或外部 `.env`，不要写入 Skill、项目清单、README、提示词或音频候选记录。Codex 负责调用和管理这些文件，但不应把密钥复制进文档、日志或提交记录。
+
+### 混合引擎快速启动
+
+新项目初始化后先执行一次 `npm install`。每个镜头在
+`animation-decision.json` 与 `shot-capabilities.json` 通过后，由路由器
+生成 `engine-plan.json`，再由脚手架生成实际引擎层：
+
+```bash
+python3 scripts/init_paper_project.py \
+  --manifest story-manifest.json \
+  --output ./my-paper-story
+
+cd ./my-paper-story
+npm install
+
+python3 /path/to/paper-animation-director/scripts/route_shot_capabilities.py \
+  shots/scene-01/shot-capabilities.json \
+  --config hybrid-pipeline.json \
+  --output shots/scene-01/engine-plan.json \
+  --strict
+
+python3 /path/to/paper-animation-director/scripts/scaffold_hybrid_shot.py \
+  --plan shots/scene-01/engine-plan.json \
+  --project .
+```
+
+脚手架会复制完整本地运行时、挂载 PixiJS 和 Three.js 可执行模板、连接
+Rive 线性动画适配器，并为 Rive/Blender 建立明确的资产门。具体字段、
+Blender 预渲染命令和乱序截图哈希验证见
+[`references/engine-execution-templates.md`](references/engine-execution-templates.md)。
 
 ### 1. 读路由与复盘规程
 
@@ -576,6 +608,14 @@ paper-animation-director/
 不适用：主要由海报式信息卡组成的编辑型解释视频；这类项目应考虑 `vox-director` 或 `faceless-explainer`。
 
 ## 版本记录
+
+### v2.5 · 按镜头能力分流与可执行混合引擎模板 · 2026-07-31
+
+- 将 HyperFrames 固定为总编排层，按镜头能力分流到 GSAP/DOM、Rive、PixiJS、Three.js WebGPU 或 Blender；
+- 新增 PixiJS 固定种子绝对时间粒子、Rive 严格线性动画 seek、Blender 烘焙预渲染、Three.js WebGPU→WebGL2 2.5D 场景模板；
+- 脚手架从诊断占位升级为已验证适配器挂载，并生成 `engine-inputs.json` 与项目专属资产门；
+- 所有浏览器运行时改为本地精确锁版，移除项目模板的 GSAP CDN 依赖；
+- 新增引擎基准运行时同步检查、乱序截图像素哈希规程和逐引擎执行手册。
 
 ### v2.4 · Codex 一站式制作与语音外接建议 · 2026-07-30
 

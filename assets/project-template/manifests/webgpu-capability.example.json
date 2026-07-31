@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "probe": "three-webgpu-render",
+  "required_backend": "webgpu",
+  "fallback_backend": "webgl2",
+  "minimum_limits": {
+    "maxTextureDimension2D": 8192,
+    "maxBindGroups": 4
+  },
+  "release_policy": {
+    "webgpu_required": false,
+    "fallback_must_be_declared": true,
+    "probe_report_required_when_three_selected": true
+  }
+}

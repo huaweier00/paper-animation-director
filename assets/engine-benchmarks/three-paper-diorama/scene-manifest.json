@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "scene_id": "three-paper-diorama-declarative",
+  "units": "paper-world",
+  "camera": {
+    "kind": "perspective",
+    "fov_degrees": 34,
+    "near": 0.1,
+    "far": 100,
+    "position": [0, 0.25, 10.2],
+    "look_at": [0, -0.15, -0.4]
+  },
+  "lights": [
+    {
+      "id": "ambient",
+      "kind": "ambient",
+      "color": "#ffd8a8",
+      "intensity": 1.35
+    },
+    {
+      "id": "key",
+      "kind": "directional",
+      "color": "#ffb36f",
+      "intensity": 3.3,
+      "position": [-3.5, 5.5, 7]
+    }
+  ],
+  "layers": [
+    {
+      "id": "backdrop",
+      "kind": "plane",
+      "depth": -3.2,
+      "size": [14.8, 8.4],
+      "position": [0, 0],
+      "material": {
+        "color": "#725039",
+        "roughness": 0.93,
+        "opacity": 1
+      },
+      "motion": {
+        "kind": "static"
+      }
+    },
+    {
+      "id": "far-mountain",
+      "kind": "shape",
+      "depth": -2.25,
+      "points": [
+        [-5.6, -2.7],
+        [-2, 1.35],
+        [1.8, -2.7]
+      ],
+      "material": {
+        "color": "#9c7958",
+        "roughness": 0.95,
+        "opacity": 1
+      },
+      "motion": {
+        "kind": "parallax",
+        "axis": "x",
+        "amplitude": 0.16,
+        "frequency": 0.52,
+        "phase": 0
+      }
+    },
+    {
+      "id": "character-card",
+      "kind": "shape",
+      "depth": 0.08,
+      "points": [
+        [-1.4, -2.2],
+        [-1.3, 0.65],
+        [-0.2, 1.65],
+        [0.8, 0.5],
+        [1.25, -2.2]
+      ],
+      "material": {
+        "color": "#86372c",
+        "roughness": 0.92,
+        "opacity": 1
+      },
+      "motion": {
+        "kind": "bob",
+        "axis": "y",
+        "amplitude": 0.08,
+        "frequency": 2.25,
+        "phase": 0
+      }
+    },
+    {
+      "id": "foreground",
+      "kind": "plane",
+      "depth": 1.28,
+      "size": [15.2, 1.3],
+      "position": [0, -3.15],
+      "material": {
+        "color": "#2e211b",
+        "roughness": 1,
+        "opacity": 1
+      },
+      "motion": {
+        "kind": "parallax",
+        "axis": "x",
+        "amplitude": 0.72,
+        "frequency": 0.52,
+        "phase": 0
+      }
+    }
+  ],
+  "occlusion_order": [
+    "backdrop",
+    "far-mountain",
+    "character-card",
+    "foreground"
+  ],
+  "previous_frame_effects_forbidden": true,
+  "local_assets_only": true
+}

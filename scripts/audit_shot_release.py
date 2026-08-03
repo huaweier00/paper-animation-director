@@ -18,6 +18,12 @@ from audit_engine_inputs import (
 )
 from audit_rendered_motion import load as load_motion_review
 from audit_rendered_motion import validate as validate_rendered_motion
+from audit_medium_contract import load_json as load_medium_contract
+from audit_medium_contract import validate_medium_contract
+from audit_audio_mode import load_json as load_audio_contract
+from audit_audio_mode import validate_audio_contract
+from audit_performance_contract import load_json as load_performance_contract
+from audit_performance_contract import validate_performance_contract
 
 BASE_REQUIRED_CHECKS = (
     "muted_semantics",
@@ -34,6 +40,12 @@ BASE_REQUIRED_CHECKS = (
 )
 ROUTING_REQUIRED_CHECKS = ("engine_plan_fulfilled", "deterministic_seek")
 MOTION_REQUIRED_CHECKS = ("motion_integrity",)
+PERFORMANCE_REQUIRED_CHECKS = (
+    "medium_truth",
+    "performance_contract",
+    "pose_reuse",
+    "sound_action_sync",
+)
 VISUAL_REQUIRED_CHECKS = (
     "art_direction_match",
     "focal_hierarchy",
@@ -123,11 +135,15 @@ def validate(
     warnings: list[str] = []
 
     schema_version = data.get("schema_version", 1)
-    if schema_version not in {1, 2, 3, 4}:
-        errors.append("schema_version: expected 1 (legacy), 2 (hybrid), 3 (premium visual), or 4 (motion-evidence release)")
-    hybrid_release = schema_version in {2, 3, 4}
-    premium_visual_release = schema_version in {3, 4}
-    motion_evidence_release = schema_version == 4
+    if schema_version not in {1, 2, 3, 4, 5}:
+        errors.append(
+            "schema_version: expected 1 (legacy), 2 (hybrid), 3 (premium visual), "
+            "4 (motion-evidence), or 5 (medium-and-performance release)"
+        )
+    hybrid_release = schema_version in {2, 3, 4, 5}
+    premium_visual_release = schema_version in {3, 4, 5}
+    motion_evidence_release = schema_version in {4, 5}
+    performance_release = schema_version == 5
     motion_required = data.get("motion_required") if motion_evidence_release else False
     if schema_version == 1:
         warnings.append(
@@ -144,8 +160,8 @@ def validate(
             "schema_version: v3 premium visual release has no hash-bound rendered motion evidence; "
             "use v4 when this shot is revised"
         )
-    elif not isinstance(motion_required, bool):
-        errors.append("motion_required: schema v4 must explicitly declare true or false")
+    if motion_evidence_release and not isinstance(motion_required, bool):
+        errors.append("motion_required: schema v4/v5 must explicitly declare true or false")
         motion_required = False
 
     if not nonempty(data.get("shot_id")):
@@ -193,6 +209,14 @@ def validate(
                 "rendered_motion_review": "point to the approved hash-bound rendered-motion-review.json",
             }
         )
+    if performance_release:
+        required_records.update(
+            {
+                "medium_contract": "point to the approved project medium-contract.json",
+                "performance_contract": "point to the approved shot performance-contract.json",
+                "audio_contract": "point to the approved project audio-contract.json",
+            }
+        )
     resolved_records: dict[str, Path] = {}
     for field, guidance in required_records.items():
         record_path = resolve_path(base, data.get(field))
@@ -218,7 +242,7 @@ def validate(
             )
         if check_paths:
             for field, record_path in resolved_records.items():
-                if field == "visual_direction_contract" or not record_path.is_file():
+                if field in {"visual_direction_contract", "medium_contract", "audio_contract"} or not record_path.is_file():
                     continue
                 try:
                     upstream = load_json(record_path)
@@ -227,6 +251,49 @@ def validate(
                     continue
                 if upstream.get("shot_id") != data.get("shot_id"):
                     errors.append(f"{field}.shot_id: must match the release shot_id")
+
+    if performance_release and check_paths:
+        medium_path = resolved_records.get("medium_contract")
+        performance_path = resolved_records.get("performance_contract")
+        audio_path = resolved_records.get("audio_contract")
+        medium_data: dict[str, Any] | None = None
+        if medium_path and medium_path.is_file():
+            try:
+                medium_data = load_medium_contract(medium_path)
+                medium_errors, medium_warnings = validate_medium_contract(medium_data, phase="release")
+                errors.extend(f"medium_contract: {message}" for message in medium_errors)
+                warnings.extend(f"medium_contract: {message}" for message in medium_warnings)
+            except ValueError as exc:
+                errors.append(f"medium_contract: {exc}")
+        if performance_path and performance_path.is_file() and medium_data is not None:
+            try:
+                performance_errors, performance_warnings = validate_performance_contract(
+                    load_performance_contract(performance_path),
+                    medium=medium_data,
+                    phase="release",
+                    project=find_project_root(base),
+                )
+                errors.extend(f"performance_contract: {message}" for message in performance_errors)
+                warnings.extend(f"performance_contract: {message}" for message in performance_warnings)
+            except ValueError as exc:
+                errors.append(f"performance_contract: {exc}")
+        if audio_path and audio_path.is_file() and medium_data is not None:
+            try:
+                audio_data = load_audio_contract(audio_path)
+                if audio_data.get("status") != "approved":
+                    errors.append("audio_contract: shot release requires approved status")
+                audio_phase = "release" if data.get("audio_required", True) else "planning"
+                audio_errors, audio_warnings, _ = validate_audio_contract(
+                    audio_data,
+                    medium=medium_data,
+                    phase=audio_phase,
+                    project=find_project_root(base),
+                    video=rendered if audio_phase == "release" else None,
+                )
+                errors.extend(f"audio_contract: {message}" for message in audio_errors)
+                warnings.extend(f"audio_contract: {message}" for message in audio_warnings)
+            except ValueError as exc:
+                errors.append(f"audio_contract: {exc}")
 
     if (
         hybrid_release
@@ -268,7 +335,16 @@ def validate(
     if not isinstance(checks, dict):
         errors.append("checks: expected an object")
         checks = {}
-    if motion_evidence_release and motion_required:
+    if performance_release and motion_required:
+        required_checks = (*REQUIRED_CHECKS, *PERFORMANCE_REQUIRED_CHECKS)
+    elif performance_release:
+        required_checks = (
+            *BASE_REQUIRED_CHECKS,
+            *ROUTING_REQUIRED_CHECKS,
+            *VISUAL_REQUIRED_CHECKS,
+            *PERFORMANCE_REQUIRED_CHECKS,
+        )
+    elif motion_evidence_release and motion_required:
         required_checks = REQUIRED_CHECKS
     elif premium_visual_release:
         required_checks = (*BASE_REQUIRED_CHECKS, *ROUTING_REQUIRED_CHECKS, *VISUAL_REQUIRED_CHECKS)

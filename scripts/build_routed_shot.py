@@ -437,6 +437,9 @@ def main() -> int:
         plan = shot_root / "engine-plan.json"
         inputs = shot_root / "engine-inputs.json"
         release = shot_root / "shot-release.json"
+        medium_contract = project / "medium-contract.json"
+        audio_contract = project / "audio-contract.json"
+        performance_contract = shot_root / "performance-contract.json"
         pipeline_config = project / "hybrid-pipeline.json"
         if not pipeline_config.is_file():
             pipeline_config = SCRIPT_ROOT.parent / "assets" / "project-template" / "hybrid-pipeline.json"
@@ -445,9 +448,68 @@ def main() -> int:
             require_file(decision, "animation decision")
             require_file(spatial, "spatial contract sidecar")
             require_file(capabilities, "shot capabilities")
+            require_file(medium_contract, "medium contract")
+            require_file(audio_contract, "audio contract")
+            require_file(performance_contract, "performance contract")
             require_current_spatial_sidecar(project, args.shot_id, spatial)
             capabilities_data = load_json(capabilities, "shot capabilities")
             motion_required = needs_motion_contract(capabilities_data)
+            medium_data = load_json(medium_contract, "medium contract")
+            medium_phase = (
+                "planning"
+                if medium_data.get("benchmark", {}).get("shot_id") == args.shot_id
+                else "production"
+            )
+            steps.append(
+                run_step(
+                    f"medium-contract-{medium_phase}",
+                    [
+                        sys.executable,
+                        str(SCRIPT_ROOT / "audit_medium_contract.py"),
+                        str(medium_contract),
+                        "--phase",
+                        medium_phase,
+                        "--json",
+                    ],
+                    cwd=project,
+                )
+            )
+            steps.append(
+                run_step(
+                    "audio-contract-planning",
+                    [
+                        sys.executable,
+                        str(SCRIPT_ROOT / "audit_audio_mode.py"),
+                        str(audio_contract),
+                        "--project",
+                        str(project),
+                        "--medium-contract",
+                        str(medium_contract),
+                        "--phase",
+                        "planning",
+                        "--json",
+                    ],
+                    cwd=project,
+                )
+            )
+            steps.append(
+                run_step(
+                    "performance-contract-planning",
+                    [
+                        sys.executable,
+                        str(SCRIPT_ROOT / "audit_performance_contract.py"),
+                        str(performance_contract),
+                        "--medium-contract",
+                        str(medium_contract),
+                        "--project",
+                        str(project),
+                        "--phase",
+                        "planning",
+                        "--json",
+                    ],
+                    cwd=project,
+                )
+            )
             steps.append(
                 run_step(
                     "story-manifest-production",
@@ -575,9 +637,48 @@ def main() -> int:
             require_file(decision, "animation decision")
             require_file(spatial, "spatial contract sidecar")
             require_file(capabilities, "shot capabilities")
+            require_file(medium_contract, "medium contract")
+            require_file(audio_contract, "audio contract")
+            require_file(performance_contract, "performance contract")
             require_current_spatial_sidecar(project, args.shot_id, spatial)
             capabilities_data = load_json(capabilities, "shot capabilities")
             motion_required = needs_motion_contract(capabilities_data)
+            contract_phase = "release" if args.phase == "release" else "production"
+            performance_phase = "release" if args.phase == "release" else "implementation"
+            steps.append(
+                run_step(
+                    f"medium-contract-{contract_phase}",
+                    [
+                        sys.executable,
+                        str(SCRIPT_ROOT / "audit_medium_contract.py"),
+                        str(medium_contract),
+                        "--phase",
+                        contract_phase,
+                        "--strict",
+                        "--json",
+                    ],
+                    cwd=project,
+                )
+            )
+            steps.append(
+                run_step(
+                    f"performance-contract-{performance_phase}",
+                    [
+                        sys.executable,
+                        str(SCRIPT_ROOT / "audit_performance_contract.py"),
+                        str(performance_contract),
+                        "--medium-contract",
+                        str(medium_contract),
+                        "--project",
+                        str(project),
+                        "--phase",
+                        performance_phase,
+                        "--strict",
+                        "--json",
+                    ],
+                    cwd=project,
+                )
+            )
             steps.append(
                 run_step(
                     f"story-manifest-{'release' if args.phase == 'release' else 'production'}",
@@ -761,7 +862,12 @@ def main() -> int:
             if args.phase == "release":
                 require_file(release, "shot release")
                 release_data = load_json(release, "shot release")
-                if release_data.get("schema_version") == 4 and release_data.get("motion_required") is not motion_required:
+                if release_data.get("schema_version") != 5:
+                    raise ValueError(
+                        "shot-release.json must use schema_version 5 so medium, performance, "
+                        "pose reuse, and sound-action evidence cannot be bypassed"
+                    )
+                if release_data.get("motion_required") is not motion_required:
                     raise ValueError(
                         "shot-release.json motion_required must match the capability-derived motion policy "
                         f"({motion_required})"
@@ -771,6 +877,10 @@ def main() -> int:
                         project / "shots" / previous_id / "shot-release.json",
                         f"previous ordered shot {previous_id} release",
                     )
+                    if load_json(previous_release, f"previous ordered shot {previous_id} release").get("schema_version") != 5:
+                        raise ValueError(
+                            f"previous ordered shot {previous_id} must use shot-release schema_version 5"
+                        )
                     steps.append(
                         run_step(
                             f"previous-shot-release-{previous_id}",
@@ -796,6 +906,48 @@ def main() -> int:
                                 "--project",
                                 str(project),
                                 "--strict",
+                                "--json",
+                            ],
+                            cwd=project,
+                        )
+                    )
+                steps.append(
+                    run_step(
+                        "pose-reuse-release",
+                        [
+                            sys.executable,
+                            str(SCRIPT_ROOT / "audit_pose_reuse.py"),
+                            "--project",
+                            str(project),
+                            "--json",
+                        ],
+                        cwd=project,
+                    )
+                )
+                if release_data.get("audio_required", True):
+                    rendered_value = release_data.get("rendered_mp4")
+                    if not isinstance(rendered_value, str) or not rendered_value.strip():
+                        raise ValueError("rendered_mp4 must be a non-empty local path")
+                    rendered_release = (release.parent / rendered_value).resolve()
+                    try:
+                        rendered_release.relative_to(project)
+                    except ValueError as exc:
+                        raise ValueError("rendered_mp4 escapes the project root") from exc
+                    steps.append(
+                        run_step(
+                            "audio-mode-release",
+                            [
+                                sys.executable,
+                                str(SCRIPT_ROOT / "audit_audio_mode.py"),
+                                str(audio_contract),
+                                "--project",
+                                str(project),
+                                "--medium-contract",
+                                str(medium_contract),
+                                "--video",
+                                str(rendered_release),
+                                "--phase",
+                                "release",
                                 "--json",
                             ],
                             cwd=project,

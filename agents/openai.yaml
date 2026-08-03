@@ -1,4 +1,4 @@
 interface:
-  display_name: "精品纸片动画制片导演"
-  short_description: "从故事、分镜、资产与表演到证据化发布的精品纸片动画工作流"
-  default_prompt: "Use $paper-animation-director to direct and produce this story through animatic, production design, sequence layout, motion contracts, rendered evidence, and final delivery."
+  display_name: "表演优先的纸片动画导演"
+  short_description: "以媒介真实性、角色表演、声画节奏和闭环发布制作精品纸片动画"
+  default_prompt: "Use $paper-animation-director to choose an honest medium route, prove character performance and sound timing in a benchmark, build each shot through the guarded controller, and release only hash-bound approved shots."

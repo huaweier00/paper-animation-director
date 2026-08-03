@@ -10,6 +10,7 @@ import unittest
 from pathlib import Path
 
 from build_routed_shot import previous_shot_ids
+from init_paper_project import build_audio_contract, build_medium_contract, build_performance_contract
 
 
 SCRIPT = Path(__file__).with_name("build_routed_shot.py")
@@ -38,7 +39,18 @@ class BuildRoutedShotTests(unittest.TestCase):
             scene["duration"] = 6.0
             manifest["scenes"] = [scene]
             manifest["target_duration"] = 6.0
+            manifest["performance_benchmark_shot"] = "scene-test"
             (project / "story-manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+            medium = build_medium_contract(manifest)
+            (project / "medium-contract.json").write_text(json.dumps(medium), encoding="utf-8")
+            (project / "audio-contract.json").write_text(
+                json.dumps(build_audio_contract(manifest, medium["route"])),
+                encoding="utf-8",
+            )
+            (shot / "performance-contract.json").write_text(
+                json.dumps(build_performance_contract(scene, medium["route"])),
+                encoding="utf-8",
+            )
             (shot / "spatial-contract.json").write_text(
                 json.dumps(
                     {
@@ -167,6 +179,9 @@ class BuildRoutedShotTests(unittest.TestCase):
             self.assertEqual(
                 [step["name"] for step in report["steps"]],
                 [
+                    "medium-contract-planning",
+                    "audio-contract-planning",
+                    "performance-contract-planning",
                     "story-manifest-production",
                     "animation-decision-planning",
                     "motion-contract-planning",

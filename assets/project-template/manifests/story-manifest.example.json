@@ -8,6 +8,9 @@
   "language": "zh",
   "subtitle_mode": "zh-en",
   "audio_mode": "dialogue-only",
+  "medium_route": "painterly-limited",
+  "audio_performance_mode": "dialogue-and-sound-design",
+  "performance_benchmark_shot": "scene-01-find-seed",
   "watermark": {
     "enabled": false,
     "text": ""

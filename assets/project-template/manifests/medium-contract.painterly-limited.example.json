@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "project_id": "sample-paper-story",
+  "route": "painterly-limited",
+  "status": "approved",
+  "medium_truth": {
+    "material": "painted image states with authored brush, edge, wash, and compositing behavior",
+    "performer": "pose states, selective local controls, or full-scene states preserve painterly integrity",
+    "space": "painted depth planes with declared support, overlap, atmosphere, and focal hierarchy",
+    "light": "painted light logic remains coherent across state changes and compositing",
+    "sound": "voice, music, effects, ambience, and silence carry rhythm without replacing visible acting"
+  },
+  "performance_policy": {
+    "actor_internal_change_required": true,
+    "allowed_modes": ["pose-replacement", "articulated-rig", "full-scene-state", "selective-local-motion", "deliberate-still"],
+    "presentation_only_not_action_proof": true,
+    "earned_stillness_required": true,
+    "pose_reuse_requires_compatible_intent": true
+  },
+  "forbidden_shortcuts": [
+    "root-transform-as-hero-acting",
+    "camera-motion-as-action-proof",
+    "surface-texture-as-material-proof",
+    "same-pose-across-incompatible-intentions"
+  ],
+  "painterly_limited": {
+    "paint_system": "authored painterly states with consistent line, wash, texture scale, and edge hierarchy",
+    "integration_model": "performers and environments share value, light, atmosphere, and contact logic",
+    "state_change_model": "pose replacement, local motion, or full-scene states carry observable change",
+    "claims_shadow_physics": false
+  },
+  "benchmark": {
+    "shot_id": "scene-benchmark",
+    "rendered_mp4": "renders/scene-benchmark.mp4",
+    "status": "approved",
+    "proves": [
+      "intention-to-result performance phrase",
+      "affected-character or environment reaction",
+      "painterly identity and character-environment integration across states"
+    ]
+  },
+  "approval": {
+    "reviewer": "director",
+    "notes": "The route is honestly painterly and its authored state changes carry the acting."
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "project_id": "sample-paper-story",
+  "route": "cutout-paper",
+  "status": "approved",
+  "medium_truth": {
+    "material": "opaque cut paper with authored edge, thickness, fold, hinge, and contact behavior",
+    "performer": "constructed cutout performer using joints, replacement poses, or connected ensembles",
+    "space": "layered paper stage with declared support, overlap, occlusion, and depth ordering",
+    "light": "directional stage light reveals paper thickness and contact without pretending to be transmitted shadow light",
+    "sound": "voice, foley, music, effects, ambience, and silence support each action phrase"
+  },
+  "performance_policy": {
+    "actor_internal_change_required": true,
+    "allowed_modes": ["articulated-rig", "pose-replacement", "connected-ensemble", "full-scene-state", "deliberate-still"],
+    "presentation_only_not_action_proof": true,
+    "earned_stillness_required": true,
+    "pose_reuse_requires_compatible_intent": true
+  },
+  "forbidden_shortcuts": [
+    "root-transform-as-hero-acting",
+    "camera-motion-as-action-proof",
+    "surface-texture-as-material-proof",
+    "same-pose-across-incompatible-intentions"
+  ],
+  "cutout_paper": {
+    "construction": "separate authored pieces, joints, replacement states, and complete object silhouettes",
+    "material_behavior": "edge, thickness, fold, hinge, contact, and stepped deformation remain visible",
+    "depth_model": "declared paper layers, support planes, occlusion order, and contact shadows",
+    "performer_model_required": true
+  },
+  "benchmark": {
+    "shot_id": "scene-benchmark",
+    "rendered_mp4": "renders/scene-benchmark.mp4",
+    "status": "approved",
+    "proves": [
+      "intention-to-result performance phrase",
+      "affected-character or environment reaction",
+      "paper construction, support, overlap, and contact"
+    ]
+  },
+  "approval": {
+    "reviewer": "director",
+    "notes": "The cut-paper construction and performance model both survive the benchmark."
+  }
+}

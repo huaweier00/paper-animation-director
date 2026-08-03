@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bind a schema-v4 shot release record to the exact records, render, and proof frames."""
+"""Bind a schema-v4/v5 shot release record to exact records, render, and proof frames."""
 
 from __future__ import annotations
 
@@ -19,6 +19,11 @@ RECORD_FIELDS = (
     "visual_direction_contract",
     "motion_contract",
     "rendered_motion_review",
+)
+PERFORMANCE_RECORD_FIELDS = (
+    "medium_contract",
+    "performance_contract",
+    "audio_contract",
 )
 FRAME_FIELDS = ("first", "midpoint", "contact", "proof", "final")
 
@@ -45,13 +50,15 @@ def sha256(path: Path) -> str:
 
 
 def bind(data: dict[str, Any], *, base: Path) -> dict[str, Any]:
-    if data.get("schema_version") != 4:
-        raise ValueError("evidence binding requires shot-release schema_version 4")
+    schema_version = data.get("schema_version")
+    if schema_version not in {4, 5}:
+        raise ValueError("evidence binding requires shot-release schema_version 4 or 5")
     rendered = resolve(base, data.get("rendered_mp4"), "rendered_mp4")
     data["rendered_mp4_sha256"] = sha256(rendered)
 
     record_hashes: dict[str, str] = {}
-    for field in RECORD_FIELDS:
+    record_fields = RECORD_FIELDS + (PERFORMANCE_RECORD_FIELDS if schema_version == 5 else ())
+    for field in record_fields:
         if data.get("motion_required") is False and field in {"motion_contract", "rendered_motion_review"}:
             continue
         if nonempty(data.get(field)):

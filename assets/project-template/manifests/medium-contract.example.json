@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "project_id": "sample-paper-story",
+  "route": "shadow-theatre",
+  "status": "approved",
+  "medium_truth": {
+    "material": "translucent carved leather-like digital performer with authored openwork and transmitted color",
+    "performer": "articulated screen-plane puppet controlled by one central control and two hand controls",
+    "space": "rear-lit translucent screen with declared entry, exit, support, and occlusion rules",
+    "light": "one authored rear-light system whose distance changes edge softness, scale, and transmission",
+    "sound": "dialogue or singing, percussion accents, music pulse, effects, ambience, and intentional silence are timed with manipulation"
+  },
+  "performance_policy": {
+    "actor_internal_change_required": true,
+    "allowed_modes": ["articulated-rig", "pose-replacement", "connected-ensemble", "full-scene-state", "deliberate-still"],
+    "presentation_only_not_action_proof": true,
+    "earned_stillness_required": true,
+    "pose_reuse_requires_compatible_intent": true
+  },
+  "forbidden_shortcuts": [
+    "opaque-full-body-png-as-shadow-puppet",
+    "root-transform-as-hero-acting",
+    "camera-motion-as-action-proof",
+    "surface-texture-as-material-proof",
+    "same-pose-across-incompatible-intentions",
+    "silent-shadow-theatre-master"
+  ],
+  "shadow_theatre": {
+    "screen": {
+      "type": "rear-lit-translucent",
+      "transmitted_light": true,
+      "screen_plane_required": true,
+      "performer_distance_affects_projection": true
+    },
+    "articulation": {
+      "required": true,
+      "puppet_model_required": true,
+      "control_logic": "central-control-plus-local-hand-or-prop-controls"
+    },
+    "audio": {
+      "allowed_modes": ["full-performance", "dialogue-and-sound-design"],
+      "silent_allowed": false,
+      "music_only_allowed": false
+    }
+  },
+  "benchmark": {
+    "shot_id": "scene-benchmark",
+    "rendered_mp4": "renders/scene-benchmark.mp4",
+    "status": "approved",
+    "proves": [
+      "intention-to-result performance phrase",
+      "affected-character reaction",
+      "exact sound-synchronized hold",
+      "transmitted color and screen-edge behavior",
+      "static-camera performance readability"
+    ]
+  },
+  "approval": {
+    "reviewer": "director",
+    "notes": "The route is selected for its articulated screen performance, not as a surface style label."
+  }
+}

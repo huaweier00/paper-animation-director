@@ -357,7 +357,7 @@ Release still requires:
 - voice-only proof;
 - combined picture/sound/subtitle proof;
 - HyperFrames checks and final-MP4 frame review;
-- a schema-version-2 shot-release record that points to both routing artifacts
+- a schema-version-5 shot-release record that binds both routing artifacts plus the approved medium, performance, audio, motion, and rendered-review evidence
   plus `engine-inputs.json`, and passes `engine_plan_fulfilled` and
   `deterministic_seek`.
 

@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "project_id": "sample-paper-story",
+  "phase": "release",
+  "decision": "approved",
+  "story_manifest": "story-manifest.json",
+  "medium_contract": "medium-contract.json",
+  "audio_contract": "audio-contract.json",
+  "ordered_shots": [
+    {
+      "shot_id": "scene-01",
+      "release": "shots/scene-01/shot-release.json",
+      "release_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "shot_id": "scene-02",
+      "release": "shots/scene-02/shot-release.json",
+      "release_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    }
+  ],
+  "master": {
+    "path": "renders/master.mp4",
+    "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "decode_verified": true,
+    "audio_verified": true
+  },
+  "review": {
+    "sequence_continuity": "approved",
+    "performance_regression": "approved",
+    "sound_picture": "approved",
+    "phone_size": "approved",
+    "ending": "approved"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "character_id": "zhongkui",
+  "medium_route": "shadow-theatre",
+  "reference_only": false,
+  "parts": [
+    {"id": "head", "parent": "torso", "draw_order": 40, "overlap_under_joint": true},
+    {"id": "torso", "parent": "root", "draw_order": 20, "overlap_under_joint": true},
+    {"id": "upper-arm-left", "parent": "torso", "draw_order": 22, "overlap_under_joint": true},
+    {"id": "lower-arm-left", "parent": "upper-arm-left", "draw_order": 23, "overlap_under_joint": true},
+    {"id": "hand-left", "parent": "lower-arm-left", "draw_order": 24, "overlap_under_joint": true},
+    {"id": "upper-arm-right", "parent": "torso", "draw_order": 30, "overlap_under_joint": true},
+    {"id": "lower-arm-right", "parent": "upper-arm-right", "draw_order": 31, "overlap_under_joint": true},
+    {"id": "hand-right", "parent": "lower-arm-right", "draw_order": 32, "overlap_under_joint": true},
+    {"id": "lower-body", "parent": "torso", "draw_order": 10, "overlap_under_joint": true}
+  ],
+  "joints": [
+    {"id": "neck", "pivot": [0.5, 0.17], "range_degrees": [-18, 14]},
+    {"id": "shoulder-left", "pivot": [0.39, 0.31], "range_degrees": [-75, 82]},
+    {"id": "elbow-left", "pivot": [0.30, 0.49], "range_degrees": [-120, 15]},
+    {"id": "shoulder-right", "pivot": [0.61, 0.31], "range_degrees": [-82, 75]},
+    {"id": "elbow-right", "pivot": [0.70, 0.49], "range_degrees": [-15, 120]},
+    {"id": "waist", "pivot": [0.5, 0.55], "range_degrees": [-12, 12]}
+  ],
+  "controls": {
+    "central": ["root", "torso", "head-direction", "screen-travel"],
+    "left_hand": ["upper-arm-left", "lower-arm-left", "hand-left"],
+    "right_hand": ["upper-arm-right", "lower-arm-right", "hand-right"]
+  },
+  "screen_side": "profile-right",
+  "turn_policy": "use an authored substitution performer for profile-left",
+  "support": "screen-plane foot baseline",
+  "material": {
+    "translucent_regions": ["face", "robe-panels", "sleeves"],
+    "openwork_regions": ["beard-edge", "armor-pattern", "sleeve-pattern"],
+    "opaque_accents": ["boots", "weapon-core"]
+  },
+  "signature_phrases": ["commanding-entry", "halt-palm", "sword-threat", "gentle-lowered-hand", "farewell-lookback"],
+  "forbidden_deformations": ["rubber-torso", "floating-hand", "uncovered-joint-gap", "unreadable-profile"]
+}

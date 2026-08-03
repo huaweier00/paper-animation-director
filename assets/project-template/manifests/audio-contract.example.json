@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "project_id": "sample-paper-story",
+  "medium_route": "shadow-theatre",
+  "mode": "full-performance",
+  "status": "approved",
+  "expected_spoken_or_sung_lines": 8,
+  "cue_ledger": "audio/cue-ledger.json",
+  "dry_stems": ["audio/stems/narrator.wav", "audio/stems/zhongkui.wav", "audio/stems/sister.wav"],
+  "music_and_effect_stems": ["audio/stems/percussion.wav", "audio/stems/ensemble.wav", "audio/stems/effects.wav"],
+  "expected_in_master": ["dialogue-or-singing", "percussion", "music", "effects", "ambience"],
+  "intentional_silence_rationale": "",
+  "approval": {
+    "reviewer": "sound-director",
+    "notes": "Every performance cue is linked to a shot action phase and the dry stems remain recoverable."
+  }
+}

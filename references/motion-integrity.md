@@ -168,7 +168,7 @@ python3 scripts/audit_rendered_motion.py \
   --strict
 ```
 
-After all shot reviews are recorded, bind the schema-v4 release record to the exact upstream records, rendered MP4, and proof frames. Re-run this whenever any bound file changes:
+After all shot reviews are recorded, bind the schema-v5 release record to the exact upstream records, rendered MP4, proof frames, medium contract, performance contract, and audio contract. Re-run this whenever any bound file changes:
 
 ```bash
 python3 scripts/bind_release_evidence.py shots/scene-xx/shot-release.json

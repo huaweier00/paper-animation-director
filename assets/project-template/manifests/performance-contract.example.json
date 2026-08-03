@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "shot_id": "scene-benchmark",
+  "medium_route": "shadow-theatre",
+  "responsibility": "Zhongkui's entrance stops the bully and changes the sister from fear to guarded safety.",
+  "motion_required": true,
+  "presentation_motion_is_not_proof": true,
+  "actors": [
+    {
+      "actor_id": "zhongkui",
+      "objective": "force the bully to release control without approaching the sister as a threat",
+      "initial_attention": "bully",
+      "final_attention": "sister",
+      "performance_mode": "articulated-rig",
+      "lead_control": "central-control-then-right-hand-control",
+      "support": "stable screen-plane stance",
+      "production_asset": {
+        "asset_id": "zhongkui-benchmark-rig",
+        "status": "approved",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "performance_state": "commanding-protective-entry",
+        "reuse_authorization": {"approved": false, "reason": "benchmark-specific hero performance"}
+      },
+      "phases": [
+        {"name": "preparation", "time": 0.8, "visible_change": "torso compresses behind the door while the hand control remains low", "channel": "torso-local"},
+        {"name": "primary-action", "time": 1.5, "visible_change": "central control advances and the right arm opens into a halt gesture", "channel": "central-and-right-arm-local"},
+        {"name": "exact-hold", "time": 2.1, "visible_change": "body and halt palm stop on the percussion accent", "channel": "articulated-pose-hold"},
+        {"name": "reaction", "time": 2.7, "visible_change": "head and torso soften toward the sister after the bully recoils", "channel": "head-and-torso-local"},
+        {"name": "settle", "time": 3.2, "visible_change": "arm lowers while the body remains between sister and bully", "channel": "right-arm-local"}
+      ]
+    },
+    {
+      "actor_id": "bully",
+      "objective": "retain control until the entrance breaks his confidence",
+      "initial_attention": "sister",
+      "final_attention": "zhongkui",
+      "performance_mode": "pose-replacement",
+      "lead_control": "torso-balance-state",
+      "support": "screen-plane foot baseline",
+      "production_asset": {
+        "asset_id": "bully-recoil-poses",
+        "status": "approved",
+        "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "performance_state": "confidence-breaks-into-recoil",
+        "reuse_authorization": {"approved": false, "reason": "shot-specific reaction"}
+      },
+      "phases": [
+        {"name": "attention-change", "time": 1.2, "visible_change": "head and chest turn from sister to the entrance", "channel": "complete-pose-replacement"},
+        {"name": "reaction", "time": 2.15, "visible_change": "weight shifts back and the forward hand retracts", "channel": "complete-pose-replacement"},
+        {"name": "settle", "time": 2.8, "visible_change": "rear foot catches the body in a defensive silhouette", "channel": "complete-pose-replacement"}
+      ]
+    }
+  ],
+  "sound_cues": [
+    {"id": "cue-entry-gong", "time": 1.45, "type": "percussion", "binds_to": "zhongkui.primary-action"},
+    {"id": "cue-hold", "time": 2.1, "type": "percussion", "binds_to": "zhongkui.exact-hold"},
+    {"id": "cue-bully-step", "time": 2.2, "type": "effect", "binds_to": "bully.reaction"}
+  ],
+  "earned_stillness": null,
+  "rendered_review": {
+    "status": "approved",
+    "video": "renders/scene-benchmark.mp4",
+    "video_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "observed_performance": ["intention changes through local controls", "bully reaction lands after the hold", "presentation motion is not required for readability"],
+    "reviewer": "director",
+    "notes": "Readable muted; sound adds identity and weight."
+  }
+}

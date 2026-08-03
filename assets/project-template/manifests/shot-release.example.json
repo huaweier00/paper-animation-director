@@ -1,5 +1,5 @@
 {
-  "schema_version": 4,
+  "schema_version": 5,
   "shot_id": "scene-01",
   "decision": "approved",
   "rendered_mp4": "../../renders/scene-01-approved.mp4",
@@ -11,6 +11,9 @@
   "visual_direction_contract": "../../story-manifest.json",
   "motion_contract": "motion-contract.json",
   "rendered_motion_review": "rendered-motion-review.json",
+  "medium_contract": "../../medium-contract.json",
+  "performance_contract": "performance-contract.json",
+  "audio_contract": "../../audio-contract.json",
   "motion_required": true,
   "record_sha256": {
     "animation_decision": "0000000000000000000000000000000000000000000000000000000000000000",
@@ -19,7 +22,10 @@
     "engine_inputs": "0000000000000000000000000000000000000000000000000000000000000000",
     "visual_direction_contract": "0000000000000000000000000000000000000000000000000000000000000000",
     "motion_contract": "0000000000000000000000000000000000000000000000000000000000000000",
-    "rendered_motion_review": "0000000000000000000000000000000000000000000000000000000000000000"
+    "rendered_motion_review": "0000000000000000000000000000000000000000000000000000000000000000",
+    "medium_contract": "0000000000000000000000000000000000000000000000000000000000000000",
+    "performance_contract": "0000000000000000000000000000000000000000000000000000000000000000",
+    "audio_contract": "0000000000000000000000000000000000000000000000000000000000000000"
   },
   "contact_required": true,
   "audio_required": true,
@@ -39,6 +45,10 @@
     "asset_finish": "pass",
     "phone_size_readability": "pass",
     "motion_integrity": "pass",
+    "medium_truth": "pass",
+    "performance_contract": "pass",
+    "pose_reuse": "pass",
+    "sound_action_sync": "pass",
     "animation_responsibility": "pass",
     "voice_only": "pass",
     "combined_picture_sound_subtitles": "pass",

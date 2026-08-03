@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "shot_id": "moving-poster-negative",
+  "medium_route": "shadow-theatre",
+  "responsibility": "The hero must interrupt the aggressor and visibly protect the victim.",
+  "motion_required": true,
+  "presentation_motion_is_not_proof": true,
+  "actors": [
+    {
+      "actor_id": "hero",
+      "objective": "interrupt the aggressor and then redirect attention toward the victim",
+      "initial_attention": "aggressor",
+      "final_attention": "victim",
+      "performance_mode": "articulated-rig",
+      "lead_control": "whole image wrapper",
+      "support": "undeclared floating layer",
+      "production_asset": {
+        "asset_id": "hero-reused-full-body-png",
+        "status": "planned",
+        "sha256": "",
+        "performance_state": "same-neutral-pose",
+        "reuse_authorization": {
+          "approved": false,
+          "reason": "selected because it was already available"
+        }
+      },
+      "phases": [
+        {
+          "name": "primary-action",
+          "time": 1.2,
+          "visible_change": "the unchanged full-body PNG slides into frame",
+          "channel": "root-translation"
+        },
+        {
+          "name": "result",
+          "time": 3.2,
+          "visible_change": "the camera pushes toward the unchanged pose",
+          "channel": "camera"
+        }
+      ]
+    }
+  ],
+  "sound_cues": [],
+  "earned_stillness": null,
+  "rendered_review": {
+    "status": "pending",
+    "video": "renders/moving-poster-negative.mp4",
+    "video_sha256": "",
+    "observed_performance": [],
+    "reviewer": "",
+    "notes": ""
+  }
+}

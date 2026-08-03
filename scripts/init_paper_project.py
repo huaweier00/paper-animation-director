@@ -14,7 +14,12 @@ from validate_story_manifest import validate_manifest
 
 
 PORTABLE_PIPELINE_SCRIPTS = (
+    "audit_audio_mode.py",
+    "audit_medium_contract.py",
     "audit_motion_contract.py",
+    "audit_performance_contract.py",
+    "audit_pose_reuse.py",
+    "audit_release_index.py",
     "audit_rendered_motion.py",
     "audit_blender_action_library.py",
     "audit_engine_inputs.py",
@@ -23,6 +28,7 @@ PORTABLE_PIPELINE_SCRIPTS = (
     "audit_three_scene.py",
     "blender_action_library.py",
     "bind_release_evidence.py",
+    "bind_release_index.py",
     "build_blender_paper_impact.py",
     "build_motion_review.py",
     "build_routed_shot.py",
@@ -45,6 +51,206 @@ ASPECT_SIZES = {
     "1:1": (1080, 1080),
     "4:5": (1080, 1350),
 }
+
+MEDIUM_ROUTES = {"shadow-theatre", "cutout-paper", "painterly-limited"}
+
+
+def build_medium_contract(data: dict) -> dict:
+    route = data.get("medium_route", "painterly-limited")
+    if route not in MEDIUM_ROUTES:
+        raise ValueError(f"medium_route must be one of {sorted(MEDIUM_ROUTES)}")
+    scenes = [item for item in data.get("scenes", []) if isinstance(item, dict)]
+    benchmark_id = data.get("performance_benchmark_shot") or (scenes[0].get("id") if scenes else "benchmark-shot")
+    modes = {
+        "shadow-theatre": ["articulated-rig", "pose-replacement", "connected-ensemble", "full-scene-state", "deliberate-still"],
+        "cutout-paper": ["articulated-rig", "pose-replacement", "connected-ensemble", "full-scene-state", "deliberate-still"],
+        "painterly-limited": ["pose-replacement", "articulated-rig", "full-scene-state", "selective-local-motion", "deliberate-still"],
+    }[route]
+    truth = {
+        "shadow-theatre": {
+            "material": "translucent carved leather-like performer with authored openwork and transmitted color",
+            "performer": "articulated screen-plane puppet with declared central and local controls",
+            "space": "rear-lit translucent screen with entry, exit, support, overlap, and occlusion rules",
+            "light": "rear light whose distance changes edge softness, scale, and color transmission",
+            "sound": "voice or singing, percussion, music, effects, ambience, and silence cue manipulation",
+        },
+        "cutout-paper": {
+            "material": "opaque cut paper with authored edge, thickness, fold, hinge, and contact behavior",
+            "performer": "constructed cutout performer using joints, replacement poses, or connected ensembles",
+            "space": "layered paper stage with declared support, overlap, occlusion, and depth ordering",
+            "light": "directional stage light reveals paper thickness and contact without fake shadow physics",
+            "sound": "voice, foley, music, effects, ambience, and silence support each action phrase",
+        },
+        "painterly-limited": {
+            "material": "painted image states with authored brush, edge, wash, and compositing behavior",
+            "performer": "pose states, selective local controls, or full-scene states preserve painterly integrity",
+            "space": "painted depth planes with declared support, overlap, atmosphere, and focal hierarchy",
+            "light": "painted light logic remains coherent across state changes and compositing",
+            "sound": "voice, music, effects, ambience, and silence carry rhythm without replacing visible acting",
+        },
+    }[route]
+    contract = {
+        "schema_version": 1,
+        "project_id": data["project"],
+        "route": route,
+        "status": "draft",
+        "medium_truth": truth,
+        "performance_policy": {
+            "actor_internal_change_required": True,
+            "allowed_modes": modes,
+            "presentation_only_not_action_proof": True,
+            "earned_stillness_required": True,
+            "pose_reuse_requires_compatible_intent": True,
+        },
+        "forbidden_shortcuts": [
+            "root-transform-as-hero-acting",
+            "camera-motion-as-action-proof",
+            "surface-texture-as-material-proof",
+            "same-pose-across-incompatible-intentions",
+        ],
+        "benchmark": {
+            "shot_id": benchmark_id,
+            "rendered_mp4": "",
+            "status": "planned",
+            "proves": [
+                "intention-to-result performance phrase",
+                "affected-character or environment reaction",
+                "static-camera readability without presentation motion",
+            ],
+        },
+        "approval": {"reviewer": "", "notes": ""},
+    }
+    if route == "shadow-theatre":
+        contract["forbidden_shortcuts"].extend(
+            ["opaque-full-body-png-as-shadow-puppet", "silent-shadow-theatre-master"]
+        )
+        contract["shadow_theatre"] = {
+            "screen": {
+                "type": "rear-lit-translucent",
+                "transmitted_light": True,
+                "screen_plane_required": True,
+                "performer_distance_affects_projection": True,
+            },
+            "articulation": {
+                "required": True,
+                "puppet_model_required": True,
+                "control_logic": "central-control-plus-local-hand-or-prop-controls",
+            },
+            "audio": {
+                "allowed_modes": ["full-performance", "dialogue-and-sound-design"],
+                "silent_allowed": False,
+                "music_only_allowed": False,
+            },
+        }
+    elif route == "cutout-paper":
+        contract["cutout_paper"] = {
+            "construction": "separate authored pieces, joints, replacement states, and complete object silhouettes",
+            "material_behavior": "edge, thickness, fold, hinge, contact, and stepped deformation remain visible",
+            "depth_model": "declared paper layers, support planes, occlusion order, and contact shadows",
+            "performer_model_required": True,
+        }
+    else:
+        contract["painterly_limited"] = {
+            "paint_system": "authored painterly states with consistent line, wash, texture scale, and edge hierarchy",
+            "integration_model": "performers and environments share value, light, atmosphere, and contact logic",
+            "state_change_model": "pose replacement, local motion, or full-scene states carry observable change",
+            "claims_shadow_physics": False,
+        }
+    return contract
+
+
+def build_audio_contract(data: dict, route: str) -> dict:
+    requested = data.get("audio_performance_mode")
+    mode = requested or ("full-performance" if route == "shadow-theatre" else "dialogue-and-sound-design")
+    return {
+        "schema_version": 1,
+        "project_id": data["project"],
+        "medium_route": route,
+        "mode": mode,
+        "status": "draft",
+        "expected_spoken_or_sung_lines": max(1, len(data.get("scenes", []))),
+        "cue_ledger": "audio/cue-ledger.json",
+        "dry_stems": [],
+        "music_and_effect_stems": [],
+        "expected_in_master": ["dialogue-or-singing", "music", "effects", "ambience"],
+        "intentional_silence_rationale": "",
+        "approval": {"reviewer": "", "notes": ""},
+    }
+
+
+def build_performance_contract(scene: dict, route: str) -> dict:
+    shot_id = scene["id"]
+    duration = float(scene["duration"])
+    spatial = scene.get("spatial_contract", {})
+    actors = []
+    for actor in spatial.get("actors", []) if isinstance(spatial, dict) else []:
+        if not isinstance(actor, dict) or not isinstance(actor.get("id"), str):
+            continue
+        actor_id = actor["id"]
+        action = actor.get("action", {}) if isinstance(actor.get("action"), dict) else {}
+        start = round(duration * 0.12, 3)
+        action_time = round(duration * 0.46, 3)
+        result = round(duration * 0.76, 3)
+        actors.append(
+            {
+                "actor_id": actor_id,
+                "objective": f"perform {action.get('type', 'the declared action')} on {action.get('target', 'the declared target')}",
+                "initial_attention": action.get("target", "declared-target"),
+                "final_attention": action.get("target", "declared-target"),
+                "performance_mode": "pose-replacement",
+                "lead_control": "author-before-production",
+                "support": actor.get("support_surface", "declared-support-surface"),
+                "production_asset": {
+                    "asset_id": f"{actor_id}-{shot_id}-performance",
+                    "status": "planned",
+                    "sha256": "",
+                    "performance_state": "planned-shot-specific-state",
+                    "reuse_authorization": {"approved": False, "reason": "shot-specific by default"},
+                },
+                "phases": [
+                    {"name": "preparation", "time": start, "visible_change": "body prepares before the declared action", "channel": "complete-pose-replacement"},
+                    {"name": "primary-action", "time": action_time, "visible_change": "lead body part completes the declared action", "channel": "complete-pose-replacement"},
+                    {"name": "result", "time": result, "visible_change": "body and attention register the result", "channel": "complete-pose-replacement"},
+                ],
+            }
+        )
+    motion_required = bool(actors)
+    sound_cues = []
+    if route == "shadow-theatre" and motion_required:
+        sound_cues = [
+            {
+                "id": f"cue-{actor['actor_id']}-action",
+                "time": actor["phases"][1]["time"],
+                "type": "author-before-production",
+                "binds_to": f"{actor['actor_id']}.primary-action",
+            }
+            for actor in actors
+        ]
+    return {
+        "schema_version": 1,
+        "shot_id": shot_id,
+        "medium_route": route,
+        "responsibility": scene.get("responsibility", "Author the shot's causal action and visible result."),
+        "motion_required": motion_required,
+        "presentation_motion_is_not_proof": True,
+        "actors": actors,
+        "sound_cues": sound_cues,
+        "earned_stillness": None if motion_required else {
+            "prior_cause": "Declare the event that earns the hold.",
+            "present_read": "Declare what remains readable in the held frame.",
+            "tension_support": "Declare composition, sound, or duration support.",
+            "why_motion_weakens": "Declare why added motion would weaken the beat.",
+            "exit_condition": "Declare what ends the hold.",
+        },
+        "rendered_review": {
+            "status": "pending",
+            "video": f"renders/{shot_id}.mp4",
+            "video_sha256": "",
+            "observed_performance": [],
+            "reviewer": "",
+            "notes": "",
+        },
+    }
 
 
 def zone_center(zone: object) -> list[float]:
@@ -171,6 +377,15 @@ def main() -> None:
     (output / "compositions" / "scene-template.html").unlink(missing_ok=True)
     (output / "compositions" / "hybrid-scene-template.html").unlink(missing_ok=True)
     shutil.copy2(manifest, output / "story-manifest.json")
+    medium_contract = build_medium_contract(data)
+    (output / "medium-contract.json").write_text(
+        json.dumps(medium_contract, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    (output / "audio-contract.json").write_text(
+        json.dumps(build_audio_contract(data, medium_contract["route"]), ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
     for relative in (
         "assets/references/characters",
         "assets/source-atlases",
@@ -201,6 +416,15 @@ def main() -> None:
         }
         (shot_root / "spatial-contract.json").write_text(
             json.dumps(spatial_sidecar, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        (shot_root / "performance-contract.json").write_text(
+            json.dumps(
+                build_performance_contract(scene, medium_contract["route"]),
+                ensure_ascii=False,
+                indent=2,
+            )
+            + "\n",
             encoding="utf-8",
         )
         motion = build_motion_contract(scene, width, height)

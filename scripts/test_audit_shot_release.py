@@ -10,6 +10,8 @@ import subprocess
 import tempfile
 import unittest
 
+from bind_release_evidence import bind as bind_release_evidence
+
 
 SCRIPT_PATH = pathlib.Path(__file__).with_name("audit_shot_release.py")
 SPEC = importlib.util.spec_from_file_location("audit_shot_release", SCRIPT_PATH)
@@ -63,6 +65,57 @@ def valid_release() -> dict:
 
 
 class ShotReleaseAuditTests(unittest.TestCase):
+    def test_v5_binder_hashes_new_contract_records(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="release-v5-bind-") as directory:
+            root = pathlib.Path(directory)
+            release = valid_release()
+            release["schema_version"] = 5
+            release.update(
+                {
+                    "medium_contract": "medium-contract.json",
+                    "performance_contract": "performance-contract.json",
+                    "audio_contract": "audio-contract.json",
+                }
+            )
+            for value in (
+                release["rendered_mp4"],
+                release["animation_decision"],
+                release["shot_capabilities"],
+                release["engine_plan"],
+                release["engine_inputs"],
+                release["visual_direction_contract"],
+                release["motion_contract"],
+                release["rendered_motion_review"],
+                release["medium_contract"],
+                release["performance_contract"],
+                release["audio_contract"],
+                *release["proof_frames"].values(),
+            ):
+                (root / value).write_bytes(str(value).encode("utf-8"))
+            bound = bind_release_evidence(release, base=root)
+            for field in ("medium_contract", "performance_contract", "audio_contract"):
+                self.assertEqual(len(bound["record_sha256"][field]), 64)
+
+    def test_v5_requires_medium_performance_audio_and_new_checks(self) -> None:
+        release = valid_release()
+        release["schema_version"] = 5
+        errors, _ = MODULE.validate(
+            release,
+            pathlib.Path("."),
+            strict=True,
+            require_approved=True,
+            check_paths=False,
+        )
+        for required in (
+            "medium_contract",
+            "performance_contract",
+            "audio_contract",
+            "checks.medium_truth",
+            "checks.pose_reuse",
+            "checks.sound_action_sync",
+        ):
+            self.assertTrue(any(required in error for error in errors), (required, errors))
+
     def test_valid_motion_evidence_release_passes_without_path_checks(self) -> None:
         errors, warnings = MODULE.validate(
             valid_release(),

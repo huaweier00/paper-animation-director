@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "package_manager": "npm",
+  "lockfile": "package-lock.json",
+  "install": {
+    "online": "npm ci",
+    "offline": "npm ci --offline --cache <prepared-npm-cache>",
+    "portable_cache_prepare": "npm ci --cache <portable-npm-cache> --prefer-offline"
+  },
+  "policies": {
+    "exact_versions_required": true,
+    "runtime_network_forbidden": true,
+    "cdn_imports_forbidden": true,
+    "online_npx_fallback_forbidden": true,
+    "lock_drift_blocks_render": true
+  },
+  "required_runtime_files": {
+    "@rive-app/canvas-advanced-single": "node_modules/@rive-app/canvas-advanced-single/canvas_advanced_single.mjs",
+    "gsap": "node_modules/gsap/dist/gsap.min.js",
+    "pixi.js": "node_modules/pixi.js/dist/pixi.mjs",
+    "three": "node_modules/three/build/three.webgpu.js",
+    "hyperframes": "node_modules/.bin/hyperframes"
+  }
+}

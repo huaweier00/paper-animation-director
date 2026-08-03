@@ -4,13 +4,22 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import re
 import sys
 from pathlib import Path
 from typing import Any
 
+from audit_engine_inputs import (
+    find_project_root,
+    load_json as load_engine_json,
+    validate_engine_inputs,
+)
+from audit_rendered_motion import load as load_motion_review
+from audit_rendered_motion import validate as validate_rendered_motion
 
-REQUIRED_CHECKS = (
+BASE_REQUIRED_CHECKS = (
     "muted_semantics",
     "required_nouns",
     "prop_realism",
@@ -22,6 +31,23 @@ REQUIRED_CHECKS = (
     "caption_safety",
     "rendered_mp4_frames",
     "technical_decode",
+)
+ROUTING_REQUIRED_CHECKS = ("engine_plan_fulfilled", "deterministic_seek")
+MOTION_REQUIRED_CHECKS = ("motion_integrity",)
+VISUAL_REQUIRED_CHECKS = (
+    "art_direction_match",
+    "focal_hierarchy",
+    "value_separation",
+    "palette_lighting_coherence",
+    "character_environment_integration",
+    "asset_finish",
+    "phone_size_readability",
+)
+REQUIRED_CHECKS = (
+    *BASE_REQUIRED_CHECKS,
+    *ROUTING_REQUIRED_CHECKS,
+    *VISUAL_REQUIRED_CHECKS,
+    *MOTION_REQUIRED_CHECKS,
 )
 
 REQUIRED_FRAMES = ("first", "midpoint", "proof", "final")
@@ -37,6 +63,7 @@ PROP_FIELDS = (
     "forbidden_substitutions",
 )
 LINE_FIELDS = ("id", "speaker", "text", "source", "start", "measured_duration")
+SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 
 
 def nonempty(value: Any) -> bool:
@@ -48,6 +75,28 @@ def resolve_path(base: Path, value: Any) -> Path | None:
         return None
     path = Path(value)
     return path if path.is_absolute() else base / path
+
+
+def sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def bind_hash(
+    errors: list[str],
+    *,
+    label: str,
+    declared: Any,
+    path: Path | None,
+    check_paths: bool,
+) -> None:
+    if not isinstance(declared, str) or not SHA256_RE.match(declared):
+        errors.append(f"{label}: expected a lowercase SHA-256 digest")
+    elif check_paths and path is not None and path.is_file() and sha256(path) != declared:
+        errors.append(f"{label}: evidence is stale because the bound file changed")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -73,6 +122,32 @@ def validate(
     errors: list[str] = []
     warnings: list[str] = []
 
+    schema_version = data.get("schema_version", 1)
+    if schema_version not in {1, 2, 3, 4}:
+        errors.append("schema_version: expected 1 (legacy), 2 (hybrid), 3 (premium visual), or 4 (motion-evidence release)")
+    hybrid_release = schema_version in {2, 3, 4}
+    premium_visual_release = schema_version in {3, 4}
+    motion_evidence_release = schema_version == 4
+    motion_required = data.get("motion_required") if motion_evidence_release else False
+    if schema_version == 1:
+        warnings.append(
+            "schema_version: legacy v1 release; use v2 with shot_capabilities and "
+            "engine_plan when this shot is revised"
+        )
+    elif schema_version == 2:
+        warnings.append(
+            "schema_version: v2 hybrid release has no premium visual-direction gate; "
+            "use v3 when this shot is revised"
+        )
+    elif schema_version == 3:
+        warnings.append(
+            "schema_version: v3 premium visual release has no hash-bound rendered motion evidence; "
+            "use v4 when this shot is revised"
+        )
+    elif not isinstance(motion_required, bool):
+        errors.append("motion_required: schema v4 must explicitly declare true or false")
+        motion_required = False
+
     if not nonempty(data.get("shot_id")):
         errors.append("shot_id: add a stable shot identifier")
 
@@ -87,22 +162,121 @@ def validate(
         errors.append("rendered_mp4: provide the rendered review MP4")
     elif check_paths and not rendered.is_file():
         errors.append(f"rendered_mp4: file does not exist: {rendered}")
+    if motion_evidence_release:
+        bind_hash(
+            errors,
+            label="rendered_mp4_sha256",
+            declared=data.get("rendered_mp4_sha256"),
+            path=rendered,
+            check_paths=check_paths,
+        )
 
-    animation_decision = resolve_path(base, data.get("animation_decision"))
-    if animation_decision is None:
-        errors.append(
-            "animation_decision: point to the reviewed animation-decision.json"
+    required_records = {
+        "animation_decision": "point to the reviewed animation-decision.json",
+    }
+    if hybrid_release:
+        required_records.update(
+            {
+                "shot_capabilities": "point to the reviewed shot-capabilities.json",
+                "engine_plan": "point to the generated and reviewed engine-plan.json",
+                "engine_inputs": "point to the audited engine-inputs.json",
+            }
         )
-    elif check_paths and not animation_decision.is_file():
-        errors.append(
-            f"animation_decision: file does not exist: {animation_decision}"
+    if premium_visual_release:
+        required_records["visual_direction_contract"] = (
+            "point to the approved story manifest or visual-direction contract"
         )
+    if motion_evidence_release and motion_required:
+        required_records.update(
+            {
+                "motion_contract": "point to the audited motion-contract.json",
+                "rendered_motion_review": "point to the approved hash-bound rendered-motion-review.json",
+            }
+        )
+    resolved_records: dict[str, Path] = {}
+    for field, guidance in required_records.items():
+        record_path = resolve_path(base, data.get(field))
+        if record_path is None:
+            errors.append(f"{field}: {guidance}")
+        elif check_paths and not record_path.is_file():
+            errors.append(f"{field}: file does not exist: {record_path}")
+        else:
+            resolved_records[field] = record_path
+
+    if motion_evidence_release:
+        record_hashes = data.get("record_sha256")
+        if not isinstance(record_hashes, dict):
+            errors.append("record_sha256: bind every required upstream record")
+            record_hashes = {}
+        for field in required_records:
+            bind_hash(
+                errors,
+                label=f"record_sha256.{field}",
+                declared=record_hashes.get(field),
+                path=resolved_records.get(field),
+                check_paths=check_paths,
+            )
+        if check_paths:
+            for field, record_path in resolved_records.items():
+                if field == "visual_direction_contract" or not record_path.is_file():
+                    continue
+                try:
+                    upstream = load_json(record_path)
+                except ValueError as exc:
+                    errors.append(f"{field}: {exc}")
+                    continue
+                if upstream.get("shot_id") != data.get("shot_id"):
+                    errors.append(f"{field}.shot_id: must match the release shot_id")
+
+    if (
+        hybrid_release
+        and check_paths
+        and "engine_plan" in resolved_records
+        and "engine_inputs" in resolved_records
+        and resolved_records["engine_plan"].is_file()
+        and resolved_records["engine_inputs"].is_file()
+    ):
+        try:
+            engine_plan = load_engine_json(resolved_records["engine_plan"], "engine plan")
+            engine_inputs = load_engine_json(resolved_records["engine_inputs"], "engine inputs")
+            input_errors, input_warnings = validate_engine_inputs(
+                engine_inputs,
+                engine_plan,
+                project_root=find_project_root(base),
+                phase="release",
+                check_paths=True,
+            )
+            errors.extend(f"engine_inputs_audit: {message}" for message in input_errors)
+            warnings.extend(f"engine_inputs_audit: {message}" for message in input_warnings)
+        except ValueError as exc:
+            errors.append(f"engine_inputs_audit: {exc}")
+
+    if motion_evidence_release and motion_required and check_paths and "rendered_motion_review" in resolved_records:
+        review_path = resolved_records["rendered_motion_review"]
+        if review_path.is_file():
+            try:
+                motion_errors, motion_warnings = validate_rendered_motion(
+                    load_motion_review(review_path),
+                    project=find_project_root(base),
+                )
+                errors.extend(f"rendered_motion_review: {message}" for message in motion_errors)
+                warnings.extend(f"rendered_motion_review: {message}" for message in motion_warnings)
+            except (OSError, ValueError, json.JSONDecodeError) as exc:
+                errors.append(f"rendered_motion_review: {exc}")
 
     checks = data.get("checks")
     if not isinstance(checks, dict):
         errors.append("checks: expected an object")
         checks = {}
-    for key in REQUIRED_CHECKS:
+    if motion_evidence_release and motion_required:
+        required_checks = REQUIRED_CHECKS
+    elif premium_visual_release:
+        required_checks = (*BASE_REQUIRED_CHECKS, *ROUTING_REQUIRED_CHECKS, *VISUAL_REQUIRED_CHECKS)
+    elif hybrid_release:
+        required_checks = (*BASE_REQUIRED_CHECKS, *ROUTING_REQUIRED_CHECKS)
+    else:
+        required_checks = BASE_REQUIRED_CHECKS
+    for key in required_checks:
         status = checks.get(key)
         if status != "pass":
             errors.append(f"checks.{key}: expected pass, got {status!r}")
@@ -118,6 +292,20 @@ def validate(
         elif check_paths and not frame.is_file():
             errors.append(f"proof_frames.{key}: file does not exist: {frame}")
 
+    frame_hashes = data.get("proof_frame_sha256") if motion_evidence_release else {}
+    if motion_evidence_release and not isinstance(frame_hashes, dict):
+        errors.append("proof_frame_sha256: bind every required rendered proof frame")
+        frame_hashes = {}
+    if motion_evidence_release:
+        for key in REQUIRED_FRAMES:
+            bind_hash(
+                errors,
+                label=f"proof_frame_sha256.{key}",
+                declared=frame_hashes.get(key),
+                path=resolve_path(base, frames.get(key)),
+                check_paths=check_paths,
+            )
+
     contact_required = bool(data.get("contact_required"))
     if contact_required:
         contact = resolve_path(base, frames.get("contact"))
@@ -125,6 +313,14 @@ def validate(
             errors.append("proof_frames.contact: required for this contact shot")
         elif check_paths and not contact.is_file():
             errors.append(f"proof_frames.contact: file does not exist: {contact}")
+        if motion_evidence_release:
+            bind_hash(
+                errors,
+                label="proof_frame_sha256.contact",
+                declared=frame_hashes.get("contact"),
+                path=contact,
+                check_paths=check_paths,
+            )
 
     critical_props = data.get("critical_props", [])
     if not isinstance(critical_props, list):

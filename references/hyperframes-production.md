@@ -14,6 +14,8 @@ Build every scene synchronously with one paused registered GSAP timeline. Use bl
 
 Use complete pose images as state frames. Crossfade only when replacement is the intended pose change; keep the overlap short and preserve world position. Prefer one connected transform path for travel, with secondary bob, load, rope, or water motion on nested elements.
 
+When an approved `engine-plan.json` selects a specialized layer, follow `hybrid-shot-pipeline.md` instead of forcing the requirement into pose replacement or whole-image transforms. Keep GSAP for shot orchestration and DOM overlays. Drive Rive/Spine, PixiJS, and Three.js from absolute shot-local time through `hf-seek` or the bundled hybrid runtime. Bake Blender and every history-dependent simulation before assembly.
+
 ## Motion proof
 
 Create a `*.motion.json` sidecar for each scene. Assert real story selectors: lamp fall, bucket arrival, water stream, fire reduction, prop contact, final pose, or another observable event. A helper or decorative particle is not proof.
@@ -27,5 +29,7 @@ npm run check -- --samples 25
 ```
 
 Capture each scene midpoint, each transition boundary, every proof frame, the first frame, final-minus-hold, and exact final. Use focused keyframe shots for contact and paths. Review the assembled pixels, not only logs.
+
+For every embedded specialized engine, also seek proof times in non-sequential order and compare repeated captures at the same timestamp. A live preview that only works after playing from frame zero is a failed deterministic integration.
 
 Render only after the complete Studio preview is approved. Extract frames from the resulting MP4 and verify audio streams with FFprobe.

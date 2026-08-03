@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "shot_id": "scene-01-find-seed",
+  "duration": 6.0,
+  "frame": {
+    "width": 1080,
+    "height": 1920
+  },
+  "actors": [
+    {
+      "actor_id": "bird",
+      "expected_facing": "right",
+      "asset_status": "planned",
+      "asset_facts": "shots/scene-01-find-seed/asset-facts/bird-hop-right-v1.json",
+      "implementation": {
+        "engine": "gsap-dom",
+        "selector": "#scene-01-find-seed-bird",
+        "source": "compositions/scene-01-find-seed.html"
+      },
+      "active": [0.45, 3.2],
+      "start": [0.12, 0.65],
+      "end": [0.64, 0.65],
+      "locomotion": "forward-travel",
+      "exception_reason": "",
+      "instance_transform": {
+        "scale_x": 1,
+        "rotation_degrees": 0
+      },
+      "mirror": {
+        "applied": false,
+        "policy": "forbidden"
+      },
+      "support": {
+        "mode": "grounded",
+        "surface": "field-ground",
+        "baseline": 0.82
+      },
+      "contact": {
+        "required": true,
+        "target": "seed",
+        "time": 3.05
+      },
+      "proof_times": {
+        "entry": 0.45,
+        "early": 1.0,
+        "midpoint": 1.8,
+        "late": 2.55,
+        "contact": 3.05,
+        "settle": 3.35,
+        "exit": 3.8
+      }
+    }
+  ]
+}

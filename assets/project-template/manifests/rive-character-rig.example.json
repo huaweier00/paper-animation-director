@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "rig_id": "hero-standard-rig",
+  "profile": "production-hero",
+  "asset": "assets/characters/hero/hero.riv",
+  "identity_reference": "assets/characters/hero/identity-reference.png",
+  "artboard": "Character",
+  "state_machine_forbidden": true,
+  "animations": {
+    "idle": {
+      "name": "idle",
+      "playback": "loop",
+      "duration_seconds": 2
+    },
+    "locomotion": {
+      "name": "walk",
+      "playback": "loop",
+      "duration_seconds": 0.8
+    },
+    "gesture": {
+      "name": "gesture",
+      "playback": "clamp",
+      "duration_seconds": 1.2
+    }
+  },
+  "anchors": {
+    "root": "root",
+    "head": "head",
+    "left_hand": "hand-l",
+    "right_hand": "hand-r",
+    "left_foot": "foot-l",
+    "right_foot": "foot-r"
+  },
+  "facing": [
+    "camera",
+    "left",
+    "right"
+  ],
+  "fallback": "assets/characters/hero/hero-linear-fallback.webm",
+  "inspection_report": "assets/characters/hero/hero-rig-inspection.json",
+  "proof_times": [
+    0,
+    0.25,
+    0.5,
+    0.75
+  ]
+}

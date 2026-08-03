@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PixiJS paper effects benchmark</title>
+    <script src="./assets/runtime/hybrid-bootstrap.js"></script>
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: #19140f;
+      }
+      #pixi-paper-effects {
+        position: relative;
+        width: 960px;
+        height: 540px;
+        overflow: hidden;
+        color: #f5ead1;
+        font-family: Georgia, serif;
+      }
+      #pixi-paper-effects-fill {
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(circle at 68% 36%, rgba(207, 169, 104, 0.18), transparent 28%),
+          linear-gradient(155deg, #2d2419, #17120e 72%);
+      }
+      #pixi-paper-effects-ground {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 88px;
+        height: 3px;
+        background: rgba(229, 205, 158, 0.5);
+        box-shadow: 0 8px 30px rgba(160, 111, 65, 0.2);
+      }
+      #pixi-paper-effects-origin {
+        position: absolute;
+        left: 50%;
+        bottom: 80px;
+        width: 14px;
+        height: 14px;
+        border: 2px solid rgba(245, 234, 209, 0.76);
+        border-radius: 50%;
+        transform: translate(-50%, 50%);
+      }
+      #pixi-paper-effects-canvas {
+        position: absolute;
+        inset: 0;
+        width: 960px;
+        height: 540px;
+      }
+      #pixi-paper-effects-label {
+        position: absolute;
+        left: 34px;
+        top: 28px;
+        padding: 12px 16px;
+        border: 1px solid rgba(245, 234, 209, 0.26);
+        background: rgba(25, 20, 15, 0.62);
+        font-size: 18px;
+        letter-spacing: 0.08em;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="pixi-paper-effects"
+      data-composition-id="pixi-paper-effects"
+      data-start="0"
+      data-duration="3.2"
+      data-width="960"
+      data-height="540"
+    >
+      <div id="pixi-paper-effects-fill"></div>
+      <div id="pixi-paper-effects-ground"></div>
+      <canvas
+        id="pixi-paper-effects-canvas"
+        data-hf-id="pixi-paper-effects-canvas"
+        width="960"
+        height="540"
+      ></canvas>
+      <div id="pixi-paper-effects-origin"></div>
+      <div id="pixi-paper-effects-label">DETERMINISTIC IMPACT DUST</div>
+    </div>
+    <script src="./node_modules/gsap/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const timeline = gsap.timeline({ paused: true });
+      timeline
+        .fromTo(
+          "#pixi-paper-effects-origin",
+          { scale: 0.55, opacity: 0.35 },
+          { scale: 1.35, opacity: 0, duration: 0.42, ease: "power2.out" },
+          0.38,
+        )
+        .fromTo(
+          "#pixi-paper-effects-label",
+          { opacity: 0.72 },
+          {
+            keyframes: [
+              { opacity: 1, duration: 0.7 },
+              { opacity: 0.78, duration: 0.8 },
+              { opacity: 1, duration: 0.8 },
+              { opacity: 0.86, duration: 0.9 }
+            ],
+            ease: "none"
+          },
+          0,
+        );
+      window.__timelines["pixi-paper-effects"] = timeline;
+    </script>
+    <script type="module">
+      import * as PIXI from "./node_modules/pixi.js/dist/pixi.mjs";
+      import {
+        registerRenderer,
+      } from "./assets/runtime/hybrid-runtime.js";
+      import {
+        mountPixiPaperEffects,
+      } from "./assets/runtime/adapters/pixi-seekable.js";
+
+      await mountPixiPaperEffects({
+        PIXI,
+        id: "pixi-paper-effects:impact-dust",
+        root: "#pixi-paper-effects",
+        canvas: document.getElementById("pixi-paper-effects-canvas"),
+        width: 960,
+        height: 540,
+        durationSeconds: 3.2,
+        registerRenderer,
+        rendererPreference: "webgl",
+        masks: [
+          {
+            id: "ground-contact-zone",
+            kind: "band",
+            origin: [0, 0.58],
+            size: [1, 0.42],
+            invert: false
+          }
+        ],
+        effects: [
+          {
+            id: "impact-dust",
+            preset: "impact-dust",
+            seed: "pixi-paper-effects:impact-dust:v1",
+            origin: [0.5, 0.83],
+            start: 0.4,
+            duration: 2.2,
+            count: 58,
+            opacity: 0.92,
+            mask: "ground-contact-zone"
+          },
+          {
+            id: "embers",
+            preset: "embers",
+            seed: "pixi-paper-effects:embers:v1",
+            origin: [0.5, 0.82],
+            start: 0.72,
+            duration: 2.1,
+            count: 24,
+            opacity: 0.58,
+            mask: "ground-contact-zone"
+          },
+          {
+            id: "paper-scraps",
+            preset: "paper-scraps",
+            seed: "pixi-paper-effects:paper-scraps:v1",
+            origin: [0.5, 0.8],
+            start: 0.48,
+            duration: 2.4,
+            count: 32,
+            opacity: 0.72,
+            mask: "ground-contact-zone"
+          }
+        ]
+      });
+      document.documentElement.dataset.engineReady = "pixijs-webgpu";
+    </script>
+  </body>
+</html>

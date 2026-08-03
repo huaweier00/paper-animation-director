@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "asset": "/Users/a8/Desktop/work-space/.p2-skill-work/paper-animation-director/assets/engine-benchmarks/rive-linear-character/assets/centaur.riv",
+  "asset_bytes": 46302,
+  "asset_sha256": "8fc833d1a98ebf803521375e570b4dbcd36e15c79c45eab4e411421392f2f764",
+  "runtime": "/Users/a8/Desktop/work-space/videos/saiweng-lost-horse-v1/node_modules/@rive-app/canvas-advanced-single/canvas_advanced_single.mjs",
+  "browser": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+  "artboards": [
+    {
+      "name": "Apple",
+      "animations": [
+        "Idle",
+        "in",
+        "out",
+        "Idle_in"
+      ],
+      "state_machines": [
+        "Apple"
+      ]
+    },
+    {
+      "name": "column",
+      "animations": [],
+      "state_machines": [
+        "Auto Generated State Machine"
+      ]
+    },
+    {
+      "name": "Character",
+      "animations": [
+        "WalkBack",
+        "Aim",
+        "Idle",
+        "Walk",
+        "Fire",
+        "Blink",
+        "Idle_fire"
+      ],
+      "state_machines": [
+        "Motion"
+      ]
+    },
+    {
+      "name": "Background_tile",
+      "animations": [],
+      "state_machines": [
+        "Auto Generated State Machine"
+      ]
+    },
+    {
+      "name": "Arrow",
+      "animations": [
+        "Animation 1"
+      ],
+      "state_machines": []
+    },
+    {
+      "name": "Example",
+      "animations": [
+        "Idle_fire",
+        "Walk",
+        "Fire",
+        "Aim",
+        "WalkBack",
+        "Blink",
+        "Idle"
+      ],
+      "state_machines": [
+        "Motion"
+      ]
+    }
+  ],
+  "ok": true
+}

@@ -1,0 +1,10 @@
+{
+  "name": "blender-paper-impact-benchmark",
+  "private": true,
+  "dependencies": {
+    "gsap": "3.15.0"
+  },
+  "devDependencies": {
+    "hyperframes": "0.7.83"
+  }
+}

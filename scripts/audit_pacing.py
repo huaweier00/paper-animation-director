@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audit narration gaps, scene tails, activity coverage, and visual-beat density."""
+"""Audit narration gaps, scene tails, activity coverage, social hooks, and visual-beat density."""
 
 from __future__ import annotations
 
@@ -63,6 +63,7 @@ def main() -> None:
     findings: list[dict] = []
     rows: list[dict] = []
     voice_windows: list[tuple[float, float, str]] = []
+    visual_beats_global: list[tuple[float, str, str]] = []
     global_start = 0.0
 
     for index, scene in enumerate(data.get("scenes", [])):
@@ -104,8 +105,59 @@ def main() -> None:
         beat_span = duration / event_count if duration else 0
         if beat_span > args.max_visual_beat and not scene.get("activity_windows"):
             findings.append({"severity": "warning", "scene": scene_id, "message": f"average {beat_span:.2f}s per declared event; add internal visual beats or activity windows"})
-        rows.append({"id": scene_id, "start": global_start, "end": global_start + duration, "duration": duration, "events": len(scene.get("events", [])), "dead": dead})
+
+        visual_beats = scene.get("visual_beats", [])
+        beat_times: list[float] = []
+        if isinstance(visual_beats, list):
+            for beat in visual_beats:
+                if not isinstance(beat, dict) or not isinstance(beat.get("time"), (int, float)):
+                    continue
+                beat_time = float(beat["time"])
+                if 0 <= beat_time <= duration:
+                    beat_times.append(beat_time)
+                    visual_beats_global.append((global_start + beat_time, scene_id, str(beat.get("function", "beat"))))
+        if beat_times:
+            checkpoints = sorted(set(beat_times + [duration]))
+            previous_time = 0.0
+            for current_time in checkpoints:
+                gap = current_time - previous_time
+                if gap > args.max_visual_beat and not str(scene.get("long_hold_rationale", "")).strip():
+                    findings.append(
+                        {
+                            "severity": "warning",
+                            "scene": scene_id,
+                            "message": f"visual-beat gap {previous_time:.2f}–{current_time:.2f}s ({gap:.2f}s) has no long_hold_rationale",
+                        }
+                    )
+                previous_time = current_time
+        rows.append({"id": scene_id, "start": global_start, "end": global_start + duration, "duration": duration, "events": len(scene.get("events", [])), "visual_beats": len(beat_times), "dead": dead})
         global_start += duration
+
+    platform = data.get("platform", {})
+    social_contract = data.get("social_contract", {})
+    destination = str(platform.get("destination", "")).strip().lower() if isinstance(platform, dict) else ""
+    if destination in {"douyin", "reels", "shorts", "social-feed"}:
+        ordered_beats = sorted(visual_beats_global)
+        if not ordered_beats:
+            findings.append({"severity": "error", "scene": "global", "message": "social route has no declared visual_beats"})
+        elif ordered_beats[0][0] > 0.1:
+            findings.append({"severity": "error", "scene": ordered_beats[0][1], "message": f"first visual beat begins at {ordered_beats[0][0]:.2f}s; the feed-native first frame must already carry the event"})
+
+        opening = social_contract.get("opening", {}) if isinstance(social_contract, dict) else {}
+        proof_limit = opening.get("visual_proof_by", 3.0) if isinstance(opening, dict) else 3.0
+        promise_proofs = [time for time, _scene, function in ordered_beats if function == "promise-proof"]
+        if not any(time <= float(proof_limit) for time in promise_proofs):
+            findings.append({"severity": "error", "scene": "global", "message": f"no promise-proof visual beat lands by {float(proof_limit):.2f}s"})
+
+        value = social_contract.get("value", {}) if isinstance(social_contract, dict) else {}
+        save_object = value.get("save_object", {}) if isinstance(value, dict) else {}
+        hold = save_object.get("on_screen_hold") if isinstance(save_object, dict) else None
+        save_beats = [time for time, _scene, function in ordered_beats if function == "save-object"]
+        if isinstance(hold, (int, float)) and hold > 0:
+            if not save_beats:
+                findings.append({"severity": "error", "scene": "global", "message": "declared save object has no visual beat"})
+            elif global_start - save_beats[-1] + 0.05 < float(hold):
+                findings.append({"severity": "warning", "scene": "global", "message": f"save-object hold is {global_start - save_beats[-1]:.2f}s, shorter than declared {float(hold):.2f}s"})
 
     for previous, current in zip(voice_windows, voice_windows[1:]):
         gap = current[0] - previous[1]
@@ -125,12 +177,12 @@ def main() -> None:
         "",
         "## Scene timeline",
         "",
-        "| Scene | Start | End | Duration | Events | Dead zones |",
-        "| --- | ---: | ---: | ---: | ---: | --- |",
+        "| Scene | Start | End | Duration | Events | Visual beats | Dead zones |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | --- |",
     ]
     for row in rows:
         dead_text = ", ".join(f"{start:.2f}–{end:.2f}" for start, end in row["dead"]) or "—"
-        lines.append(f"| {row['id']} | {row['start']:.2f} | {row['end']:.2f} | {row['duration']:.2f} | {row['events']} | {dead_text} |")
+        lines.append(f"| {row['id']} | {row['start']:.2f} | {row['end']:.2f} | {row['duration']:.2f} | {row['events']} | {row['visual_beats']} | {dead_text} |")
     lines.extend(["", "## Findings", ""])
     if findings:
         for item in findings:

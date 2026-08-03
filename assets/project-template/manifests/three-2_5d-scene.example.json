@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "engine": "three-webgpu",
+  "runtime": "three/webgpu",
+  "runtime_version": "0.185.1",
+  "delivery": "embedded-seekable",
+  "scene_factory": "assets/runtime/scenes/paper-diorama-2_5d.js",
+  "renderer": {
+    "preferred_backend": "webgpu",
+    "fallback_backend": "webgl2",
+    "pixel_ratio": 1,
+    "alpha": true,
+    "antialias": false
+  },
+  "clock": "hyperframes-absolute-seconds",
+  "camera": {
+    "kind": "perspective",
+    "fov_degrees": 34,
+    "near": 0.1,
+    "far": 100
+  },
+  "depth_layers": [
+    "backdrop",
+    "far-mountains",
+    "near-mountains",
+    "character",
+    "foreground"
+  ],
+  "previous_frame_effects_forbidden": true,
+  "local_assets_only": true,
+  "proof_times": [
+    0.1,
+    0.9,
+    1.8,
+    2.7
+  ]
+}

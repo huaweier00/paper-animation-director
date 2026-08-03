@@ -1,0 +1,15 @@
+{
+  "duration": 2,
+  "assertions": [
+    {
+      "kind": "appearsBy",
+      "selector": "#blender-paper-impact-video",
+      "bySec": 0.1
+    },
+    {
+      "kind": "appearsBy",
+      "selector": "#blender-paper-impact-label",
+      "bySec": 0.25
+    }
+  ]
+}

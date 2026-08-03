@@ -137,7 +137,9 @@ The spoken line, issuing gesture, propagated response, and final state must occu
 
 ## Shot asset gate
 
-After the contract passes, set `asset_plan.generation_policy: shot-just-in-time` and `asset_plan.space_approved: true`. List only the assets needed to prove this shot. For every character asset, record `actor_id`, the approved identity-reference ID, camera side, facing, screen direction, light direction, action, and target.
+After the contract passes, set `asset_plan.generation_policy: shot-just-in-time` and `asset_plan.space_approved: true`. List only the assets needed to prove this shot. For every character asset, record `actor_id`, canonical identity ID, approved model-pack view, camera side, expected facing, screen direction, light direction, action, and target.
+
+Once a final production image exists, replace declared orientation with an observed `asset-facts.json` record. Hash the file and record intrinsic facing, forward axis, head/chest/gaze evidence, support/contact points, asymmetry, and mirror policy. When the capability profile requires movement or contact, make `motion-contract.json` the single owner of travel, rendered facing, selector, active times, instance transform, contact, and proof times. Compile that contract into the implementation track; do not retype direction independently in CSS or engine code.
 
 Reject generated or reused assets when any hard field differs. Existing availability never overrides shot fit.
 

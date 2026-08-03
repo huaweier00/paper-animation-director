@@ -29,4 +29,18 @@
     tl.to("#__SCENE_ID__-depth-a", { scale: 1.04, x: 16, duration: __DURATION__, ease: "sine.inOut" }, 0);
     window.__timelines["__SCENE_ID__"] = tl;
   </script>
+  <script>
+    window.__motionReady = window.__motionReady || {};
+    window.__motionReady["__SCENE_ID__"] = (async () => {
+      const response = await fetch("./shots/__SCENE_ID__/compiled-motion-track.json");
+      if (response.status === 404) return;
+      if (!response.ok) throw new Error(`compiled-motion-track HTTP ${response.status}`);
+      const compiledMotion = await response.json();
+      const { applyGsapMotion, seekTimelineToPending } = await import("./assets/runtime/motion-contract.js");
+      for (const track of compiledMotion.tracks || []) {
+        applyGsapMotion({ gsap, timeline: tl, compiled: compiledMotion, actorId: track.actor_id });
+      }
+      seekTimelineToPending({ timeline: tl, root: "#__SCENE_ID__", duration: compiledMotion.duration });
+    })();
+  </script>
 </template>

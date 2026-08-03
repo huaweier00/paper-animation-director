@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "provider": "fish_audio",
+  "model": "s2.1-pro",
+  "speed_policy": "voice-baseline-plus-contextual-per-line-or-beat",
+  "pause_policy": "expressive-cues-for-performance-measured-silence-for-exact-timing",
+  "voice": {
+    "role": "narrator",
+    "reference_id": "public-model-id",
+    "market_url": "https://fish.audio/m/public-model-id/",
+    "audition_baseline_speed": 1.0,
+    "baseline_reason": "Replace after same-text audition; this value is not a film-wide preset."
+  },
+  "global_performance_contract": {
+    "style": "warm, restrained story narration",
+    "listener_relationship": "speak with the audience, not at them",
+    "forbidden_delivery": [
+      "advertising cadence",
+      "newsreader cadence",
+      "dialect drift",
+      "melodrama",
+      "ridicule",
+      "moralizing"
+    ]
+  },
+  "lines": [
+    {
+      "id": "narration-01",
+      "speaker": "narrator",
+      "raw_text": "宋国有一个农夫，每天都在田里耕作。",
+      "context": {
+        "previous_change": "story opening",
+        "narrative_function": "establish ordinary life",
+        "subtext": "introduce the farmer with warmth and no judgment",
+        "primary_direction": "warm and plainspoken",
+        "information_density": "low",
+        "focus_words": ["农夫", "每天", "耕作"],
+        "forbidden_delivery": ["comic setup", "premature irony"]
+      },
+      "variants": [
+        {
+          "id": "A-baseline",
+          "annotated_text": "宋国有一个农夫，每天都在田里耕作。",
+          "prosody": {
+            "speed": 1.0
+          },
+          "speed_reason": "audition baseline",
+          "pause_strategy": "punctuation",
+          "status": "candidate"
+        },
+        {
+          "id": "B-contextual",
+          "annotated_text": "[温暖而朴素的故事讲述]宋国有一个农夫，每天都在田里耕作。",
+          "prosody": {
+            "speed": 0.98
+          },
+          "speed_reason": "allow the opening image to settle without sounding solemn",
+          "pause_strategy": "punctuation",
+          "status": "candidate"
+        }
+      ],
+      "selected_variant": null
+    },
+    {
+      "id": "narration-02",
+      "speaker": "narrator",
+      "raw_text": "他等了一天。又等了一天。",
+      "context": {
+        "previous_change": "initial luck has become expectation",
+        "narrative_function": "show repetition and expectation fading",
+        "subtext": "understand the farmer without mocking him",
+        "primary_direction": "expectation gradually falling away",
+        "information_density": "low",
+        "focus_words": ["一天", "又"],
+        "forbidden_delivery": ["sarcasm", "comic disappointment"]
+      },
+      "variants": [
+        {
+          "id": "A-baseline",
+          "annotated_text": "他等了一天。又等了一天。",
+          "prosody": {
+            "speed": 1.0
+          },
+          "speed_reason": "audition baseline",
+          "pause_strategy": "punctuation",
+          "status": "candidate"
+        },
+        {
+          "id": "B-expressive-pause",
+          "annotated_text": "[仍抱着期待]他等了一天。[long pause][期待渐渐落空]又等了一天。",
+          "prosody": {
+            "speed": 0.94
+          },
+          "speed_reason": "slower second beat supports the emotional change",
+          "pause_strategy": "model-expressive-long-pause",
+          "status": "candidate"
+        },
+        {
+          "id": "C-exact-pause",
+          "segments": [
+            {
+              "annotated_text": "[仍抱着期待]他等了一天。",
+              "prosody": {
+                "speed": 0.98
+              }
+            },
+            {
+              "silence_seconds": 0.8
+            },
+            {
+              "annotated_text": "[期待渐渐落空]又等了一天。",
+              "prosody": {
+                "speed": 0.92
+              }
+            }
+          ],
+          "speed_reason": "separate segments express the change and preserve exact picture timing",
+          "pause_strategy": "measured-silence-in-post",
+          "status": "candidate"
+        }
+      ],
+      "selected_variant": null
+    }
+  ],
+  "api_baseline": {
+    "temperature": 0.7,
+    "top_p": 0.7,
+    "normalize": true,
+    "latency": "normal",
+    "chunk_length": 300,
+    "repetition_penalty": 1.2,
+    "condition_on_previous_chunks": true,
+    "format": "wav",
+    "sample_rate": 44100
+  }
+}

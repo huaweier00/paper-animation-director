@@ -2,9 +2,9 @@
   "project": "sample-paper-story",
   "story": "A small bird finds a seed before a storm and learns to ask for help.",
   "message": "Preparation and cooperation turn a small effort into safety.",
-  "aspect": "16:9",
+  "aspect": "9:16",
   "fps": 30,
-  "target_duration": 12,
+  "target_duration": 16,
   "language": "zh",
   "subtitle_mode": "zh-en",
   "audio_mode": "dialogue-only",
@@ -12,10 +12,161 @@
     "enabled": false,
     "text": ""
   },
+  "platform": {
+    "destination": "douyin",
+    "distribution_mode": "feed-native",
+    "primary_audience": "Adults and parents who enjoy concise illustrated fables with a reusable takeaway.",
+    "quality_posture": "premium-quality-first",
+    "aspect_decision": {
+      "selected": "9:16",
+      "reason": "Compose faces, the seed, the storm, captions, and the final decision card for a native vertical feed.",
+      "feed_preview_required": true,
+      "non_native_ratio_justification": ""
+    }
+  },
+  "social_contract": {
+    "editorial_promise": "Show that a tiny preparation becomes useful only when the bird asks for help, then leave a reusable cooperation check.",
+    "familiarity_gap": "The audience may know cooperation is good; the episode shows the specific moment when solitary preparation must become a shared action.",
+    "opening": {
+      "first_frame_event": "Wind tears through the grass as the bird and seed are already at risk.",
+      "first_spoken_line": "一颗种子，为什么要两只鸟才能救下来？",
+      "promise_by": 2.8,
+      "visual_proof_by": 2.6,
+      "logo_before_promise": false,
+      "cover_to_opening_match": "The cover shows the seed, two birds, and the incoming storm; the first frame begins that same danger."
+    },
+    "value": {
+      "transferable_insight": "Preparation becomes resilient when ownership, help, and the next action are explicit.",
+      "modern_connection": "Use the same check when a small task is too fragile for one person to protect alone.",
+      "save_object": {
+        "type": "three-question-decision-card",
+        "content": ["现在最怕失去什么？", "谁能真正帮上忙？", "下一步由谁行动？"],
+        "on_screen_hold": 4.2,
+        "readability_review": "approved"
+      }
+    },
+    "packaging": {
+      "series_label": "纸上寓言 · 01",
+      "episode_title": "一颗种子，为什么需要两只鸟？",
+      "cover_copy": "一颗种子\n两只鸟来救",
+      "cover_subjects": ["bird", "helper-bird", "seed", "storm"],
+      "feed_to_opening_match": "approved",
+      "thumbnail_review": "approved",
+      "pinned_question": "你最近哪件事，真正需要另一个人一起完成？"
+    },
+    "animatic": {
+      "hook_animatic": "reviews/hook-animatic.mp4",
+      "full_scratch_animatic": "reviews/full-scratch-animatic.mp4",
+      "hook_review": "approved",
+      "full_edit_review": "approved",
+      "review_notes": "Opening risk, full causal edit, and final three-question card are readable with scratch audio and muted."
+    }
+  },
+  "visual_direction": {
+    "audience_layers": {
+      "immediate_read": "A child or fast-scrolling viewer immediately reads one vulnerable seed, an approaching storm, and two birds choosing to protect it together.",
+      "adult_reward": "Adults notice the shift from isolated ownership to shared responsibility, credible bird behavior, restrained botanical detail, and the opening storm shape returning as a protective nest arc."
+    },
+    "emotional_promise": "Move from exposed fragility and cold pressure to active cooperation and enclosed warmth.",
+    "collectible_frame_goal": "The final three-question card remains useful as a standalone image while the two birds and sheltered seed visually complete the story.",
+    "undesirable_impression": "Reject generic AI children's-book art, a museum slide, muddy antique filtering, decorative cutouts, or a mobile-game-ad finish.",
+    "art_route": "soft-gongbi shelter arcs",
+    "shape_language": {
+      "heroes": "round and enclosing ovals with asymmetric gesture",
+      "threat": "narrow wind diagonals and broken grass rhythms",
+      "environment": "large calm fields with one readable middle-ground corridor",
+      "critical_props": "simple complete silhouettes with tactile construction"
+    },
+    "value_design": {
+      "focal_subject": "bird-seed contact, then the shared leaf over the nest",
+      "focal_order": ["face-and-contact", "storm-direction", "shelter-result"],
+      "subject_background_separation": "Warm light figures sit one clear value step above the cool gray-green field; the seed receives the brightest small accent.",
+      "mass_policy": "One large environment mass, one medium actor relationship, and one small high-contrast decision object."
+    },
+    "color_script": {
+      "base_palette": ["cool gray-green", "warm cream", "ochre", "jade"],
+      "accent_policy": "Reserve vermilion-brown for the seed and final decision marks; do not scatter equal saturation through the scenery.",
+      "emotional_arc": "Opening is cool and desaturated; cooperation introduces warm cream; the ending balances jade and ochre inside a warmer enclosure."
+    },
+    "line_and_texture": {
+      "line_rule": "Fine controlled ink at faces and contacts; lighter, softer edges with depth.",
+      "texture_rule": "Smooth silk-like washes with sparse botanical grain at a scale that survives phone display.",
+      "surface_forbidden": ["heavy paper fiber", "torn white rim", "cardboard thickness", "uniform texture noise", "vector gloss"]
+    },
+    "lighting_and_depth": {
+      "key_light": "Soft upper-left light remains coherent through both shots; storm shadow cools the opposite side.",
+      "depth_plan": "Foreground grass uses selective dark overlap, actors remain crisp in the middle ground, and distant foliage loses contrast and edge detail.",
+      "contact_shadow_policy": "Small restrained shadows attach feet, seed, leaf, and nest to their declared support surfaces."
+    },
+    "composition": {
+      "big_medium_small": "Unequal environment, actor-pair, and seed/nest masses; no evenly spaced decorative repetition.",
+      "negative_space": "Reserve wind direction and gaze space ahead of the birds, then close that space around the protected seed.",
+      "phone_focal_point": "The primary face-to-object or beak-to-load contact remains identifiable at normal vertical-feed size.",
+      "subtitle_integration": "Bottom-center captions sit over a deliberately quiet value field and never cover bird, seed, leaf, or nest contact."
+    },
+    "signature": "Threatening diagonal grass gradually bends into the same enclosing arc used by the leaf and final question card.",
+    "anti_generic": {
+      "forbidden_traits": ["dead-eyed neutral poses", "centered symmetry", "muddy beige-teal grade", "random floating particles", "uniform sharpness", "fake handwriting", "generic cute bird proportions"]
+    },
+    "lookdev": {
+      "route_candidates": [
+        {
+          "id": "route-a-soft-gongbi",
+          "differentiator": "Fine ink, silk-like washes, shallow theatrical depth, and warm/cool restraint.",
+          "strengths": "Supports emotion, cultural tactility, and readable character acting.",
+          "risks": "Can become pale or museum-like if value hierarchy is weak.",
+          "audience_impression": "Gentle, crafted, literary, and contemporary enough for a phone feed."
+        },
+        {
+          "id": "route-b-bold-cut-stage",
+          "differentiator": "Large cut silhouettes, harder theatrical light, and very sparse texture.",
+          "strengths": "Excellent small-screen readability and energetic threat shapes.",
+          "risks": "May lose tenderness and botanical specificity.",
+          "audience_impression": "Graphic, playful, immediate, and younger."
+        },
+        {
+          "id": "route-c-watercolor-air",
+          "differentiator": "Atmospheric watercolor fields, selective ink detail, and deeper weather perspective.",
+          "strengths": "Strong storm mood and adult visual reward.",
+          "risks": "Characters may dissolve into low-contrast scenery.",
+          "audience_impression": "Poetic, cinematic, and contemplative."
+        }
+      ],
+      "selected_route": "route-a-soft-gongbi",
+      "selection_rationale": "It best preserves phone-size action clarity while supporting warmth, cultural craft, and a collectible ending; route B is too blunt and route C risks weak character separation.",
+      "hero_frames": [
+        { "role": "opening-pressure", "path": "reviews/lookdev/opening-pressure.png", "reference_only": true },
+        { "role": "central-choice", "path": "reviews/lookdev/central-choice.png", "reference_only": true },
+        { "role": "consequence-save", "path": "reviews/lookdev/consequence-save.png", "reference_only": true }
+      ],
+      "integration_benchmark": {
+        "path": "reviews/lookdev/character-environment-integration.png",
+        "reference_only": true,
+        "review": "approved"
+      },
+      "phone_size_review": "approved",
+      "grayscale_review": "approved",
+      "blur_focal_review": "approved",
+      "anti_generic_review": "approved",
+      "style_lock": "approved"
+    },
+    "asset_policy": {
+      "candidate_comparison_required": true,
+      "first_plausible_auto_accept": false,
+      "rejection_log_required": true,
+      "composite_test_required": true,
+      "intended_display_scale_required": true,
+      "upscale_after_composition_approval": true,
+      "selection_dimensions": ["semantics", "silhouette-pose", "identity-anatomy", "composition", "value-color", "light-depth", "finish", "distinctiveness"]
+    }
+  },
   "voice": {
     "provider": "manual",
+    "model": "",
     "reference_id": "",
-    "speed_policy": "natural-1x",
+    "speed_policy": "contextual-per-line-or-beat",
+    "expressive_direction_policy": "context-derived-not-fixed-vocabulary",
+    "exact_pause_policy": "measured-silence-in-post",
     "generate_by_scene": true
   },
   "characters": [
@@ -30,6 +181,21 @@
         "purpose": "identity-consistency-reference-only",
         "animation_use": false,
         "approved": true
+      },
+      "identity_model_pack": {
+        "status": "approved",
+        "reference_only": true,
+        "animation_use": false,
+        "views": [
+          { "view": "left-profile", "path": "assets/references/characters/bird-left-profile.png" },
+          { "view": "right-profile", "path": "assets/references/characters/bird-right-profile.png" },
+          { "view": "three-quarter-front", "path": "assets/references/characters/bird-three-quarter.png" }
+        ],
+        "scale_reference": "One approved body-height unit from crown to grounded foot baseline.",
+        "asymmetry_notes": "Indigo wing-tip pattern and eye highlights must remain side-correct; do not infer direction from filename alone.",
+        "expression_range": "Neutral, alert, worried, effort, relief; preserve beak and eye construction.",
+        "attachment_rules": "Feet attach to the ground baseline; beak and both wing roots have named contact points.",
+        "forbidden_variations": ["no mirrored wing markings", "no long tail", "no costume", "no facial redesign"]
       },
       "stable_traits": {
         "silhouette": "round ochre body with short beak",
@@ -48,6 +214,21 @@
         "purpose": "identity-consistency-reference-only",
         "animation_use": false,
         "approved": true
+      },
+      "identity_model_pack": {
+        "status": "approved",
+        "reference_only": true,
+        "animation_use": false,
+        "views": [
+          { "view": "left-profile", "path": "assets/references/characters/helper-bird-left-profile.png" },
+          { "view": "right-profile", "path": "assets/references/characters/helper-bird-right-profile.png" },
+          { "view": "three-quarter-front", "path": "assets/references/characters/helper-bird-three-quarter.png" }
+        ],
+        "scale_reference": "1.18 bird body-height units on the same grounded baseline.",
+        "asymmetry_notes": "Long tail sweep and jade wing marking remain side-correct; preserve warm-cream chest placement.",
+        "expression_range": "Neutral, attentive, effort, reassurance, relief; preserve the longer beak and eye spacing.",
+        "attachment_rules": "Feet share the project ground baseline; beak, wing roots, and tail base have named pivots.",
+        "forbidden_variations": ["no mirrored wing markings", "no round tail", "no costume", "no facial redesign"]
       },
       "stable_traits": {
         "silhouette": "slender jade body with long tail",
@@ -130,7 +311,9 @@
           {
             "id": "scene-01-background",
             "kind": "background",
-            "status": "planned"
+            "status": "planned",
+            "dominant": true,
+            "intended_max_frame_fraction": 1.0
           },
           {
             "id": "bird-hop-right",
@@ -141,7 +324,9 @@
             "screen_direction": "left-to-right",
             "facing": "right",
             "action": "pick-up",
-            "target": "seed"
+            "target": "seed",
+            "dominant": true,
+            "intended_max_frame_fraction": 0.36
           }
         ]
       },
@@ -176,6 +361,13 @@
       "activity_windows": [
         { "start": 0, "end": 5.5, "type": "character-and-prop-action" },
         { "start": 5.5, "end": 6, "type": "transition" }
+      ],
+      "visual_beats": [
+        { "time": 0.0, "change": "Wind bends the grass and puts the bird and seed in immediate danger.", "function": "hook" },
+        { "time": 1.1, "change": "The bird notices the exposed seed and changes direction.", "function": "attention-shift" },
+        { "time": 2.6, "change": "The beak reaches the seed while the storm closes in.", "function": "promise-proof" },
+        { "time": 4.2, "change": "The seed leaves the ground under the bird's control.", "function": "result" },
+        { "time": 5.5, "change": "The bird looks off-screen for help.", "function": "forward-question" }
       ]
     },
     {
@@ -184,7 +376,7 @@
       "title_en": "Shelter",
       "narrative_goal": "Two birds carry one leaf from screen right to screen left and cover the nest.",
       "narration": "它叫来伙伴，一起把种子藏进温暖的巢里。",
-      "duration": 6,
+      "duration": 10,
       "duration_policy": "voice-plus-action",
       "production_status": "space-approved",
       "spatial_contract": {
@@ -275,7 +467,9 @@
           {
             "id": "scene-02-background",
             "kind": "background",
-            "status": "planned"
+            "status": "planned",
+            "dominant": true,
+            "intended_max_frame_fraction": 1.0
           },
           {
             "id": "shared-leaf-ensemble-left",
@@ -286,7 +480,9 @@
             "screen_direction": "right-to-left",
             "facing": "left",
             "action": "cover",
-            "target": "nest"
+            "target": "nest",
+            "dominant": true,
+            "intended_max_frame_fraction": 0.58
           }
         ]
       },
@@ -294,7 +490,7 @@
         "protected_regions": ["head", "face", "hands", "feet", "action-contact"],
         "edge_clipping": "reject",
         "unplanned_occlusion": "reject",
-        "review_times": [0.0, 3.0, 4.8, 5.95],
+        "review_times": [0.0, 3.0, 4.8, 9.95],
         "intentional_occlusions": []
       },
       "ensemble_actions": [
@@ -328,13 +524,28 @@
       ],
       "activity_windows": [
         { "start": 0, "end": 5.4, "type": "ensemble-action" },
-        { "start": 5.4, "end": 6, "type": "final-hold" }
-      ]
+        { "start": 5.4, "end": 5.8, "type": "transition" },
+        { "start": 5.8, "end": 10, "type": "save-object-hold" }
+      ],
+      "visual_beats": [
+        { "time": 0.0, "change": "The helper enters and both birds take one leaf.", "function": "answer" },
+        { "time": 1.5, "change": "Their shared load crosses toward the nest.", "function": "joint-action" },
+        { "time": 3.2, "change": "The leaf begins to lower over the seed.", "function": "propagation" },
+        { "time": 4.8, "change": "The seed is visibly covered and dry.", "function": "consequence" },
+        { "time": 5.8, "change": "The three-question decision card begins its measured readable hold.", "function": "save-object" }
+      ],
+      "long_hold_rationale": "The final 4.2-second still card is the declared save object; narration pauses so all three questions can be read at feed size."
     }
   ],
   "delivery": {
     "master": true,
     "social_1080p": true,
-    "social_vmaf_floor": 95
+    "social_vmaf_floor": 95,
+    "feed_simulation": "reviews/douyin-feed-simulation.mp4",
+    "feed_simulation_review": "approved",
+    "cover_full": "delivery/cover-1080x1920.png",
+    "cover_thumbnail": "reviews/cover-thumbnail.png",
+    "cover_review": "approved",
+    "save_object_frame": "reviews/save-object-proof.png"
   }
 }

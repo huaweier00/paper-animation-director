@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "shot_id": "scene-01-find-seed",
+  "orchestrator": "hyperframes",
+  "engines": [
+    "rive",
+    "gsap-dom",
+    "pixijs-webgpu"
+  ],
+  "layers": [
+    {
+      "engine": "rive",
+      "role": [
+        "character",
+        "contact"
+      ],
+      "integration": "embedded-seekable",
+      "reason": [
+        "skeletal 2d character motion requires continuous articulation",
+        "continuous contact benefits from a rigged 2D character system"
+      ]
+    },
+    {
+      "engine": "gsap-dom",
+      "role": [
+        "space",
+        "typography"
+      ],
+      "integration": "native",
+      "reason": [
+        "multiplane parallax can remain deterministic on the DOM timeline",
+        "typography and editorial overlays remain on the HyperFrames DOM timeline"
+      ]
+    },
+    {
+      "engine": "pixijs-webgpu",
+      "role": [
+        "effects"
+      ],
+      "integration": "embedded-seekable",
+      "reason": [
+        "2D environmental effects need deterministic GPU particles, masks, or displacement"
+      ]
+    }
+  ],
+  "benchmark_required": true,
+  "risk_score": 6,
+  "seek_contract": {
+    "clock": "hyperframes-absolute-seconds",
+    "event": "hf-seek",
+    "wall_clock_forbidden": true,
+    "unseeded_random_forbidden": true,
+    "stateful_runtime_simulation_forbidden": true
+  },
+  "fallbacks": [
+    {
+      "engine": "rive",
+      "fallback": "pre-render-alpha",
+      "condition": "the animation cannot be reconstructed from absolute time"
+    },
+    {
+      "engine": "pixijs-webgpu",
+      "fallback": "baked-alpha-or-gsap-svg",
+      "condition": "the render environment cannot provide the required GPU path"
+    }
+  ],
+  "asset_requirements": [
+    "a separated or mesh-ready character source plus an approved bone/mesh rig",
+    "local effect textures, deterministic emitters, and fixed particle seeds"
+  ],
+  "proof_requirements": [
+    "limbs follow continuous joint paths",
+    "feet or hooves keep readable support contact",
+    "dust originates at the declared impact point"
+  ]
+}

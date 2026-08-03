@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "orchestrator": "hyperframes",
+  "defaults": {
+    "simple_2d": "gsap-dom",
+    "character_2d": "rive",
+    "character_2d_alternative": "spine",
+    "effects_2d": "pixijs-webgpu",
+    "spatial_2_5d": "three-webgpu",
+    "hero_offline": "blender",
+    "runtime_delivery": "embedded-seekable",
+    "offline_delivery": "pre-render-alpha"
+  },
+  "policies": {
+    "allow_runtime_network": false,
+    "require_local_assets": true,
+    "require_absolute_time": true,
+    "require_seeded_randomness": true,
+    "require_engine_plan": true,
+    "require_engine_benchmark": true,
+    "stateful_simulation_delivery": "pre-render",
+    "state_machine_delivery": "pre-render"
+  }
+}

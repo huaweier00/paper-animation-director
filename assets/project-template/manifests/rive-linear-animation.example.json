@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "engine": "rive",
+  "runtime": "@rive-app/canvas-advanced-single",
+  "runtime_version": "2.39.1",
+  "delivery": "embedded-seekable",
+  "asset": "assets/characters/scene-01-character.riv",
+  "artboard": "Character",
+  "animation": "walk",
+  "playback": "native",
+  "animation_duration_seconds": null,
+  "fit": "contain",
+  "alignment": "center",
+  "state_machine_forbidden": true,
+  "wasm_embedded": true,
+  "fallback": "pre-render-alpha",
+  "proof_times": [
+    0,
+    0.25,
+    0.5,
+    0.75
+  ]
+}

@@ -2,6 +2,8 @@
 
 Use the `imagegen` skill for all generated or edited raster assets. Inspect every referenced image before editing it.
 
+For `premium-quality-first` work, read `visual-art-direction-and-asset-quality.md` before identity or shot asset generation. An asset prompt must inherit the approved visual-direction blocks and the shot contract; adjectives such as “高级、唯美、电影感、8K” do not replace shape, value, palette, line, texture, light, depth, composition, and forbidden-trait decisions.
+
 ## Shared style block
 
 Define animation method, visible medium, line quality, palette, edge treatment, lighting, and depth once. Reuse it across backgrounds, characters, props, and effects. Keep story identity separate from the style block.
@@ -20,13 +22,19 @@ no embossed relief, no curled paper, no pulp grain, no vector gloss
 
 When the user explicitly requests fibrous xuan paper or cut-paper edges, describe those instead. Keep an explicit `surface_forbidden` list so a rejected surface style does not return in later shots.
 
-Lock only this global style block and the approved frontal identity references before shot production. Do not pre-generate backgrounds, props, effects, poses, gait atlases, ensembles, or full-scene plates.
+After the complete animatic and visual route pass, lock this global style block, the approved frontal identity anchors, and the minimum controlled reference-only model packs justified by the sequence layout. Do not pre-generate final backgrounds, props, effects, action poses, gait atlases, ensembles, or full-scene plates.
 
 ## Frontal identity-reference prompt
 
 Generate one person only, front-facing, neutral, preferably full-body, with an unobstructed face, complete costume silhouette, natural proportions, and plain non-narrative background. Exclude walking, gesturing, emotional acting, scenery, interaction, story props, text, watermark, chroma-key production requirements, and alternate views.
 
 Record the result as reference-only generation conditioning. Do not treat it as an animation-ready character cutout.
+
+## Controlled model-pack prompts
+
+After sequence layout establishes the required camera sides, generate only the recurring character's needed left profile, right profile, and useful three-quarter construction views. Condition every view from the canonical frontal anchor. Keep the same neutral construction, grounded baseline, body-height scale, light-neutral presentation, costume logic, and identity; exclude story action and final-shot staging.
+
+Record view name, scale reference, asymmetry, expression range, attachment points, forbidden variations, and approval. Mark every model-pack image `reference_only: true` and `animation_use: false`. The pack removes construction ambiguity; it is not a production atlas or a generic pose library.
 
 ## Shot contract input
 
@@ -67,7 +75,9 @@ Require:
 - no text, watermark, fire, scenery, or unrequested props;
 - no pose crossing a cell boundary.
 
-Also require the active shot’s exact camera side, screen travel direction, facing, gaze, action target, and light direction. Use the frontal identity image only to preserve identity; do not copy its front-facing neutral pose into the action.
+Also require the active shot’s exact camera side, screen travel direction, facing, gaze, action target, and light direction. Use the canonical anchor for identity and the approved model-pack view for side-correct construction; do not copy either neutral reference pose into the action.
+
+After extraction, register each production file in `asset-facts.json` from observed pixels. Record its SHA-256, intrinsic facing, forward axis, observed head/chest/gaze, support/contact evidence, mirror policy, and orientation-evidence frame. A prompt or filename is not orientation evidence.
 
 ## Ensemble prompt
 
@@ -108,10 +118,16 @@ Reject placeholder horizontal lines, generic animal icons, emoji-like symbols, o
 
 ## Re-roll policy
 
-Re-roll weak assets before animation. Reject identity drift, missing body parts, accidental scenery, unintended embedded text, baked fire/water, inconsistent light, wrong actor count, cropped feet, duplicate props, or contact that cannot support the planned action.
+Re-roll weak assets before animation. For every visually dominant asset, compare materially useful candidates at the same crop and intended display scale, record the selected candidate and rejection reasons, then test the selection in the real composite. Never auto-approve the first plausible output. Prefer deterministic drawing, typography, or compositing when additional generations would not solve the defect.
+
+Record the intended maximum frame fraction, source pixel dimensions, close-up suitability, art-direction match, and composite-test result for every approved dominant asset. Upscale only after composition and crop approval; upscaling does not repair anatomy, line, light, perspective, or generic design.
+
+Reject identity drift, missing body parts, accidental scenery, unintended embedded text, baked fire/water, inconsistent light, wrong actor count, cropped feet, duplicate props, or contact that cannot support the planned action.
 
 Also reject an asset that is beautiful but unsuitable for the current room, period, camera side, scale, light direction, travel vector, facing, target, or action. A generated person moving left when the approved shot requires movement right is a failed asset. A window cannot replace a wall that narration identifies as the writing surface.
 
 Reject a prop that is semantically present but visually unrecognizable, physically unsupported, implausibly scaled, or only readable after narration explains it. Compare weapons, plants, currency, official documents, vehicles, tools, containers, and food against at least one concrete structural reference before approval.
 
 Treat every existing asset as an unapproved candidate until it passes the current shot contract. Do not force-fit it because generation was expensive. Do not mirror by default; permit mirroring only after an explicit audit of asymmetry, text, handedness, props, light, contact, and adjacent-shot continuity.
+
+Also reject a technically correct asset that fails the selected visual world: unclear focal hierarchy, muddy value separation, random saturation, dead-eyed or neutral acting, stiff symmetry, incompatible edge/texture scale, pasted-on lighting, generic AI ornament, or a silhouette that disappears at phone size.

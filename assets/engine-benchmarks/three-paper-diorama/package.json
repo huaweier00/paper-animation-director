@@ -1,0 +1,12 @@
+{
+  "name": "three-paper-diorama-benchmark",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "gsap": "3.15.0",
+    "three": "0.185.1"
+  },
+  "devDependencies": {
+    "hyperframes": "0.7.83"
+  }
+}

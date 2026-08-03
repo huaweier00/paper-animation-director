@@ -1,16 +1,44 @@
 {
+  "schema_version": 4,
   "shot_id": "scene-01",
   "decision": "approved",
-  "rendered_mp4": "renders/scene-01-approved.mp4",
+  "rendered_mp4": "../../renders/scene-01-approved.mp4",
+  "rendered_mp4_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
   "animation_decision": "animation-decision.json",
+  "shot_capabilities": "shot-capabilities.json",
+  "engine_plan": "engine-plan.json",
+  "engine_inputs": "engine-inputs.json",
+  "visual_direction_contract": "../../story-manifest.json",
+  "motion_contract": "motion-contract.json",
+  "rendered_motion_review": "rendered-motion-review.json",
+  "motion_required": true,
+  "record_sha256": {
+    "animation_decision": "0000000000000000000000000000000000000000000000000000000000000000",
+    "shot_capabilities": "0000000000000000000000000000000000000000000000000000000000000000",
+    "engine_plan": "0000000000000000000000000000000000000000000000000000000000000000",
+    "engine_inputs": "0000000000000000000000000000000000000000000000000000000000000000",
+    "visual_direction_contract": "0000000000000000000000000000000000000000000000000000000000000000",
+    "motion_contract": "0000000000000000000000000000000000000000000000000000000000000000",
+    "rendered_motion_review": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
   "contact_required": true,
   "audio_required": true,
   "checks": {
+    "engine_plan_fulfilled": "pass",
+    "deterministic_seek": "pass",
     "muted_semantics": "pass",
     "required_nouns": "pass",
     "prop_realism": "pass",
     "support_grounding": "pass",
     "identity_continuity": "pass",
+    "art_direction_match": "pass",
+    "focal_hierarchy": "pass",
+    "value_separation": "pass",
+    "palette_lighting_coherence": "pass",
+    "character_environment_integration": "pass",
+    "asset_finish": "pass",
+    "phone_size_readability": "pass",
+    "motion_integrity": "pass",
     "animation_responsibility": "pass",
     "voice_only": "pass",
     "combined_picture_sound_subtitles": "pass",
@@ -19,11 +47,18 @@
     "technical_decode": "pass"
   },
   "proof_frames": {
-    "first": "reviews/scene-01-first.png",
-    "midpoint": "reviews/scene-01-midpoint.png",
-    "contact": "reviews/scene-01-contact.png",
-    "proof": "reviews/scene-01-proof.png",
-    "final": "reviews/scene-01-final.png"
+    "first": "review/scene-01-first.png",
+    "midpoint": "review/scene-01-midpoint.png",
+    "contact": "review/scene-01-contact.png",
+    "proof": "review/scene-01-proof.png",
+    "final": "review/scene-01-final.png"
+  },
+  "proof_frame_sha256": {
+    "first": "0000000000000000000000000000000000000000000000000000000000000000",
+    "midpoint": "0000000000000000000000000000000000000000000000000000000000000000",
+    "contact": "0000000000000000000000000000000000000000000000000000000000000000",
+    "proof": "0000000000000000000000000000000000000000000000000000000000000000",
+    "final": "0000000000000000000000000000000000000000000000000000000000000000"
   },
   "critical_props": [
     {
@@ -44,11 +79,11 @@
       "id": "scene-01-narrator-01",
       "speaker": "narrator",
       "text": "已批准的旁白或对白。",
-      "source": "assets/audio/scene-01-narrator-01.wav",
+      "source": "../../assets/audio/scene-01-narrator-01.wav",
       "start": 0.4,
       "measured_duration": 3.8,
       "audible_check": "pass"
     }
   ],
-  "review_notes": "镜头完成了 animation-decision.json 中声明的叙事职责；静音、现实物件、地面接触、声音、字幕和技术检查均通过。"
+  "review_notes": "镜头完成了 animation-decision.json 中声明的叙事职责；与 visual_direction 一致，并在手机尺寸通过焦点、明暗、色光、人物环境融合、素材完成度检查；静音、现实物件、地面接触、声音、字幕和技术检查均通过。"
 }

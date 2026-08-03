@@ -1,0 +1,10 @@
+{
+  "duration": 3.2,
+  "assertions": [
+    {
+      "kind": "appearsBy",
+      "selector": "#pixi-paper-effects-canvas",
+      "bySec": 0.1
+    }
+  ]
+}

@@ -15,6 +15,8 @@ ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 VALID_ASPECTS = {"16:9", "9:16", "1:1", "4:5"}
 VALID_SUBTITLES = {"none", "zh", "en", "zh-en", "source", "bilingual"}
 VALID_AUDIO = {"dialogue-only", "full-mix", "stems", "silent"}
+VALID_PHASES = {"editorial", "production", "release"}
+SOCIAL_DESTINATIONS = {"douyin", "reels", "shorts", "social-feed"}
 VALID_DIRECTIONS = {"left-to-right", "right-to-left", "stationary"}
 VALID_FACINGS = {"left", "right", "front"}
 VALID_PRODUCTION_STATUS = {
@@ -27,8 +29,20 @@ VALID_PRODUCTION_STATUS = {
     "reviewed",
 }
 IDENTITY_PURPOSE = "identity-consistency-reference-only"
+MODEL_PACK_STATUS = "approved"
 SHOT_ASSET_POLICY = "shot-just-in-time"
 REQUIRED_PROTECTED_REGIONS = {"head", "face", "hands", "feet", "action-contact"}
+REQUIRED_LOOKDEV_ROLES = {"opening-pressure", "central-choice", "consequence-save"}
+REQUIRED_SELECTION_DIMENSIONS = {
+    "semantics",
+    "silhouette-pose",
+    "identity-anatomy",
+    "composition",
+    "value-color",
+    "light-depth",
+    "finish",
+    "distinctiveness",
+}
 
 
 def finding(severity: str, path: str, message: str) -> dict[str, str]:
@@ -47,6 +61,327 @@ def valid_zone(value: Any) -> bool:
         and 0 <= value[0] < value[2] <= 1
         and 0 <= value[1] < value[3] <= 1
     )
+
+
+def validate_social_contract(
+    data: dict[str, Any],
+    project_dir: Path | None,
+    phase: str,
+) -> list[dict[str, str]]:
+    out: list[dict[str, str]] = []
+    platform = data.get("platform")
+    if not isinstance(platform, dict):
+        return out
+    destination = str(platform.get("destination", "")).strip().lower()
+    if destination not in SOCIAL_DESTINATIONS:
+        return out
+
+    if not nonempty(platform.get("primary_audience")):
+        out.append(finding("error", "platform.primary_audience", "name one primary audience for the social edit"))
+    if platform.get("quality_posture") != "premium-quality-first":
+        out.append(finding("error", "platform.quality_posture", "set premium-quality-first for the精品 social route"))
+    if platform.get("distribution_mode") not in {"feed-native", "horizontal-longform", "cross-platform"}:
+        out.append(finding("error", "platform.distribution_mode", "declare feed-native, horizontal-longform, or cross-platform"))
+
+    aspect = data.get("aspect")
+    aspect_decision = platform.get("aspect_decision")
+    if not isinstance(aspect_decision, dict):
+        out.append(finding("error", "platform.aspect_decision", "record the selected ratio, reason, and feed-preview requirement"))
+    else:
+        if aspect_decision.get("selected") != aspect:
+            out.append(finding("error", "platform.aspect_decision.selected", "match the manifest aspect"))
+        if not nonempty(aspect_decision.get("reason")):
+            out.append(finding("error", "platform.aspect_decision.reason", "explain how the ratio serves the story in the feed"))
+        if aspect_decision.get("feed_preview_required") is not True:
+            out.append(finding("error", "platform.aspect_decision.feed_preview_required", "require a real-size vertical-feed preview"))
+        if platform.get("distribution_mode") == "feed-native" and aspect != "9:16" and not nonempty(
+            aspect_decision.get("non_native_ratio_justification")
+        ):
+            out.append(
+                finding(
+                    "error",
+                    "platform.aspect_decision.non_native_ratio_justification",
+                    "justify a non-9:16 feed-native composition and prove it in the feed preview",
+                )
+            )
+
+    contract = data.get("social_contract")
+    if not isinstance(contract, dict):
+        return out + [finding("error", "social_contract", "add the social editorial, opening, value, packaging, and animatic contract")]
+    for field, message in (
+        ("editorial_promise", "state the concrete viewer payoff"),
+        ("familiarity_gap", "state what this treatment adds beyond a familiar plot"),
+    ):
+        if not nonempty(contract.get(field)):
+            out.append(finding("error", f"social_contract.{field}", message))
+
+    opening = contract.get("opening")
+    if not isinstance(opening, dict):
+        out.append(finding("error", "social_contract.opening", "declare first frame, first line, and proof by three seconds"))
+    else:
+        for field in ("first_frame_event", "first_spoken_line", "cover_to_opening_match"):
+            if not nonempty(opening.get(field)):
+                out.append(finding("error", f"social_contract.opening.{field}", "required for the opening contract"))
+        for field in ("promise_by", "visual_proof_by"):
+            value = opening.get(field)
+            if not isinstance(value, (int, float)) or isinstance(value, bool) or not 0 <= float(value) <= 3.0:
+                out.append(finding("error", f"social_contract.opening.{field}", "use a timestamp from 0.0 through 3.0 seconds"))
+        if opening.get("logo_before_promise") is not False:
+            out.append(finding("error", "social_contract.opening.logo_before_promise", "set false; prove the promise before branding"))
+
+    value = contract.get("value")
+    if not isinstance(value, dict):
+        out.append(finding("error", "social_contract.value", "declare the transferable insight, modern connection, and save object"))
+    else:
+        for field in ("transferable_insight", "modern_connection"):
+            if not nonempty(value.get(field)):
+                out.append(finding("error", f"social_contract.value.{field}", "required for a useful social payoff"))
+        save_object = value.get("save_object")
+        if not isinstance(save_object, dict):
+            out.append(finding("error", "social_contract.value.save_object", "declare a concrete reusable save object"))
+        else:
+            if not nonempty(save_object.get("type")):
+                out.append(finding("error", "social_contract.value.save_object.type", "name the card, framework, quote, comparison, or sourced reference"))
+            content = save_object.get("content")
+            if not isinstance(content, list) or not content or any(not nonempty(item) for item in content):
+                out.append(finding("error", "social_contract.value.save_object.content", "provide non-empty audience-facing content"))
+            hold = save_object.get("on_screen_hold")
+            if not isinstance(hold, (int, float)) or isinstance(hold, bool) or hold <= 0:
+                out.append(finding("error", "social_contract.value.save_object.on_screen_hold", "record a positive readable hold measured in the animatic"))
+            if phase in {"production", "release"} and save_object.get("readability_review") != "approved":
+                out.append(finding("error", "social_contract.value.save_object.readability_review", "approve the save object at feed size before production"))
+
+    packaging = contract.get("packaging")
+    if not isinstance(packaging, dict):
+        out.append(finding("error", "social_contract.packaging", "declare series label, episode-first cover, subjects, match, and thumbnail review"))
+    else:
+        for field in ("series_label", "episode_title", "cover_copy", "feed_to_opening_match", "pinned_question"):
+            if not nonempty(packaging.get(field)):
+                out.append(finding("error", f"social_contract.packaging.{field}", "required for the social publishing contract"))
+        subjects = packaging.get("cover_subjects")
+        if not isinstance(subjects, list) or not subjects or any(not nonempty(item) for item in subjects):
+            out.append(finding("error", "social_contract.packaging.cover_subjects", "list the readable conflict subjects and critical objects"))
+        if phase in {"production", "release"} and packaging.get("feed_to_opening_match") != "approved":
+            out.append(finding("error", "social_contract.packaging.feed_to_opening_match", "approve that the cover promise is fulfilled by the opening"))
+        if phase == "release" and packaging.get("thumbnail_review") != "approved":
+            out.append(finding("error", "social_contract.packaging.thumbnail_review", "approve the cover at thumbnail size"))
+
+    animatic = contract.get("animatic")
+    if not isinstance(animatic, dict):
+        out.append(finding("error", "social_contract.animatic", "record hook and full scratch animatics plus review decisions"))
+    else:
+        for field in ("hook_animatic", "full_scratch_animatic", "review_notes"):
+            if not nonempty(animatic.get(field)):
+                out.append(finding("error", f"social_contract.animatic.{field}", "required for auditable editorial proof"))
+        for field in ("hook_review", "full_edit_review"):
+            status = animatic.get(field)
+            if status not in {"pending", "approved", "rejected", "needs-fix"}:
+                out.append(finding("error", f"social_contract.animatic.{field}", "expected pending, approved, rejected, or needs-fix"))
+            elif phase in {"production", "release"} and status != "approved":
+                out.append(finding("error", f"social_contract.animatic.{field}", "premium production remains locked until approved"))
+        if project_dir and phase in {"production", "release"}:
+            for field in ("hook_animatic", "full_scratch_animatic"):
+                value_path = animatic.get(field)
+                if nonempty(value_path) and not (project_dir / value_path).is_file():
+                    out.append(finding("warning", f"social_contract.animatic.{field}", "approved animatic file does not exist at the declared project path"))
+
+    if phase == "release":
+        delivery = data.get("delivery")
+        if not isinstance(delivery, dict):
+            out.append(finding("error", "delivery", "social release requires feed and cover proof"))
+        else:
+            for field in ("feed_simulation", "cover_full", "cover_thumbnail", "save_object_frame"):
+                if not nonempty(delivery.get(field)):
+                    out.append(finding("error", f"delivery.{field}", "required for social release proof"))
+                elif project_dir and not (project_dir / str(delivery[field])).is_file():
+                    out.append(finding("warning", f"delivery.{field}", "declared social release proof does not exist at the project path"))
+            for field in ("feed_simulation_review", "cover_review"):
+                if delivery.get(field) != "approved":
+                    out.append(finding("error", f"delivery.{field}", "expected approved before social release"))
+    return out
+
+
+def validate_visual_direction(
+    data: dict[str, Any],
+    project_dir: Path | None,
+    phase: str,
+    *,
+    required: bool,
+) -> list[dict[str, str]]:
+    """Validate premium look-development and asset-curation gates."""
+    out: list[dict[str, str]] = []
+    visual = data.get("visual_direction")
+    if not isinstance(visual, dict):
+        if required and phase in {"production", "release"}:
+            out.append(
+                finding(
+                    "error",
+                    "visual_direction",
+                    "add and approve the V0-V4 visual-direction contract before premium identity or shot assets",
+                )
+            )
+        return out
+
+    audience = visual.get("audience_layers")
+    if not isinstance(audience, dict):
+        out.append(finding("error", "visual_direction.audience_layers", "declare immediate and adult/repeat-viewer reads"))
+    else:
+        for field in ("immediate_read", "adult_reward"):
+            if not nonempty(audience.get(field)):
+                out.append(finding("error", f"visual_direction.audience_layers.{field}", "required for two-layer audience design"))
+
+    for field, message in (
+        ("emotional_promise", "state the visual feeling arc"),
+        ("collectible_frame_goal", "state which frame earns pause, rewatch, or collection"),
+        ("undesirable_impression", "name the cheap, generic, or off-tone impression to reject"),
+        ("art_route", "name the selected visual world"),
+        ("signature", "declare one memorable authored visual idea"),
+    ):
+        if not nonempty(visual.get(field)):
+            out.append(finding("error", f"visual_direction.{field}", message))
+
+    required_text_blocks = {
+        "shape_language": ("heroes", "threat", "environment", "critical_props"),
+        "lighting_and_depth": ("key_light", "depth_plan", "contact_shadow_policy"),
+        "composition": ("big_medium_small", "negative_space", "phone_focal_point", "subtitle_integration"),
+    }
+    for block_name, fields in required_text_blocks.items():
+        block = visual.get(block_name)
+        if not isinstance(block, dict):
+            out.append(finding("error", f"visual_direction.{block_name}", "add the complete visual-system block"))
+            continue
+        for field in fields:
+            if not nonempty(block.get(field)):
+                out.append(finding("error", f"visual_direction.{block_name}.{field}", "required for the selected visual system"))
+
+    value_design = visual.get("value_design")
+    if not isinstance(value_design, dict):
+        out.append(finding("error", "visual_direction.value_design", "declare focal and dark/light mass hierarchy"))
+    else:
+        for field in ("focal_subject", "subject_background_separation", "mass_policy"):
+            if not nonempty(value_design.get(field)):
+                out.append(finding("error", f"visual_direction.value_design.{field}", "required for value hierarchy"))
+        focal_order = value_design.get("focal_order")
+        if not isinstance(focal_order, list) or not focal_order or any(not nonempty(item) for item in focal_order):
+            out.append(finding("error", "visual_direction.value_design.focal_order", "list the intended first, second, and later reads"))
+
+    color_script = visual.get("color_script")
+    if not isinstance(color_script, dict):
+        out.append(finding("error", "visual_direction.color_script", "declare a restrained palette and emotional color behavior"))
+    else:
+        palette = color_script.get("base_palette")
+        if not isinstance(palette, list) or not palette or any(not nonempty(item) for item in palette):
+            out.append(finding("error", "visual_direction.color_script.base_palette", "list the approved base color families"))
+        for field in ("accent_policy", "emotional_arc"):
+            if not nonempty(color_script.get(field)):
+                out.append(finding("error", f"visual_direction.color_script.{field}", "required for consistent color behavior"))
+
+    line_texture = visual.get("line_and_texture")
+    if not isinstance(line_texture, dict):
+        out.append(finding("error", "visual_direction.line_and_texture", "declare line, texture, and forbidden surface rules"))
+    else:
+        for field in ("line_rule", "texture_rule"):
+            if not nonempty(line_texture.get(field)):
+                out.append(finding("error", f"visual_direction.line_and_texture.{field}", "required for medium consistency"))
+        forbidden = line_texture.get("surface_forbidden")
+        if not isinstance(forbidden, list) or not forbidden or any(not nonempty(item) for item in forbidden):
+            out.append(finding("error", "visual_direction.line_and_texture.surface_forbidden", "list rejected surface traits"))
+
+    anti_generic = visual.get("anti_generic")
+    forbidden_traits = anti_generic.get("forbidden_traits") if isinstance(anti_generic, dict) else None
+    if not isinstance(forbidden_traits, list) or not forbidden_traits or any(not nonempty(item) for item in forbidden_traits):
+        out.append(finding("error", "visual_direction.anti_generic.forbidden_traits", "add project-specific generic-AI failure traits"))
+
+    lookdev = visual.get("lookdev")
+    if not isinstance(lookdev, dict):
+        out.append(finding("error", "visual_direction.lookdev", "record route comparison, hero frames, integration benchmark, and style lock"))
+    else:
+        routes = lookdev.get("route_candidates")
+        route_ids: set[str] = set()
+        if not isinstance(routes, list) or len(routes) < 3:
+            out.append(finding("error", "visual_direction.lookdev.route_candidates", "compare at least three materially different art routes"))
+            routes = []
+        for index, route in enumerate(routes):
+            base = f"visual_direction.lookdev.route_candidates[{index}]"
+            if not isinstance(route, dict):
+                out.append(finding("error", base, "route candidate must be an object"))
+                continue
+            route_id = route.get("id")
+            if not nonempty(route_id) or route_id in route_ids:
+                out.append(finding("error", f"{base}.id", "use a unique non-empty route id"))
+            else:
+                route_ids.add(route_id)
+            for field in ("differentiator", "strengths", "risks", "audience_impression"):
+                if not nonempty(route.get(field)):
+                    out.append(finding("error", f"{base}.{field}", "required for a meaningful route comparison"))
+        selected_route = lookdev.get("selected_route")
+        if selected_route not in route_ids:
+            out.append(finding("error", "visual_direction.lookdev.selected_route", "select one declared route candidate"))
+        if not nonempty(lookdev.get("selection_rationale")):
+            out.append(finding("error", "visual_direction.lookdev.selection_rationale", "explain why the route won and what risks remain"))
+
+        hero_frames = lookdev.get("hero_frames")
+        seen_roles: set[str] = set()
+        if not isinstance(hero_frames, list):
+            out.append(finding("error", "visual_direction.lookdev.hero_frames", "add reference-only opening, choice, and consequence frames"))
+            hero_frames = []
+        for index, frame in enumerate(hero_frames):
+            base = f"visual_direction.lookdev.hero_frames[{index}]"
+            if not isinstance(frame, dict):
+                out.append(finding("error", base, "hero frame must be an object"))
+                continue
+            role = frame.get("role")
+            if role not in REQUIRED_LOOKDEV_ROLES or role in seen_roles:
+                out.append(finding("error", f"{base}.role", f"use each role exactly once: {sorted(REQUIRED_LOOKDEV_ROLES)}"))
+            else:
+                seen_roles.add(role)
+            frame_path = frame.get("path")
+            if not nonempty(frame_path):
+                out.append(finding("error", f"{base}.path", "record the look-development frame path"))
+            elif project_dir and phase in {"production", "release"} and not (project_dir / frame_path).is_file():
+                out.append(finding("warning", f"{base}.path", "declared look-development frame does not exist at the project path"))
+            if frame.get("reference_only") is not True:
+                out.append(finding("error", f"{base}.reference_only", "set true; look-development frames are not production assets"))
+        missing_roles = sorted(REQUIRED_LOOKDEV_ROLES - seen_roles)
+        if missing_roles:
+            out.append(finding("error", "visual_direction.lookdev.hero_frames", f"missing roles: {', '.join(missing_roles)}"))
+
+        integration = lookdev.get("integration_benchmark")
+        if not isinstance(integration, dict):
+            out.append(finding("error", "visual_direction.lookdev.integration_benchmark", "prove character, prop, and environment in one reference composite"))
+        else:
+            integration_path = integration.get("path")
+            if not nonempty(integration_path):
+                out.append(finding("error", "visual_direction.lookdev.integration_benchmark.path", "record the integration benchmark path"))
+            elif project_dir and phase in {"production", "release"} and not (project_dir / integration_path).is_file():
+                out.append(finding("warning", "visual_direction.lookdev.integration_benchmark.path", "declared integration benchmark does not exist at the project path"))
+            if integration.get("reference_only") is not True:
+                out.append(finding("error", "visual_direction.lookdev.integration_benchmark.reference_only", "set true; benchmark art is not a shot asset"))
+            if phase in {"production", "release"} and integration.get("review") != "approved":
+                out.append(finding("error", "visual_direction.lookdev.integration_benchmark.review", "approve character/environment integration before production"))
+
+        for field in ("phone_size_review", "grayscale_review", "blur_focal_review", "anti_generic_review", "style_lock"):
+            status = lookdev.get(field)
+            if status not in {"pending", "approved", "rejected", "needs-fix"}:
+                out.append(finding("error", f"visual_direction.lookdev.{field}", "expected pending, approved, rejected, or needs-fix"))
+            elif phase in {"production", "release"} and status != "approved":
+                out.append(finding("error", f"visual_direction.lookdev.{field}", "premium production remains locked until approved"))
+
+    policy = visual.get("asset_policy")
+    if not isinstance(policy, dict):
+        out.append(finding("error", "visual_direction.asset_policy", "declare candidate, rejection, composite, display-scale, and upscale rules"))
+    else:
+        for field in ("candidate_comparison_required", "rejection_log_required", "composite_test_required", "intended_display_scale_required", "upscale_after_composition_approval"):
+            if policy.get(field) is not True:
+                out.append(finding("error", f"visual_direction.asset_policy.{field}", "set true for premium asset curation"))
+        if policy.get("first_plausible_auto_accept") is not False:
+            out.append(finding("error", "visual_direction.asset_policy.first_plausible_auto_accept", "set false; compare candidates instead of auto-approving the first plausible result"))
+        dimensions = policy.get("selection_dimensions")
+        dimension_set = {item for item in dimensions if isinstance(item, str)} if isinstance(dimensions, list) else set()
+        missing_dimensions = sorted(REQUIRED_SELECTION_DIMENSIONS - dimension_set)
+        if missing_dimensions:
+            out.append(finding("error", "visual_direction.asset_policy.selection_dimensions", f"include: {', '.join(missing_dimensions)}"))
+    return out
 
 
 def zone_center(zone: list[float]) -> tuple[float, float]:
@@ -71,10 +406,16 @@ def zones_overlap(first: list[float], second: list[float]) -> bool:
     )
 
 
-def validate_manifest(data: Any, project_dir: Path | None = None) -> list[dict[str, str]]:
+def validate_manifest(
+    data: Any,
+    project_dir: Path | None = None,
+    phase: str = "production",
+) -> list[dict[str, str]]:
     out: list[dict[str, str]] = []
     if not isinstance(data, dict):
         return [finding("error", "$", "manifest root must be a JSON object")]
+    if phase not in VALID_PHASES:
+        return [finding("error", "$phase", f"expected one of {sorted(VALID_PHASES)}")]
 
     project = data.get("project")
     if not nonempty(project):
@@ -97,6 +438,12 @@ def validate_manifest(data: Any, project_dir: Path | None = None) -> list[dict[s
         out.append(finding("error", "subtitle_mode", f"expected one of {sorted(VALID_SUBTITLES)}"))
     if data.get("audio_mode", "dialogue-only") not in VALID_AUDIO:
         out.append(finding("error", "audio_mode", f"expected one of {sorted(VALID_AUDIO)}"))
+
+    platform = data.get("platform")
+    social_route = isinstance(platform, dict) and str(platform.get("destination", "")).strip().lower() in SOCIAL_DESTINATIONS
+    premium_route = isinstance(platform, dict) and platform.get("quality_posture") == "premium-quality-first"
+    out.extend(validate_social_contract(data, project_dir, phase))
+    out.extend(validate_visual_direction(data, project_dir, phase, required=social_route or premium_route))
 
     characters = data.get("characters")
     character_ids: set[str] = set()
@@ -156,6 +503,53 @@ def validate_manifest(data: Any, project_dir: Path | None = None) -> list[dict[s
                 )
             if identity.get("approved") is not True:
                 out.append(finding("error", f"{base}.identity_reference.approved", "approve identity before shot asset generation"))
+        model_pack = char.get("identity_model_pack")
+        model_pack_required = (social_route or premium_route) and phase in {"production", "release"}
+        if not isinstance(model_pack, dict):
+            if model_pack_required:
+                out.append(
+                    finding(
+                        "error",
+                        f"{base}.identity_model_pack",
+                        "add an approved reference-only model pack after animatic/style lock",
+                    )
+                )
+        else:
+            if model_pack.get("status") != MODEL_PACK_STATUS and model_pack_required:
+                out.append(finding("error", f"{base}.identity_model_pack.status", "approve the model pack before shot asset generation"))
+            if model_pack.get("reference_only") is not True:
+                out.append(finding("error", f"{base}.identity_model_pack.reference_only", "model-pack images guide production but never enter a shot"))
+            if model_pack.get("animation_use") is not False:
+                out.append(finding("error", f"{base}.identity_model_pack.animation_use", "set false; generate separate shot production assets"))
+            views = model_pack.get("views")
+            view_names: set[str] = set()
+            if not isinstance(views, list) or not views:
+                out.append(finding("error", f"{base}.identity_model_pack.views", "provide the controlled views required by the approved sequence layout"))
+            else:
+                for view_index, view in enumerate(views):
+                    view_base = f"{base}.identity_model_pack.views[{view_index}]"
+                    if not isinstance(view, dict):
+                        out.append(finding("error", view_base, "view must be an object"))
+                        continue
+                    view_name = view.get("view")
+                    if not nonempty(view_name):
+                        out.append(finding("error", f"{view_base}.view", "name the controlled camera-facing view"))
+                    else:
+                        view_names.add(str(view_name))
+                    view_path = view.get("path")
+                    if not nonempty(view_path):
+                        out.append(finding("error", f"{view_base}.path", "provide the approved reference path"))
+                    elif project_dir and not (project_dir / str(view_path)).exists():
+                        out.append(finding("warning", f"{view_base}.path", "referenced model-pack image does not exist yet"))
+            if model_pack_required and not {"left-profile", "right-profile"}.issubset(view_names):
+                out.append(finding("error", f"{base}.identity_model_pack.views", "premium recurring characters require both left-profile and right-profile evidence"))
+            for field in ("scale_reference", "asymmetry_notes", "expression_range", "attachment_rules", "forbidden_variations"):
+                value = model_pack.get(field)
+                if field == "forbidden_variations":
+                    if not isinstance(value, list) or not value or any(not nonempty(item) for item in value):
+                        out.append(finding("error", f"{base}.identity_model_pack.{field}", "provide non-empty forbidden variations"))
+                elif not nonempty(value):
+                    out.append(finding("error", f"{base}.identity_model_pack.{field}", "required for repeatable identity and rig decisions"))
         if "required_poses" in char:
             out.append(
                 finding(
@@ -475,6 +869,42 @@ def validate_manifest(data: Any, project_dir: Path | None = None) -> list[dict[s
             if asset.get("status") not in {"planned", "generated", "approved", "rejected"}:
                 out.append(finding("error", f"{asset_base}.status", "expected planned, generated, approved, or rejected"))
 
+            if social_route or premium_route:
+                dominant = asset.get("dominant")
+                if not isinstance(dominant, bool):
+                    out.append(finding("error", f"{asset_base}.dominant", "classify whether this asset is visually dominant"))
+                if dominant is True:
+                    display_fraction = asset.get("intended_max_frame_fraction")
+                    if (
+                        not isinstance(display_fraction, (int, float))
+                        or isinstance(display_fraction, bool)
+                        or not 0 < float(display_fraction) <= 1
+                    ):
+                        out.append(finding("error", f"{asset_base}.intended_max_frame_fraction", "record the intended maximum fraction of the frame from 0 to 1"))
+                    if asset.get("status") == "approved":
+                        quality = asset.get("quality_review")
+                        if not isinstance(quality, dict):
+                            out.append(finding("error", f"{asset_base}.quality_review", "approved dominant assets require candidate and composite evidence"))
+                        else:
+                            candidates = quality.get("candidates_compared")
+                            if not isinstance(candidates, int) or isinstance(candidates, bool) or candidates < 2:
+                                out.append(finding("error", f"{asset_base}.quality_review.candidates_compared", "compare at least two materially useful candidates"))
+                            if not nonempty(quality.get("selected_candidate")):
+                                out.append(finding("error", f"{asset_base}.quality_review.selected_candidate", "record the selected candidate id"))
+                            rejection_notes = quality.get("rejection_notes")
+                            if not isinstance(rejection_notes, list) or not rejection_notes or any(not nonempty(item) for item in rejection_notes):
+                                out.append(finding("error", f"{asset_base}.quality_review.rejection_notes", "record concise reasons the alternatives lost"))
+                            source_dimensions = quality.get("source_dimensions")
+                            if (
+                                not isinstance(source_dimensions, list)
+                                or len(source_dimensions) != 2
+                                or any(not isinstance(item, int) or isinstance(item, bool) or item <= 0 for item in source_dimensions)
+                            ):
+                                out.append(finding("error", f"{asset_base}.quality_review.source_dimensions", "record positive [width, height] source pixels"))
+                            for field in ("art_direction_match", "composite_test", "phone_size_readability", "finish"):
+                                if quality.get(field) != "pass":
+                                    out.append(finding("error", f"{asset_base}.quality_review.{field}", "expected pass before asset approval"))
+
             actor_id = asset.get("actor_id")
             if actor_id is not None:
                 actor_contract = actor_contracts.get(actor_id)
@@ -745,6 +1175,58 @@ def validate_manifest(data: Any, project_dir: Path | None = None) -> list[dict[s
             elif not isinstance(proof_time, (int, float)) or proof_time < 0 or (duration_value and proof_time > duration_value):
                 out.append(finding("error", f"{event_base}.proof_time", "proof_time must fall inside the scene"))
 
+        if social_route:
+            visual_beats = scene.get("visual_beats")
+            if not isinstance(visual_beats, list) or not visual_beats:
+                out.append(
+                    finding(
+                        "error",
+                        f"{base}.visual_beats",
+                        "declare what new audience information arrives during this social shot",
+                    )
+                )
+                visual_beats = []
+            previous_time = -1.0
+            for beat_index, beat in enumerate(visual_beats):
+                beat_base = f"{base}.visual_beats[{beat_index}]"
+                if not isinstance(beat, dict):
+                    out.append(finding("error", beat_base, "visual beat must be an object"))
+                    continue
+                beat_time = beat.get("time")
+                if (
+                    not isinstance(beat_time, (int, float))
+                    or isinstance(beat_time, bool)
+                    or beat_time < 0
+                    or (duration_value and beat_time > duration_value)
+                ):
+                    out.append(finding("error", f"{beat_base}.time", "use a scene-relative timestamp inside the shot"))
+                elif float(beat_time) < previous_time:
+                    out.append(finding("error", f"{beat_base}.time", "list visual beats in chronological order"))
+                else:
+                    previous_time = float(beat_time)
+                if not nonempty(beat.get("change")):
+                    out.append(finding("error", f"{beat_base}.change", "state the visible or audible change the audience receives"))
+                if not nonempty(beat.get("function")):
+                    out.append(finding("error", f"{beat_base}.function", "state the editorial function of this beat"))
+            if index == 0 and visual_beats:
+                first_time = visual_beats[0].get("time") if isinstance(visual_beats[0], dict) else None
+                if not isinstance(first_time, (int, float)) or float(first_time) > 0.1:
+                    out.append(finding("error", f"{base}.visual_beats[0].time", "the feed-native first frame must already carry the opening event"))
+                proof_limit = data.get("social_contract", {}).get("opening", {}).get("visual_proof_by", 3.0)
+                promise_proofs = [
+                    beat.get("time")
+                    for beat in visual_beats
+                    if isinstance(beat, dict) and beat.get("function") == "promise-proof"
+                ]
+                if not any(isinstance(time, (int, float)) and float(time) <= float(proof_limit) for time in promise_proofs):
+                    out.append(
+                        finding(
+                            "error",
+                            f"{base}.visual_beats",
+                            "add a promise-proof beat no later than social_contract.opening.visual_proof_by",
+                        )
+                    )
+
         for ensemble_index, ensemble in enumerate(scene.get("ensemble_actions", [])):
             ens_base = f"{base}.ensemble_actions[{ensemble_index}]"
             if not isinstance(ensemble, dict):
@@ -778,6 +1260,12 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("manifest", type=Path)
     parser.add_argument("--project-dir", type=Path)
+    parser.add_argument(
+        "--phase",
+        choices=sorted(VALID_PHASES),
+        default="production",
+        help="editorial allows pending animatics; production/release require approved social gates",
+    )
     parser.add_argument("--strict", action="store_true", help="fail on warnings as well as errors")
     parser.add_argument("--json", action="store_true", dest="as_json")
     args = parser.parse_args()
@@ -788,7 +1276,11 @@ def main() -> None:
         print(f"Could not read manifest: {exc}", file=sys.stderr)
         raise SystemExit(2)
 
-    findings = validate_manifest(data, args.project_dir.resolve() if args.project_dir else None)
+    findings = validate_manifest(
+        data,
+        args.project_dir.resolve() if args.project_dir else None,
+        phase=args.phase,
+    )
     errors = sum(item["severity"] == "error" for item in findings)
     warnings = sum(item["severity"] == "warning" for item in findings)
     payload = {"ok": errors == 0 and (warnings == 0 or not args.strict), "errors": errors, "warnings": warnings, "findings": findings}

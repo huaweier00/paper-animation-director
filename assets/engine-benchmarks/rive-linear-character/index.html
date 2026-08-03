@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rive absolute-time linear character benchmark</title>
+    <script src="./assets/runtime/hybrid-bootstrap.js"></script>
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: #1a1712;
+      }
+      #rive-linear-character {
+        position: relative;
+        width: 960px;
+        height: 540px;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 66% 38%, rgba(192, 136, 62, 0.19), transparent 34%),
+          linear-gradient(145deg, #382d20, #17120e 76%);
+        color: #f0dfbf;
+        font-family: "EB Garamond", serif;
+      }
+      #rive-linear-character-stage {
+        position: absolute;
+        left: 100px;
+        right: 100px;
+        top: 70px;
+        bottom: 58px;
+        border: 1px solid rgba(240, 223, 191, 0.19);
+        border-radius: 48% 44% 12% 14%;
+        background:
+          linear-gradient(180deg, rgba(225, 188, 126, 0.1), rgba(72, 47, 28, 0.12)),
+          repeating-linear-gradient(
+            5deg,
+            rgba(241, 218, 177, 0.025) 0,
+            rgba(241, 218, 177, 0.025) 2px,
+            transparent 2px,
+            transparent 8px
+          );
+        box-shadow: inset 0 -16px 44px rgba(0, 0, 0, 0.24);
+      }
+      #rive-linear-character-ground {
+        position: absolute;
+        left: 75px;
+        right: 75px;
+        bottom: 76px;
+        height: 3px;
+        background: rgba(231, 196, 137, 0.48);
+        box-shadow: 0 12px 34px rgba(179, 105, 50, 0.25);
+      }
+      #rive-linear-character-canvas {
+        position: absolute;
+        inset: 0;
+        width: 960px;
+        height: 540px;
+      }
+      #rive-linear-character-label {
+        position: absolute;
+        left: 30px;
+        top: 27px;
+        padding: 11px 15px;
+        border: 1px solid rgba(240, 223, 191, 0.28);
+        background: rgba(23, 18, 14, 0.7);
+        box-shadow: 7px 8px 0 rgba(118, 57, 35, 0.24);
+        font-size: 17px;
+        letter-spacing: 0.08em;
+      }
+      #rive-linear-character-clock {
+        position: absolute;
+        right: 30px;
+        bottom: 23px;
+        color: rgba(240, 223, 191, 0.72);
+        font: 15px ui-monospace, SFMono-Regular, Menlo, monospace;
+        letter-spacing: 0.04em;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="rive-linear-character"
+      data-composition-id="rive-linear-character"
+      data-start="0"
+      data-duration="2.8"
+      data-width="960"
+      data-height="540"
+    >
+      <div id="rive-linear-character-stage"></div>
+      <div id="rive-linear-character-ground"></div>
+      <canvas
+        id="rive-linear-character-canvas"
+        data-hf-id="rive-linear-character-canvas"
+        width="960"
+        height="540"
+      ></canvas>
+      <div id="rive-linear-character-label">RIVE · ABSOLUTE LINEAR ANIMATION</div>
+      <div id="rive-linear-character-clock">hf-seek → linear timeline</div>
+    </div>
+    <script src="./node_modules/gsap/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const timeline = gsap.timeline({ paused: true });
+      timeline
+        .fromTo(
+          "#rive-linear-character-label",
+          { opacity: 0, x: -22 },
+          { opacity: 1, x: 0, duration: 0.34, ease: "power3.out" },
+          0.06,
+        )
+        .fromTo(
+          "#rive-linear-character-clock",
+          { opacity: 0.42 },
+          { opacity: 0.9, duration: 1.4, yoyo: true, repeat: 1, ease: "sine.inOut" },
+          0,
+        );
+      window.__timelines["rive-linear-character"] = timeline;
+    </script>
+    <script type="module">
+      import RiveCanvas from "./node_modules/@rive-app/canvas-advanced-single/canvas_advanced_single.mjs";
+      import {
+        registerRenderer,
+      } from "./assets/runtime/hybrid-runtime.js";
+      import {
+        mountRiveLinearAnimation,
+      } from "./assets/runtime/adapters/rive-seekable.js";
+
+      const adapter = await mountRiveLinearAnimation({
+        RiveCanvas,
+        registerRenderer,
+        id: "rive-linear-character:centaur-walk",
+        root: "#rive-linear-character",
+        durationSeconds: 2.8,
+        canvas: document.getElementById("rive-linear-character-canvas"),
+        src: "./assets/centaur.riv",
+        artboardName: "Character",
+        animationName: "Walk",
+        playback: "native",
+        fit: "contain",
+        alignment: "center"
+      });
+      document.documentElement.dataset.engineReady = "rive";
+      document.documentElement.dataset.riveAnimationDuration = String(adapter.duration);
+    </script>
+  </body>
+</html>

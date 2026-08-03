@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Extract proof, identity, and occlusion frames into a labeled review contact sheet."""
+"""Extract semantic, identity, occlusion, and social-editorial proof frames into a review sheet."""
 
 from __future__ import annotations
 
@@ -17,6 +17,10 @@ from PIL import Image, ImageDraw, ImageFont
 def manifest_times(path: Path) -> list[float]:
     data = json.loads(path.read_text(encoding="utf-8"))
     times: list[float] = []
+    opening = data.get("social_contract", {}).get("opening", {})
+    for key in ("promise_by", "visual_proof_by"):
+        if isinstance(opening.get(key), (int, float)):
+            times.append(float(opening[key]))
     scene_start = 0.0
     for scene in data.get("scenes", []):
         duration = float(scene.get("duration", 0))
@@ -33,6 +37,9 @@ def manifest_times(path: Path) -> list[float]:
         for event in scene.get("events", []):
             if isinstance(event.get("proof_time"), (int, float)):
                 times.append(scene_start + float(event["proof_time"]))
+        for beat in scene.get("visual_beats", []):
+            if isinstance(beat, dict) and isinstance(beat.get("time"), (int, float)):
+                times.append(scene_start + float(beat["time"]))
         if not any(isinstance(event.get("proof_time"), (int, float)) for event in scene.get("events", [])) and duration > 0:
             times.append(scene_start + duration * 0.5)
         scene_start += duration

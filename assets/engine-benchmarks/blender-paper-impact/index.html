@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blender baked paper impact benchmark</title>
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: #20160f;
+      }
+      #blender-paper-impact {
+        position: relative;
+        width: 960px;
+        height: 540px;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 50% 45%, rgba(205, 137, 62, 0.23), transparent 42%),
+          linear-gradient(145deg, #362216, #160e0a 78%);
+        color: #f1dec0;
+        font-family: "EB Garamond", serif;
+      }
+      #blender-paper-impact-video {
+        position: absolute;
+        inset: 0;
+        width: 960px;
+        height: 540px;
+        object-fit: contain;
+      }
+      #blender-paper-impact .clip {
+        visibility: hidden;
+      }
+      #blender-paper-impact-label {
+        position: absolute;
+        left: 30px;
+        top: 28px;
+        padding: 11px 15px;
+        border: 1px solid rgba(241, 222, 192, 0.3);
+        background: rgba(26, 16, 11, 0.68);
+        box-shadow: 7px 8px 0 rgba(117, 48, 30, 0.28);
+        font-size: 17px;
+        letter-spacing: 0.08em;
+      }
+      #blender-paper-impact-proof {
+        position: absolute;
+        right: 28px;
+        bottom: 25px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #e6b36c;
+        box-shadow: 0 0 24px rgba(230, 179, 108, 0.8);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="blender-paper-impact"
+      data-composition-id="blender-paper-impact"
+      data-start="0"
+      data-duration="2"
+      data-width="960"
+      data-height="540"
+    >
+      <video
+        id="blender-paper-impact-video"
+        class="clip"
+        data-hf-id="blender-paper-impact-video"
+        data-start="0"
+        data-duration="2"
+        muted
+        playsinline
+        preload="auto"
+        src="./assets/blender/paper-impact-alpha.webm"
+      ></video>
+      <div id="blender-paper-impact-label">BAKED RIGID-BODY PAPER IMPACT</div>
+      <div id="blender-paper-impact-proof"></div>
+    </div>
+    <script src="./node_modules/gsap/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const timeline = gsap.timeline({ paused: true });
+      timeline
+        .fromTo(
+          "#blender-paper-impact-label",
+          { opacity: 0, x: -20 },
+          { opacity: 1, x: 0, duration: 0.32, ease: "power3.out" },
+          0.08,
+        )
+        .fromTo(
+          "#blender-paper-impact-proof",
+          { scale: 0.65, opacity: 0.4 },
+          {
+            keyframes: [
+              { scale: 1.3, opacity: 1, duration: 0.62 },
+              { scale: 0.8, opacity: 0.5, duration: 0.58 },
+              { scale: 1.1, opacity: 0.9, duration: 0.8 }
+            ],
+            ease: "none"
+          },
+          0,
+        );
+      window.__timelines["blender-paper-impact"] = timeline;
+    </script>
+  </body>
+</html>

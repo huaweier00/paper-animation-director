@@ -3,9 +3,22 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "HYPERFRAMES_NO_UPDATE_CHECK=1 npx --yes hyperframes@0.7.68 preview",
-    "check": "HYPERFRAMES_NO_UPDATE_CHECK=1 npx --yes hyperframes@0.7.68 check --strict",
-    "render": "HYPERFRAMES_NO_UPDATE_CHECK=1 npx --yes hyperframes@0.7.68 render",
-    "publish": "HYPERFRAMES_NO_UPDATE_CHECK=1 npx --yes hyperframes@0.7.68 publish"
+    "dev": "HYPERFRAMES_NO_UPDATE_CHECK=1 hyperframes preview",
+    "check": "HYPERFRAMES_NO_UPDATE_CHECK=1 hyperframes check --strict",
+    "doctor": "python3 tools/paper-pipeline/doctor_paper_pipeline.py --project . --phase render",
+    "shot:build": "python3 tools/paper-pipeline/build_routed_shot.py --project .",
+    "shot:profile": "node tools/paper-pipeline/profile_multi_engine.mjs --project .",
+    "webgpu:probe": "node tools/paper-pipeline/probe_webgpu_runtime.mjs --project . --required-backend any",
+    "render": "HYPERFRAMES_NO_UPDATE_CHECK=1 hyperframes render",
+    "publish": "HYPERFRAMES_NO_UPDATE_CHECK=1 hyperframes publish"
+  },
+  "dependencies": {
+    "@rive-app/canvas-advanced-single": "2.39.1",
+    "gsap": "3.15.0",
+    "pixi.js": "8.19.0",
+    "three": "0.185.1"
+  },
+  "devDependencies": {
+    "hyperframes": "0.7.83"
   }
 }

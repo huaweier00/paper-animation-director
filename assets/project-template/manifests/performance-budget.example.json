@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "profile": "desktop-1080p",
+  "iterations": 5,
+  "warmup_iterations": 2,
+  "total_p95_ms": 40,
+  "max_renderers": 4,
+  "engine_p95_ms": {
+    "rive": 16,
+    "pixijs-webgpu": 20,
+    "three-webgpu": 33
+  },
+  "missing_selected_renderer_blocks_release": true
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "asset_id": "scene-01-bird-hop-right-v1",
+  "identity_id": "bird",
+  "file": "shots/scene-01-find-seed/assets/characters/bird-hop-right-v1.png",
+  "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "kind": "complete-character-pose-or-atlas",
+  "camera_side": "side",
+  "intrinsic_facing": "right",
+  "forward_axis": [1, 0],
+  "support_anchors": ["feet-baseline"],
+  "contact_anchors": ["beak"],
+  "light_direction": "upper-left-to-lower-right",
+  "handedness": "not-applicable",
+  "text_or_directional_symbols": false,
+  "held_objects": [],
+  "asymmetry_notes": "Indigo wing tip and eye markings remain consistent under the approved side view.",
+  "mirror_policy": "forbidden",
+  "mirror_safety": {
+    "costume_hair_asymmetry": false,
+    "text_symbols": false,
+    "handedness_held_objects": false,
+    "light_shadow_direction": false,
+    "contact_load_geometry": false,
+    "adjacent_shot_continuity": false
+  },
+  "orientation_review": {
+    "status": "approved",
+    "observed_head_side": "right",
+    "observed_chest_side": "right",
+    "observed_gaze": "right",
+    "reviewer": "visual-artifact-review",
+    "evidence": "shots/scene-01-find-seed/review/assets/bird-hop-right-v1-orientation.png",
+    "notes": "The visible beak, chest, feet, and gaze all point toward screen right."
+  }
+}

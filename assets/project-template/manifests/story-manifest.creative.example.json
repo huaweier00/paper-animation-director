@@ -1,0 +1,32 @@
+{
+  "project": "paper-story-development",
+  "aspect": "16:9",
+  "language": "zh",
+  "duration_target": 24,
+  "emotional_promise": "A small physical choice changes the relationship between two characters.",
+  "forbidden_outcomes": [
+    "generic antique-paper styling",
+    "camera drift used instead of acting",
+    "narration explaining an invisible action"
+  ],
+  "scenes": [
+    {
+      "id": "scene-01-pressure",
+      "title": "Pressure",
+      "duration": 9,
+      "responsibility": "Establish what the first character wants and what physically prevents it.",
+      "action": "The character notices the obstacle, hesitates, and tests it.",
+      "result": "The obstacle resists and another character notices.",
+      "narration": ""
+    },
+    {
+      "id": "scene-02-choice",
+      "title": "Choice and consequence",
+      "duration": 15,
+      "responsibility": "Show a deliberate choice, contact, material consequence, and a changed relationship.",
+      "action": "The characters coordinate one difficult action.",
+      "result": "The physical result proves their relationship has changed.",
+      "narration": ""
+    }
+  ]
+}

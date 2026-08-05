@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build a generic HyperFrames scene/timing skeleton from a validated story manifest."""
+"""Build a neutral HyperFrames timing skeleton from a creative or production manifest."""
 
 from __future__ import annotations
 
@@ -29,12 +29,48 @@ def replace_tokens(source: str, values: dict[str, str]) -> str:
     return source
 
 
-def build(manifest_path: Path, project: Path) -> dict[str, float | int | str]:
+def validate_creative_manifest(data: object) -> list[str]:
+    errors: list[str] = []
+    if not isinstance(data, dict):
+        return ["manifest: expected an object"]
+    if not isinstance(data.get("project"), str) or not data["project"].strip():
+        errors.append("project: provide a non-empty project id")
+    if data.get("aspect", "16:9") not in ASPECT_SIZES:
+        errors.append(f"aspect: expected one of {sorted(ASPECT_SIZES)}")
+    scenes = data.get("scenes")
+    if not isinstance(scenes, list) or not scenes:
+        errors.append("scenes: provide at least one scene")
+        return errors
+    seen: set[str] = set()
+    for index, scene in enumerate(scenes):
+        base = f"scenes[{index}]"
+        if not isinstance(scene, dict):
+            errors.append(f"{base}: expected an object")
+            continue
+        scene_id = scene.get("id")
+        if not isinstance(scene_id, str) or not scene_id.strip():
+            errors.append(f"{base}.id: provide a non-empty id")
+        elif scene_id in seen:
+            errors.append(f"{base}.id: duplicate id {scene_id!r}")
+        else:
+            seen.add(scene_id)
+        duration = scene.get("duration")
+        if not isinstance(duration, (int, float)) or isinstance(duration, bool) or duration <= 0:
+            errors.append(f"{base}.duration: provide a positive number")
+        responsibility = scene.get("responsibility") or scene.get("narrative_goal")
+        if not isinstance(responsibility, str) or not responsibility.strip():
+            errors.append(f"{base}.responsibility: state the scene's changed story state")
+    return errors
+
+
+def build(manifest_path: Path, project: Path, *, creative: bool = False) -> dict[str, float | int | str]:
     data = json.loads(manifest_path.read_text(encoding="utf-8"))
-    findings = validate_manifest(data)
-    errors = [item for item in findings if item["severity"] == "error"]
+    findings = [] if creative else validate_manifest(data)
+    errors = validate_creative_manifest(data) if creative else [
+        f"{item['path']}: {item['message']}" for item in findings if item["severity"] == "error"
+    ]
     if errors:
-        message = "\n".join(f"{item['path']}: {item['message']}" for item in errors)
+        message = "\n".join(errors)
         raise SystemExit(f"Manifest has blocking errors:\n{message}")
 
     skill_root = Path(__file__).resolve().parent.parent
@@ -61,7 +97,12 @@ def build(manifest_path: Path, project: Path) -> dict[str, float | int | str]:
         duration = float(scene["duration"])
         scene_starts[scene_id] = global_start
         title = scene.get("title") or scene_id.replace("-", " ").title()
-        first_event = scene["events"][0]
+        events = scene.get("events") if isinstance(scene.get("events"), list) else []
+        first_event = events[0] if events and isinstance(events[0], dict) else {
+            "start": min(1.0, duration * 0.2),
+            "action": scene.get("action", "Block the decisive action"),
+            "result": scene.get("result", "Show the changed story state"),
+        }
         event_at = float(first_event.get("start", min(1.0, duration * 0.2)))
         event_at = min(max(event_at, 0.2), max(0.2, duration - 0.5))
         event_text = f"{first_event['action']} → {first_event['result']}"
@@ -73,19 +114,30 @@ def build(manifest_path: Path, project: Path) -> dict[str, float | int | str]:
                 "HEIGHT": str(height),
                 "DURATION": fmt(duration),
                 "SCENE_TITLE": html.escape(str(title)),
-                "SCENE_GOAL": html.escape(str(scene["narrative_goal"])),
+                "SCENE_GOAL": html.escape(str(scene.get("responsibility") or scene.get("narrative_goal"))),
                 "EVENT_TEXT": html.escape(event_text),
                 "EVENT_AT": fmt(event_at),
             },
         )
+        if creative:
+            scene_html = re.sub(
+                r"\n  <script>\n    window\.__motionReady.*?\n  </script>",
+                "",
+                scene_html,
+                flags=re.DOTALL,
+            )
         (compositions / f"{scene_id}.html").write_text(scene_html, encoding="utf-8")
+        assertions = [
+            {"kind": "appearsBy", "selector": f"#{scene_id}-card", "bySec": min(0.7, duration * 0.25)},
+            {"kind": "appearsBy", "selector": f"#{scene_id}-event", "bySec": min(duration - 0.1, event_at + 0.55)},
+        ]
+        if not creative:
+            assertions.append(
+                {"kind": "keepsMoving", "withinSelector": f"#{scene_id}", "maxStaticSec": min(2, max(0.8, duration * 0.35))}
+            )
         motion = {
             "duration": duration,
-            "assertions": [
-                {"kind": "appearsBy", "selector": f"#{scene_id}-card", "bySec": min(0.7, duration * 0.25)},
-                {"kind": "appearsBy", "selector": f"#{scene_id}-event", "bySec": min(duration - 0.1, event_at + 0.55)},
-                {"kind": "keepsMoving", "withinSelector": f"#{scene_id}", "maxStaticSec": min(2, max(0.8, duration * 0.35))},
-            ],
+            "assertions": assertions,
         }
         (compositions / f"{scene_id}.motion.json").write_text(json.dumps(motion, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
@@ -141,11 +193,15 @@ def build(manifest_path: Path, project: Path) -> dict[str, float | int | str]:
         },
     )
     (project / "index.html").write_text(index_html, encoding="utf-8")
-    index_motion = {
-        "duration": global_start,
-        "assertions": [{"kind": "keepsMoving", "withinSelector": "#root", "maxStaticSec": 2}],
-    }
-    (project / "index.motion.json").write_text(json.dumps(index_motion, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    if not creative:
+        index_motion = {
+            "duration": global_start,
+            "assertions": [{"kind": "keepsMoving", "withinSelector": "#root", "maxStaticSec": 2}],
+        }
+        (project / "index.motion.json").write_text(
+            json.dumps(index_motion, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
     return {"project": data["project"], "width": width, "height": height, "duration": global_start, "scenes": len(data["scenes"])}
 
 
@@ -153,8 +209,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", required=True, type=Path)
     parser.add_argument("--project", required=True, type=Path)
+    parser.add_argument("--creative", action="store_true", help="Accept the lightweight creative manifest and do not require perpetual motion.")
     args = parser.parse_args()
-    result = build(args.manifest.resolve(), args.project.resolve())
+    result = build(args.manifest.resolve(), args.project.resolve(), creative=args.creative)
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
 

@@ -107,14 +107,11 @@ class HybridScaffolderTests(unittest.TestCase):
             self.assertTrue((project / "shots" / "scene-01" / "webgpu-capability.json").is_file())
             self.assertTrue((project / "blender-action-library.json").is_file())
 
-    def test_project_template_pins_local_engine_dependencies(self) -> None:
+    def test_creative_template_is_minimal_and_production_lock_pins_engines(self) -> None:
         package = json.loads(
             (SKILL_ROOT / "assets" / "project-template" / "package.json").read_text(encoding="utf-8")
         )
-        self.assertEqual(package["dependencies"]["gsap"], "3.15.0")
-        self.assertEqual(package["dependencies"]["pixi.js"], "8.19.0")
-        self.assertEqual(package["dependencies"]["@rive-app/canvas-advanced-single"], "2.39.1")
-        self.assertEqual(package["dependencies"]["three"], "0.185.1")
+        self.assertEqual(package["dependencies"], {"gsap": "3.15.0"})
         self.assertEqual(package["devDependencies"]["hyperframes"], "0.7.83")
         lock = json.loads(
             (SKILL_ROOT / "assets" / "project-template" / "package-lock.json").read_text(
@@ -122,7 +119,11 @@ class HybridScaffolderTests(unittest.TestCase):
             )
         )
         self.assertEqual(lock["lockfileVersion"], 3)
-        self.assertEqual(lock["packages"][""]["dependencies"], package["dependencies"])
+        production_dependencies = lock["packages"][""]["dependencies"]
+        self.assertEqual(production_dependencies["gsap"], "3.15.0")
+        self.assertEqual(production_dependencies["pixi.js"], "8.19.0")
+        self.assertEqual(production_dependencies["@rive-app/canvas-advanced-single"], "2.39.1")
+        self.assertEqual(production_dependencies["three"], "0.185.1")
         self.assertEqual(lock["packages"][""]["devDependencies"], package["devDependencies"])
         policy = json.loads(
             (

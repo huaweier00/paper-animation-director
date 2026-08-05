@@ -1,179 +1,243 @@
 ---
 name: paper-animation-director
-description: Direct and produce story-led paper animation through a fail-closed workflow that distinguishes shadow theatre, articulated cutout paper, and painterly limited animation. Use for 纸片动画, 皮影动画, 剪纸动画, 卡纸偶动画, 工笔动画, 宣纸水彩故事, illustrated folktales, historical or cultural narrative films, recurring-character animation, and premium social story films where medium truth, character performance, spatial contact, sound rhythm, rendered evidence, and release quality must remain coherent.
+description: Direct and produce story-led paper animation, shadow theatre, articulated cutout animation, and painterly limited animation with strong character acting, readable physical cause and effect, distinctive art direction, sound-action rhythm, and human-reviewed visual quality. Use for 纸片动画, 皮影动画, 剪纸动画, 卡纸偶动画, 工笔动画, 宣纸水彩故事, illustrated folktales, historical or cultural narrative films, recurring-character animation, and for diagnosing or improving paper-animation projects that feel generic, stiff, slideshow-like, over-engineered, or technically correct but emotionally weak.
 ---
 
 # Paper Animation Director
 
-Direct performers in a declared medium. Do not decorate rigid illustrations until they resemble motion. A valid project proves, in this order:
+Direct the film before governing the pipeline. Optimize for a memorable finished scene, not for the number of records, engines, layers, or passing checks.
+
+## Non-negotiable hierarchy
+
+Use this order whenever rules compete:
+
+1. story pressure and character intention;
+2. readable performance, contact, force, and consequence;
+3. a project-specific visual identity;
+4. rhythm, stillness, sound, and editing;
+5. medium honesty;
+6. implementation reliability;
+7. release evidence and delivery compliance.
+
+Do not sacrifice a stronger scene merely to reuse a template, satisfy an optional schema, display a medium technique in every shot, or use a more sophisticated engine.
+
+Automated checks may reject technical defects. They never certify taste, acting, emotional force, visual distinction, or final approval.
+
+## Work in two modes
+
+### Mode A — creative development
+
+Keep this mode open and inexpensive. Rough drawings, temporary audio, incomplete assets, alternate cuts, deliberate stillness, unusual framing, and contradictory experiments are allowed.
+
+Require only lightweight working documents:
+
+- a brief with audience, duration, aspect, emotional promise, and forbidden outcomes;
+- a beat sheet or storyboard with one dramatic responsibility per scene;
+- a short list of character, space, and sound continuity facts.
+
+Do not require release manifests, hashes, engine readiness records, or per-shot approval packages during exploration.
+
+To scaffold a neutral creative project, start from `assets/project-template/manifests/story-manifest.creative.example.json` and run:
+
+```bash
+python3 scripts/init_paper_project.py --manifest creative-manifest.json --output ./project-name
+```
+
+Use `--production` only after benchmark approval and only when the advanced pipeline is justified.
+
+### Mode B — production and release
+
+Enter this mode only after the user approves the visual direction and the performance benchmark. Then add the minimum contracts and deterministic checks needed by the chosen implementation and delivery target.
+
+Do not apply every available gate. Load and run only the gates justified by the actual medium, engine, risk, and release destination.
+
+## Creative workflow
+
+### 1. Find the dramatic spine
+
+For the film and for every scene, write the visible chain in plain language:
 
 ```text
-story deserves production
-→ medium has one physical/visual truth
-→ characters can perform the required actions
-→ sound and motion share a rhythm
-→ rendered shots fulfil their responsibilities
-→ only released shots enter the master
+pressure or desire
+→ decision
+→ preparation
+→ action
+→ contact or state change
+→ physical consequence
+→ another character's reaction
+→ changed story state
 ```
 
-Trust rendered evidence tied to exact files. Prompts, filenames, CSS class names, source-code intent, and self-declared `pass` values are not proof.
+If a silent viewer cannot identify the changed state, repair the scene before producing final art. Do not use narration to excuse missing visual causality.
 
-## Select one route before production art
+### 2. Choose the medium without turning it into a demonstration
 
-Create and approve `medium-contract.json`, then read exactly one route reference completely:
+Select the dominant route:
 
-| Route | Use when | Required reference |
-|---|---|---|
-| `shadow-theatre` | The film claims skin/paper shadow-puppet construction, rear light, screen-plane staging, rod/joint performance, or 皮影 language | `references/route-shadow-theatre.md` |
-| `cutout-paper` | Opaque paper/card actors use pivots, replacement poses, layered depth, pins, folds, or visible material construction | `references/route-cutout-paper.md` |
-| `painterly-limited` | Gongbi, watercolor, silk-like, ink, or illustrated characters use authored pose replacement, local rigs, or integrated state changes | `references/route-painterly-limited.md` |
+| Route | Use when | Read completely |
+| --- | --- | --- |
+| `shadow-theatre` | Light, screen distance, silhouette articulation, rods, joints, or shadow optics carry story meaning | `references/route-shadow-theatre.md` |
+| `cutout-paper` | Opaque card or paper actors use pivots, replacement poses, folds, pins, layered depth, or visible construction | `references/route-cutout-paper.md` |
+| `painterly-limited` | Gongbi, watercolor, silk-like, ink, or illustrated characters use authored pose or whole-tableau state changes | `references/route-painterly-limited.md` |
 
-Do not blend route claims casually. A painterly character may borrow shadow-theatre timing, but it must not claim transmitted leather light. A shadow-theatre route must not use an opaque full-body painting translated as the hero performance.
+Use the route to prevent false material claims. Do not force every shot to prove the route. Once the audience understands the medium, let it serve the story quietly.
 
-Read `references/performance-grammar.md` for every route before shot assets. Read `references/sound-action-cueing.md` before final timing or performance blocking.
+Read `references/performance-grammar.md` when blocking acting. Read `references/sound-action-cueing.md` when timing action and sound. Do not load unrelated engine or release references yet.
 
-## Fail-closed production kernel
+### 3. Establish a visual identity before using a scaffold
 
-1. **Complete the disposable film first.** Build a full scratch-audio animatic, not only a hook. It must work muted, audio-only, and combined before formal voices, production art, or full-film implementation.
-2. **Lock the medium before the look.** `medium-contract.json` owns route, material/screen model, articulation or state-change model, depth model, sound posture, and forbidden shortcuts.
-3. **Prove performance before polish.** Every action-bearing shot has `performance-contract.json` with objective, attention, lead control, support, performance mode, action phases, proof times, and sound cues. Background motion, camera motion, opacity, particles, and whole-actor transforms are presentation, not character performance.
-4. **Use internal change for actor action.** Physical or emotional action must use articulated local controls, authored replacement poses, connected ensemble states, or integrated full-scene states. Rigid root translation is valid only for a deliberately rigid object or stylized travel whose support and action are proved elsewhere.
-5. **Earn stillness.** A deliberate still identifies the prior cause, present result or tension, audience-facing purpose, sound/visual support, and exit condition. One unchanged pose must not carry incompatible intentions or several unshown plot verbs.
-6. **Treat sound as a directing system.** Preserve dry stems and a cue ledger. Dialogue, singing, percussion, effects, holds, contacts, and cuts share measured times. A shadow-theatre release cannot be silent or music-only.
-7. **Reject incompatible pose reuse.** Reuse a production asset only when identity, camera, facing, support, light, action, intention, and performance state are compatible. Availability is not authorization.
-8. **Separate performance from presentation.** Review performance motion, physical response, presentation motion, and surface motion independently. Presentation or surface activity cannot satisfy a performance requirement.
-9. **Sequence continuity precedes shot polish.** Approve adjacent layout, axis, floor/screen line, direction, scale, light, entry/exit, eye trace, acting intensity, and sound perspective before final assets.
-10. **Choose the least complex performance-capable engine.** “Capable” means it can express the approved acting and contact, not merely move pixels. Use a still, stepped poses, DOM/GSAP, Rive, PixiJS, Three.js, or Blender only after the performance contract declares why.
-11. **Bind review to the render.** Review exact entry, anticipation, action, contact, hold, settle, reaction, and exit evidence from the rendered MP4. Upstream changes invalidate downstream approval.
-12. **Assemble released shots only.** A final master requires an ordered `release-index.json`, current shot-release hashes, a valid audio contract, and a verified decoded master. Do not create an alternate final-film directory that bypasses the controller.
+Create at least three materially different look studies inside the selected medium. Vary silhouette, proportion, palette, edge, negative space, light, paper behavior, typography, and motion posture—not only color grading.
 
-## Required production flow
+Reject:
 
-### 0. Intake and editorial proof
+- universal beige antique paper;
+- default teal-and-gold history grading;
+- generic AI prettiness;
+- identical subtitle cards across unrelated stories;
+- constant paper grain, drifting particles, slow push-ins, breathing scale, or parallax used as proof of animation;
+- cute proportions that erase age, danger, hierarchy, labor, or cultural specificity.
 
-Resolve rights, adaptation boundary, audience, platform, aspect, duration posture, language, historical posture, subtitles, audio posture, and deliverables. Write observable beats and consequences.
+Start from a neutral technical canvas. Add every aesthetic choice deliberately.
 
-Build the entire scratch animatic with temporary shapes, scratch voice, captions, sound accents, and intentional silence. Reject production expansion when only the opening has been tested.
+### 4. Build a timed scratch animatic before final assets
 
-Validate the story manifest:
+Use crude blocks, temporary poses, or rough whole-tableau states. Lock:
 
-```bash
-python3 scripts/validate_story_manifest.py story-manifest.json --phase editorial --strict
+- scene order and duration;
+- entrances, exits, sightlines, and screen direction;
+- the action target and contact point;
+- reaction windows and intentional silence;
+- where narration ends and picture must carry the story;
+- the exact moment each scene has completed its dramatic responsibility.
+
+Cut dead time now. Grain, camera drift, particles, ambient loops, or unchanged held plates do not justify duration.
+
+### 5. Prove the hardest 8–15 seconds
+
+Choose the passage with the hardest combination of acting, identity, contact, medium truth, and sound. Build it to near-final quality before expanding the film.
+
+The benchmark must include:
+
+- a character wanting or resisting something;
+- anticipation or hesitation;
+- a specific action and readable contact or state change;
+- force propagation or a credible material response;
+- a consequence and reaction;
+- at least one purposeful hold or still moment;
+- shot-specific sound timing when sound matters.
+
+A polished still, camera move, particle layer, root translation, silent montage, or engine demo is not a passing performance benchmark.
+
+Before approval, compare the benchmark with `references/gold-standard-regression.md`. A technically valid benchmark that is flatter, less readable, more generic, or less rhythmically alive than the gold passages must be revised.
+
+### 6. Produce one shot and one dominant problem at a time
+
+For each shot:
+
+1. state the shot's single dramatic responsibility;
+2. identify the one failure that most harms it;
+3. make the smallest change that can solve that failure;
+4. preview the exact passage with sound;
+5. compare before and after;
+6. keep the change only if the scene becomes clearer, stronger, or more distinctive;
+7. cut any embellishment that competes with the responsibility.
+
+Do not attempt to improve art direction, acting, physics, captions, mix, transitions, engine architecture, and release evidence in the same pass.
+
+### 7. Direct performance as phrases, not perpetual motion
+
+Prefer complete connected poses, route-appropriate rigs, connected ensembles, or whole-tableau state changes. Preserve silhouette and weight.
+
+Shape phrases from intention:
+
+```text
+notice → decide → prepare → act → make contact → absorb force → hold → react → settle
 ```
 
-### 1. Medium and visual development
+Not every phrase needs every beat, but entry, action, result, and exit must be intelligible. Vary timing by thought, force, fatigue, status, and material. Avoid symmetric easing and identical loops.
 
-Create `medium-contract.json` from the route-matched template (`medium-contract.example.json` for shadow theatre, or the named cutout/painterly examples) and validate it:
+Use stillness when a character is thinking, withholding, grieving, listening, or realizing. Stillness passes only when pressure changes within or around it; a frozen plate plus drifting texture is not acting.
 
-```bash
-python3 scripts/audit_medium_contract.py medium-contract.json --strict
-```
+### 8. Make sound land on causes and consequences
 
-Compare at least three materially different visual routes inside the selected medium. Approve the opening-pressure, central-choice/contact, and consequence hero frames plus one character/prop/environment integration composite. Lock silhouette, value, palette, edge, material, light, depth, screen or ground behavior, signature, and anti-generic traits.
+Use sound to clarify weight, material, distance, and edit rhythm. Bind important cues to visible events: foot plant, pole flex, bucket handoff, water impact, blade scrape, curtain pull, lamp fall, fire spread, screen reveal, or reaction.
 
-Build reference-only identity/model packs after the timed animatic establishes required views. Build a route-appropriate performer model for each recurring hero:
+Audit the actual mix, not merely stream presence. Confirm audibility, sync, hierarchy, silence, and emotional posture at normal listening level.
 
-- shadow theatre: parts, joints, pivots, rods/controls, screen side, translucent material, signature action phrases;
-- cutout paper: parts or pose-family decision, pivots/overlap, draw order, material thickness, support and contact points;
-- painterly limited: authored pose/state family, identity construction, local-control limits, integration and repaint rules.
+### 9. Review the film as a viewer
 
-Reference design never enters a final shot unless separately approved and registered as production media.
+Review the exact rendered or previewed timeline in four passes:
 
-### 2. Final audio and sequence layout
+1. silent: story, intention, contact, and changed state;
+2. audio-only: voice, pauses, sound hierarchy, and edit rhythm;
+3. normal playback: attention, emotion, surprise, fatigue, and pacing;
+4. frame inspection: identity, silhouette, edges, grounding, occlusion, captions, and medium artifacts.
 
-Select measured performances, preserve dry stems, and create `audio-contract.json`. Fit picture to chosen takes. Lay out adjacent shots with rough silhouettes; prove geography, support, contact, occlusion, subtitle space, action accents, reactions, and cut motivation.
+Ask the user to approve the benchmark and final preview. Do not infer approval from automated checks.
 
-### 3. Performance benchmark
+## Human creative gates
 
-Choose an 8–15 second passage or another short passage long enough to expose the hardest combination of acting, route truth, identity, contact, sound, integration, and deterministic rendering. The benchmark must contain:
+A scene advances only when a human review can answer yes to all five:
 
-- at least one readable intention-to-result performance phrase;
-- at least one reaction or relationship change;
-- route-specific material/screen evidence;
-- sound-picture timing;
-- a static-camera read before optional presentation motion.
+1. **Silent readability** — Can a viewer understand who wants what and what changed?
+2. **Performance** — Do anticipation, force, weight, hold, and reaction feel authored rather than procedural?
+3. **Space and contact** — Are facing, ground, depth, target, touch, and consequence credible?
+4. **Visual identity** — Could this frame belong only to this project, rather than to a generic paper-animation template?
+5. **Rhythm and sound** — Does the scene enter, develop, land, and leave at the right moments, with sound supporting rather than explaining it?
 
-A polished still, root translation, camera push, particle layer, or silent montage is not a passing action benchmark. Do not open the full-film WIP window until the benchmark passes.
+Record concise review notes in the storyboard, production notes, or existing review document. Do not create a new schema solely to store these answers.
 
-### 4. Plan and build each shot
+## Implementation routing
 
-For each shot in a limited adjacent-shot window:
+Use the least complex technique that preserves the approved performance:
 
-1. approve `animation-decision.json` and `spatial-contract.json`;
-2. create and approve `performance-contract.json`;
-3. create `shot-capabilities.json`; route and approve `engine-plan.json`;
-4. create `motion-contract.json` when travel, contact, or simulation requires it;
-5. create shot-specific assets and `asset-facts.json` only after planning passes;
-6. block performance with rough shapes before final art;
-7. audit pose reuse before accepting an existing production asset;
-8. integrate final art, light, captions, voice, ambience, effects, and transitions;
-9. render, extract evidence, review, and release in sequence order.
+- whole-tableau or replacement-pose animation for integrated painterly acting;
+- connected ensemble frames for contact-heavy character interaction;
+- GSAP/DOM for deterministic rigid layers, masks, opacity, replacement poses, and local transforms;
+- PixiJS for a genuinely demanding 2D effects field;
+- Rive or Spine for sustained local skeletal or mesh deformation that authored assets support;
+- Three.js for necessary spatial depth or camera behavior;
+- Blender only for physical action, simulation, or 3D construction that simpler methods cannot credibly produce.
 
-Run the guarded controller:
+Specialized engines are optional implementation tools, not signs of artistic quality. Read `references/hybrid-shot-pipeline.md` and `references/engine-execution-templates.md` only after a shot has earned a specialized route.
 
-```bash
-python3 scripts/build_routed_shot.py --project . --shot-id scene-xx --phase prepare
-python3 scripts/build_routed_shot.py --project . --shot-id scene-xx --phase verify
-python3 scripts/build_routed_shot.py --project . --shot-id scene-xx --phase release
-```
+For HyperFrames authoring, preview, checks, and rendering, load the mandatory `hyperframes` skill and only its stage-relevant references. Use `imagegen` for raster generation or editing when needed.
 
-The controller must validate the project medium contract and the shot performance contract in every phase. Do not replace it with ad hoc rendering.
+## Release discipline
 
-### 5. Performance and sequence dailies
+After creative approval, read only the applicable release references:
 
-Review each shot in this order:
+- production order or invalidation risk: `references/production-architecture.md`;
+- asset art direction: `references/visual-art-direction-and-asset-quality.md`;
+- identity and pose continuity: `references/character-and-pose-system.md`;
+- detailed spatial contracts: `references/shot-spatial-contract.md`;
+- rendered motion evidence: `references/motion-integrity.md`;
+- voice and subtitles: `references/voice-timing-and-subtitles.md`;
+- final delivery: `references/quality-gates-and-delivery.md`.
 
-1. editorial responsibility and consequence;
-2. static layout, silhouette, axis, scale, support, and eye trace;
-3. intention, anticipation, lead part, timing, spacing, contact, hold, settle, and reaction;
-4. route truth: material, joints/states, screen/ground, light, edges, and integration;
-5. voice, singing/music, percussion/effects, captions, and cut rhythm;
-6. deterministic render, decode, proof hashes, and delivery.
+Use hashes, manifests, engine probes, and release scripts only to protect a finished creative decision from technical drift. Never use their green status as a substitute for watching the film.
 
-Review adjacent shots for repeated poses, acting intensity, direction, light, sound perspective, and transition energy. An individually approved shot may return when sequence dailies expose a downgrade.
+## Return conditions
 
-### 6. Final assembly and delivery
+Return to the earliest failed creative layer:
 
-Create an ordered release index and audio contract. Audit before and after assembly:
+- unclear story state → rewrite beats or staging;
+- generic visual identity → redo look studies, not color polish;
+- weak acting → reblock intention, pose, timing, contact, and reaction;
+- floating or false contact → repair space, actor assets, and force propagation;
+- slideshow feeling → add meaningful state change or shorten the shot, not more drift;
+- repetitive movement → vary thought, force, fatigue, status, and consequence;
+- correct files but weak film → continue directing; do not add schemas;
+- strong preview but broken output → repair implementation or rendering without redesigning the approved scene.
 
-```bash
-python3 scripts/bind_release_index.py release-index.json --project .
-python3 scripts/audit_release_index.py release-index.json --project . --strict
-python3 scripts/audit_audio_mode.py audio-contract.json --project . --video master.mp4 --strict
-```
+## Completion
 
-Preserve editable sources, dry stems, archival master, optional watermarked master, and platform derivatives separately. Verify decode, audio streams, expected lines, captions, phone-size frames, compression, and save/ending object. Never overwrite the archival master.
+The film is complete only when:
 
-## Failure policy
+- the user has reviewed and approved the final preview;
+- the five human creative gates pass;
+- comparison with the gold standards reveals no unexplained regression in acting, causality, rhythm, or distinctiveness;
+- required technical checks pass for the chosen implementation;
+- the rendered master is watched and its sound, duration, resolution, and delivery files are verified.
 
-Stop expansion at the earliest failed layer and repair autonomously within scope:
-
-- moving poster, rigid PNG acting, or repeated incompatible pose → performance contract/source asset;
-- shadow route without transmitted light, joints, screen behavior, or sound → medium route/model;
-- beautiful actor pasted into a background → integration/value/light/edge/contact;
-- correct files but weak acting → performance blocking and benchmark, not more schemas;
-- narration parked over unchanged art → edit, shot division, performance states, and sound cueing;
-- missing contract or stale hash → rebuild evidence; do not bypass;
-- final master assembled from unreleased shots or missing audio → reject assembly.
-
-## Reference map
-
-Read only what the active stage requires, except the selected route, performance grammar, and sound cueing, which are mandatory:
-
-- route truth: `references/route-shadow-theatre.md`, `references/route-cutout-paper.md`, `references/route-painterly-limited.md`;
-- acting and motion phrases: `references/performance-grammar.md`;
-- music/dialogue/effects timing: `references/sound-action-cueing.md`;
-- production order and invalidation: `references/production-architecture.md`;
-- art development and asset curation: `references/visual-art-direction-and-asset-quality.md`;
-- identity, model packs, poses, rigs, ensembles: `references/character-and-pose-system.md`;
-- space and action targets: `references/shot-spatial-contract.md`;
-- detailed motion direction: `references/performance-and-motion-direction.md`;
-- motion contracts and rendered proof: `references/motion-integrity.md`;
-- engine routing/integration: `references/hybrid-shot-pipeline.md`;
-- prompts and asset rejection: `references/image-generation-prompts.md`;
-- voice, timing, subtitles: `references/voice-timing-and-subtitles.md`;
-- release and delivery: `references/quality-gates-and-delivery.md`.
-
-For implementation/rendering, also load the mandatory `hyperframes` entry skill and its required stage references. Use `imagegen` for raster generation/editing and `dynamic-video-watermark` only when requested at delivery.
-
-The project is complete only when the finished film proves its story, route truth, actor performance, physical relationships, sound rhythm, visual authorship, and release integrity.
+Passing validators alone never completes a paper-animation film.

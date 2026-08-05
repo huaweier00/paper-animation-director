@@ -33,6 +33,7 @@ class InitP2ProjectTests(unittest.TestCase):
                     str(manifest),
                     "--output",
                     str(output),
+                    "--production",
                 ],
                 capture_output=True,
                 text=True,
@@ -68,6 +69,46 @@ class InitP2ProjectTests(unittest.TestCase):
             )
             self.assertEqual(motion["shot_id"], "scene-01-find-seed")
             self.assertEqual(motion["actors"][0]["expected_facing"], "right")
+
+    def test_creative_project_starts_without_production_governance(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="paper-creative-init-") as directory:
+            output = Path(directory) / "project"
+            manifest = (
+                SKILL_ROOT
+                / "assets"
+                / "project-template"
+                / "manifests"
+                / "story-manifest.creative.example.json"
+            )
+            result = subprocess.run(
+                [
+                    "python3",
+                    str(SCRIPT),
+                    "--manifest",
+                    str(manifest),
+                    "--output",
+                    str(output),
+                ],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+            self.assertIn("three distinct look studies", result.stdout)
+            self.assertTrue((output / "story-manifest.json").is_file())
+            self.assertTrue((output / "index.html").is_file())
+            self.assertFalse((output / "index.motion.json").exists())
+            self.assertFalse((output / "medium-contract.json").exists())
+            self.assertFalse((output / "audio-contract.json").exists())
+            self.assertFalse((output / "tools/paper-pipeline").exists())
+            self.assertFalse((output / "package-lock.json").exists())
+            package = json.loads((output / "package.json").read_text(encoding="utf-8"))
+            self.assertEqual(set(package["dependencies"]), {"gsap"})
+            self.assertNotIn("shot:build", package["scripts"])
+            self.assertNotIn("doctor", package["scripts"])
+            scene = (output / "compositions/scene-01-pressure.html").read_text(encoding="utf-8")
+            self.assertNotIn("compiled-motion-track.json", scene)
+            self.assertNotIn("window.__motionReady", scene)
 
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Initialize a paper-animation HyperFrames project from a story manifest."""
+"""Initialize a creative paper-animation project; opt into production gates explicitly."""
 
 from __future__ import annotations
 
@@ -11,6 +11,7 @@ import sys
 from pathlib import Path
 
 from validate_story_manifest import validate_manifest
+from build_hyperframes_timeline import validate_creative_manifest
 
 
 PORTABLE_PIPELINE_SCRIPTS = (
@@ -53,6 +54,19 @@ ASPECT_SIZES = {
 }
 
 MEDIUM_ROUTES = {"shadow-theatre", "cutout-paper", "painterly-limited"}
+
+PRODUCTION_SCRIPTS = {
+    "doctor": "python3 tools/paper-pipeline/doctor_paper_pipeline.py --project . --phase render",
+    "shot:build": "python3 tools/paper-pipeline/build_routed_shot.py --project .",
+    "shot:profile": "node tools/paper-pipeline/profile_multi_engine.mjs --project .",
+    "webgpu:probe": "node tools/paper-pipeline/probe_webgpu_runtime.mjs --project . --required-backend any",
+}
+
+PRODUCTION_DEPENDENCIES = {
+    "@rive-app/canvas-advanced-single": "2.39.1",
+    "pixi.js": "8.19.0",
+    "three": "0.185.1",
+}
 
 
 def build_medium_contract(data: dict) -> dict:
@@ -342,6 +356,11 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument(
+        "--production",
+        action="store_true",
+        help="Install advanced contracts, engine adapters, release tools, and production dependencies.",
+    )
     args = parser.parse_args()
 
     manifest = args.manifest.expanduser().resolve()
@@ -349,16 +368,27 @@ def main() -> None:
     if output.exists() and any(output.iterdir()):
         raise SystemExit(f"Refusing to overwrite non-empty output directory: {output}")
     data = json.loads(manifest.read_text(encoding="utf-8"))
-    errors = [item for item in validate_manifest(data) if item["severity"] == "error"]
+    errors = [item for item in validate_manifest(data) if item["severity"] == "error"] if args.production else []
+    creative_errors = validate_creative_manifest(data) if not args.production else []
     if errors:
         details = "\n".join(f"{item['path']}: {item['message']}" for item in errors)
         raise SystemExit(f"Manifest has blocking errors:\n{details}")
+    if creative_errors:
+        raise SystemExit("Manifest has blocking errors:\n" + "\n".join(creative_errors))
 
     skill_root = Path(__file__).resolve().parent.parent
     template = skill_root / "assets" / "project-template"
     output.mkdir(parents=True, exist_ok=True)
+    production_only = {"manifests", "runtime"}
+    if not args.production:
+        production_only.update({
+            "README-flow.svg",
+            "hybrid-pipeline.json",
+            "offline-dependency-policy.json",
+            "package-lock.json",
+        })
     for source in template.iterdir():
-        if source.name in {"manifests", "runtime"}:
+        if source.name in production_only:
             continue
         target = output / source.name
         if source.is_dir():
@@ -377,6 +407,44 @@ def main() -> None:
     (output / "compositions" / "scene-template.html").unlink(missing_ok=True)
     (output / "compositions" / "hybrid-scene-template.html").unlink(missing_ok=True)
     shutil.copy2(manifest, output / "story-manifest.json")
+
+    width, height = ASPECT_SIZES.get(data.get("aspect", "16:9"), (1920, 1080))
+    build_script = Path(__file__).with_name("build_hyperframes_timeline.py")
+
+    if not args.production:
+        lock_path.unlink(missing_ok=True)
+        for relative in (
+            "assets/references/characters",
+            "assets/source-atlases",
+            "assets/characters",
+            "assets/backgrounds",
+            "assets/props",
+            "assets/effects",
+            "assets/audio",
+            "shots",
+            "snapshots",
+            "renders",
+        ):
+            (output / relative).mkdir(parents=True, exist_ok=True)
+        subprocess.run(
+            [sys.executable, str(build_script), "--manifest", str(output / "story-manifest.json"), "--project", str(output), "--creative"],
+            check=True,
+        )
+        print(f"Initialized creative project {output}")
+        print(
+            "Next: make three distinct look studies, build a timed scratch animatic, "
+            "and prove the hardest 8–15 seconds before adding production gates."
+        )
+        print(
+            "When the benchmark is approved, rerun with --production into a new directory "
+            "or add only the production tools required by the chosen implementation."
+        )
+        return
+
+    package = json.loads(package_path.read_text(encoding="utf-8"))
+    package["scripts"].update(PRODUCTION_SCRIPTS)
+    package["dependencies"].update(PRODUCTION_DEPENDENCIES)
+    package_path.write_text(json.dumps(package, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     medium_contract = build_medium_contract(data)
     (output / "medium-contract.json").write_text(
         json.dumps(medium_contract, ensure_ascii=False, indent=2) + "\n",
@@ -401,7 +469,6 @@ def main() -> None:
         "renders",
     ):
         (output / relative).mkdir(parents=True, exist_ok=True)
-    width, height = ASPECT_SIZES.get(data.get("aspect", "16:9"), (1920, 1080))
     for scene in data.get("scenes", []):
         if not isinstance(scene, dict) or not isinstance(scene.get("id"), str):
             continue
@@ -466,12 +533,11 @@ def main() -> None:
     )
     shutil.copy2(template / "hybrid-pipeline.json", portable_template / "hybrid-pipeline.json")
 
-    build_script = Path(__file__).with_name("build_hyperframes_timeline.py")
     subprocess.run(
         [sys.executable, str(build_script), "--manifest", str(output / "story-manifest.json"), "--project", str(output)],
         check=True,
     )
-    print(f"Initialized {output}")
+    print(f"Initialized production project {output}")
     print(
         "Next: approve identities and the hardest shot's spatial/animation decisions, "
         "then route shot-capabilities.json into engine-plan.json before generating engine-shaped assets."
